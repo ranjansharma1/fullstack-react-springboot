@@ -25,6 +25,7 @@ function TodoTable(props) {
             desc={todo.desc}
             assign={todo.assignedBy}
             deleteTodo={props.deleteTodo}
+            handleUpdate={props.handleUpdate}
           />
         ))}
       </tbody>

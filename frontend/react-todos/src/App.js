@@ -34,6 +34,15 @@ function App() {
     setTodos(filtered);
   }
 
+
+  // If you want to perform any task in child components, you can define here and take there using props
+  const handleUpdate = (id, updatedTodo) => {
+    const updatedTodos = todos.map(todo =>
+      todo.id === id ? updatedTodo : todo
+    );
+    setTodos(updatedTodos);
+  };
+
   return (
     <>
       <div>
@@ -41,7 +50,7 @@ function App() {
           <div className="card">
             <div className="card-header"> Your To do List</div>
             <div className="card-body">
-              <TodoTable todos={todos} deleteTodo={deleteTodo}/>
+              <TodoTable todos={todos} deleteTodo={deleteTodo} handleUpdate={handleUpdate}/>
 
               <button
                 type="button"
@@ -50,7 +59,7 @@ function App() {
                   setshowTodoForm(!showTodoForm);
                 }}
               >
-                {!showTodoForm ? "Show New To Do" : "Hide New To Do"}
+                {!showTodoForm ? "New To Do" : "Hide New To Do"}
               </button>
               {showTodoForm && <TodoForm addTodo={addTodo} />}
               

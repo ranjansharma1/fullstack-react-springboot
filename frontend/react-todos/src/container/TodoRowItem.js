@@ -9,6 +9,18 @@ desc={todo.desc}
 assign={todo.assignedBy}
 /> */
 function TodoRowItem(props) {
+  const handleUpdate = () => {
+    var desc = prompt("Enter description:");
+    var assignedBy = prompt("Enter assigned by:");
+    
+    // Handle the user input as desired (e.g., store in an array, send to server, etc.)
+    console.log("Description:", desc);
+    console.log("Assigned By:", assignedBy);
+
+    let updatedTodo={ id: props.id, desc: desc, assignedBy: assignedBy };
+    console.log("Updated Todo:", updatedTodo);
+    props.handleUpdate(props.id, updatedTodo);
+  }
   return (
     <tr> 
       <th scope="row">{props.id}</th>
@@ -16,6 +28,7 @@ function TodoRowItem(props) {
       <td>{props.assign}</td>
       <td>
         <button
+          className="btn btn-danger"
           type="button"
           onClick={() => {props.deleteTodo(props.id); console.log("Deleting Todo Item...")}}
         >
@@ -23,7 +36,7 @@ function TodoRowItem(props) {
         </button>
       </td>
       <td>
-        <button type="button">Update</button>
+        <button className="btn btn-warning"  onClick={handleUpdate} type="button">Update</button>
       </td>
     </tr>
   );
