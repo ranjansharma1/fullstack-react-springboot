@@ -13,6 +13,8 @@ function TodoTable(props) {
           <th scope="col">S.No.</th>
           <th scope="col">Description</th>
           <th scope="col">Assigned</th>
+          <th scope="col">Delete</th>
+          <th scope="col">Update</th>
         </tr>
       </thead>
       <tbody>
@@ -22,6 +24,7 @@ function TodoTable(props) {
             id={todo.id}
             desc={todo.desc}
             assign={todo.assignedBy}
+            deleteTodo={props.deleteTodo}
           />
         ))}
       </tbody>

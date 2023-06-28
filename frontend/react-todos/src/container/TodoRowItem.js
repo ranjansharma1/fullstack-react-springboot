@@ -1,6 +1,5 @@
 import React from "react";
 
-
 // Here we define props that will take the valiue from its parent component (TodoTable.js) where it has defined properties
 //like from below in App.js file
 /* <TodoRowItem
@@ -11,11 +10,22 @@ assign={todo.assignedBy}
 /> */
 function TodoRowItem(props) {
   return (
-        <tr>
-          <th scope="row">{props.id}</th>
-          <td>{props.desc}</td>
-          <td>{props.assign}</td>
-        </tr>
+    <tr> 
+      <th scope="row">{props.id}</th>
+      <td>{props.desc}</td>
+      <td>{props.assign}</td>
+      <td>
+        <button
+          type="button"
+          onClick={() => {props.deleteTodo(props.id); console.log("Deleting Todo Item...")}}
+        >
+          Delete
+        </button>
+      </td>
+      <td>
+        <button type="button">Update</button>
+      </td>
+    </tr>
   );
 }
 
