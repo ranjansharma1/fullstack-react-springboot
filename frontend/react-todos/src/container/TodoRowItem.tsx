@@ -8,7 +8,13 @@ id={todo.id}
 desc={todo.desc}
 assign={todo.assignedBy}
 /> */
-function TodoRowItem(props) {
+const TodoRowItem: React.FC<{
+  id: number, 
+  desc: string, 
+  assign: string, 
+  deleteTodo: Function,
+  handleUpdate: Function
+}> = (props)=> {
   const handleUpdate = () => {
     var desc = prompt("Enter description:");
     var assignedBy = prompt("Enter assigned by:");

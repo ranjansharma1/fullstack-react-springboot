@@ -5,7 +5,20 @@ import TodoRowItem from "./TodoRowItem";
 //like from below in App.js file
 /* <TodoTable todos={todos}/> */
 /* It using in this component using 'props.todos.map'  */
-function TodoTable(props) {
+
+interface Todo {
+  id: number;
+  desc: string;
+  assignedBy: string;
+}
+
+interface TodoTableProps {
+  todos: Todo[];
+  deleteTodo: (id: number) => void;
+  handleUpdate: (id: number, updatedTodo: Todo) => void;
+}
+
+const TodoTable: React.FC<TodoTableProps> = (props) => {
   return (
     <table className="table table-hover">
       <thead className="table-primary">

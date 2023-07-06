@@ -1,6 +1,6 @@
-import { React, useState } from "react";
+import { useState } from "react";
 
-function TodoForm(props) {
+const TodoForm: React.FC<{addTodo: Function}> = (props) => {
   const [desc, setDesc] = useState("");
   const [assignee,setAssignee] = useState("");
   const submitToDO =()=>{
@@ -40,7 +40,6 @@ function TodoForm(props) {
             setAssignee(e.target.value);
           }}
           value={assignee}
-          row={3}
           required
         />
       </div>

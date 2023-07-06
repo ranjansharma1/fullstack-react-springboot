@@ -3,6 +3,12 @@ import "./App.css";
 import TodoTable from "./container/TodoTable";
 import TodoForm from "./container/TodoForm";
 
+interface Todo {
+  id: number;
+  desc: string;
+  assignedBy: string;
+}
+
 function App() {
   const [todos, setTodos] = useState([
     { id: 1, desc: "eat", assignedBy: "Ranjan1" },
@@ -14,7 +20,7 @@ function App() {
 
   const [showTodoForm, setshowTodoForm] = useState(false);
 
-  const addTodo = (desc, assgn) => {
+  const addTodo = (desc:string, assgn:string) => {
     let rowNumber = 0;
     if (todos.length > 0) {
       rowNumber = todos[todos.length - 1].id + 1;
@@ -27,7 +33,7 @@ function App() {
     setTodos((todos) => [...todos, newTodo]);
   };
 
-  const deleteTodo = (deleteTodoRowNumber) => {
+  const deleteTodo = (deleteTodoRowNumber:number) => {
     let filtered = todos.filter(function (value) {
       return value.id !== deleteTodoRowNumber;
     });
@@ -36,12 +42,13 @@ function App() {
 
 
   // If you want to perform any task in child components, you can define here and take there using props
-  const handleUpdate = (id, updatedTodo) => {
+  const handleUpdate = (id: number, updatedTodo: Todo) => {
     const updatedTodos = todos.map(todo =>
       todo.id === id ? updatedTodo : todo
     );
     setTodos(updatedTodos);
   };
+  
 
   return (
     <>
