@@ -1,9 +1,12 @@
 import './App.css';
+import ExploreNewBooks from './layout/Hompage/components/ExploreNewBooks';
+import Navbar from './layout/NavbarAndFooter/Navbar';
 
 function App() {
   return (
-    <main className="App mt-5">
-      <div>This app is working fine :) <button type="button" className='btn btn-primary mt-6' onClick={()=>{alert('Congratulations !!!')}}>Open Surprize</button></div>
+    <main className="App ">
+      <Navbar/>
+      <ExploreNewBooks/>
     </main>
   );
 }
