@@ -1,6 +1,7 @@
 import './App.css';
 import Carousel from './layout/Hompage/components/Carousel';
 import ExploreNewBooks from './layout/Hompage/components/ExploreNewBooks';
+import Heros from './layout/Hompage/components/Heros';
 import Navbar from './layout/NavbarAndFooter/Navbar';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Navbar/>
       <ExploreNewBooks/>
       <Carousel/>
+      <Heros/>
     </main>
   );
 }
