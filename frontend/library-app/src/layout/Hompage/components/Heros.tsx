@@ -3,7 +3,7 @@ import hero2 from "../../../images/Heros2.jpg";
 
 const Heros = () => {
   return (
-    <section className="container m-5 ">
+    <section className="container my-5 ">
       <div className="row">
         <div className="col-md-6 px-0" style={{ backgroundColor: "red" }}>
           <div

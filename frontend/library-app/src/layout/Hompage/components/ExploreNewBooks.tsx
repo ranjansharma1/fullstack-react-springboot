@@ -1,6 +1,6 @@
 import exploreNewBooksImg1 from "../../../images/exploreNewBooksImg3.jpg";
 
-export default function ExploreNewBooks() {
+const ExploreNewBooks=()=> {
   return (
     <section id="#exploreNewBooks" >
       <div
@@ -23,3 +23,4 @@ export default function ExploreNewBooks() {
     </section>
   );
 }
+export default ExploreNewBooks;
