@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Navbar() {
+const Navbar =()=> {
   return (
     <nav className="navbar navbar-expand-lg " style={{backgroundColor: "#e3f2fd"}}>
       <div className="container-fluid">
@@ -41,3 +41,4 @@ export default function Navbar() {
     </nav>
   );
 }
+export default  Navbar;

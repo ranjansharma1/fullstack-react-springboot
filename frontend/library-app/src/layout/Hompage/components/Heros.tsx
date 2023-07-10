@@ -1,7 +1,7 @@
 import hero1 from "../../../images/Heros1.jpg";
 import hero2 from "../../../images/Heros2.jpg";
 
-const Heros = () => {
+export const Heros = () => {
   return (
     <section className="container my-5 ">
       <div className="row">
@@ -38,7 +38,7 @@ const Heros = () => {
         </div>
       </div>
 
-      <div className="row " style={{border:"2px solid black"}}>
+      <div className="row ">
         {/* Desktop */}
         <div className="col-md-6 px-0 d-none d-lg-block">
           <div className="card px-5" style={{ height: "300px", width: "100%" }}>
@@ -107,5 +107,3 @@ const Heros = () => {
     </section>
   );
 };
-
-export default Heros;

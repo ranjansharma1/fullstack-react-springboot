@@ -2,9 +2,9 @@ import React from "react";
 import book1 from "../../../images/BooksImages/book1.png";
 import book2 from "../../../images/BooksImages/book2.png";
 import book3 from "../../../images/BooksImages/book3.png";
-import ReturnBook from "./ReturnBook";
+import {ReturnBook} from "./ReturnBook";
 
-function Carousel() {
+export const Carousel =()=> {
   const books = [
     {
       id: 1,
@@ -168,4 +168,3 @@ function Carousel() {
   );
 }
 
-export default Carousel;

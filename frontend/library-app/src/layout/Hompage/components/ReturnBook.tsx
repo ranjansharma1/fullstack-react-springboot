@@ -6,7 +6,7 @@ interface bookModel {
   image: string;
   description: string;
 }
-const ReturnBook: React.FC<{ book: bookModel }> = (props) => {
+export const ReturnBook: React.FC<{ book: bookModel }> = (props) => {
   return (
     <div className="text-center col">
       <img src={props.book.image} width="151" height="233" alt="book" />
@@ -16,5 +16,3 @@ const ReturnBook: React.FC<{ book: bookModel }> = (props) => {
     </div>
   );
 };
-
-export default ReturnBook;
