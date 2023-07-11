@@ -1,50 +1,101 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import book1 from "../../../images/BooksImages/book1.png";
 import book2 from "../../../images/BooksImages/book2.png";
 import book3 from "../../../images/BooksImages/book3.png";
-import {ReturnBook} from "./ReturnBook";
+import { ReturnBook } from "./ReturnBook";
+import BookModel from "../../../models/BookModel";
+import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 
-export const Carousel =()=> {
+export const Carousel = () => {
+  const [bookAPI, setBookAPI] = useState<BookModel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState(null);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const baseUrl: string = "http://localhost:8080/api/books";
+      const url: string = `${baseUrl}?page=0&size=9`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+      const responseJSON = await response.json();
+      const responseJSONData = responseJSON._embedded.books;
+      const loadedBookfromDatabase: BookModel[] = [];
+
+      for (const key in responseJSONData) {
+        loadedBookfromDatabase.push({
+          id: responseJSONData[key].id,
+          title: responseJSONData[key].title,
+          author: responseJSONData[key].author,
+          description: responseJSONData[key].description,
+          copies: responseJSONData[key].copies,
+          copiesAvailable: responseJSONData[key].copiesAvailable,
+          category: responseJSONData[key].category,
+          img: responseJSONData[key].img,
+        });
+      }
+      setBookAPI(loadedBookfromDatabase);
+      setIsLoading(false);
+    };
+    fetchBooks().catch((error: any) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+      console.log(error.massage);
+    });
+  }, []);
+
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
+  if (httpError) {
+    return (
+      <div className="container m-5 text-center text-danger">
+        <h1>{httpError}</h1>
+      </div>
+    );
+  }
+
   const books = [
     {
       id: 1,
       title: "first book",
-      image: book1,
+      img: book1,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis aliquid cum eum porro sapiente modi corrupti, quos nesciunt delectus ratione odit ad temporibus ducimus a ipsa deleniti. Neque, possimus assumenda.",
     },
     {
       id: 2,
       title: "Second book",
-      image: book2,
+      img: book2,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis aliquid cum eum porro sapiente modi corrupti, quos nesciunt delectus ratione odit ad temporibus ducimus a ipsa deleniti. Neque, possimus assumenda.",
     },
     {
       id: 3,
       title: "Third book",
-      image: book3,
+      img: book3,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis aliquid cum eum porro sapiente modi corrupti, quos nesciunt delectus ratione odit ad temporibus ducimus a ipsa deleniti. Neque, possimus assumenda.",
     },
     {
       id: 4,
       title: "Fourth book",
-      image: book2,
+      img: book2,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis aliquid cum eum porro sapiente modi corrupti, quos nesciunt delectus ratione odit ad temporibus ducimus a ipsa deleniti. Neque, possimus assumenda.",
     },
     {
       id: 5,
       title: "fifth book",
-      image: book3,
+      img: book3,
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis aliquid cum eum porro sapiente modi corrupti, quos nesciunt delectus ratione odit ad temporibus ducimus a ipsa deleniti. Neque, possimus assumenda.",
     },
   ];
 
   return (
-    <div className="container mt-5" style={{ height: 550 }}>
+    <div className="container mt-5">
       <div className="homepage-carousel-title">
         <h3>Find your next "I stayed up too late reading" book.</h3>
       </div>
@@ -59,14 +110,21 @@ export const Carousel =()=> {
         <div className="carousel-inner ">
           <div className="carousel-item active">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(0, 3).map((book) => (
+              {bookAPI.slice(0, 3).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
           </div>
           <div className="carousel-item">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(3, 6).map((book) => (
+              {bookAPI.slice(3, 6).map((book) => (
+                <ReturnBook book={book} key={book.id} />
+              ))}
+            </div>
+          </div>
+          <div className="carousel-item">
+            <div className="row d-flex justify-content-center align-items-center">
+              {bookAPI.slice(6, 9).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
@@ -109,28 +167,28 @@ export const Carousel =()=> {
         <div className="carousel-inner ">
           <div className="carousel-item active">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(0, 1).map((book) => (
+              {bookAPI.slice(0, 1).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
           </div>
           <div className="carousel-item ">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(1, 2).map((book) => (
+              {bookAPI.slice(1, 2).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
           </div>
           <div className="carousel-item ">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(2, 3).map((book) => (
+              {bookAPI.slice(2, 3).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
           </div>
           <div className="carousel-item ">
             <div className="row d-flex justify-content-center align-items-center">
-              {books.slice(3, 4).map((book) => (
+              {bookAPI.slice(3, 4).map((book) => (
                 <ReturnBook book={book} key={book.id} />
               ))}
             </div>
@@ -161,10 +219,11 @@ export const Carousel =()=> {
           <span className="visually-hidden">Next</span>
         </button>
       </div>
-      <div className='homepage-carousel-title mt-3'>
-        <a className='btn btn-outline-secondary btn-lg' href='#'>View More</a>
+      <div className="homepage-carousel-title mt-3">
+        <a className="btn btn-outline-secondary btn-lg" href="#">
+          View More
+        </a>
       </div>
     </div>
   );
-}
-
+};
