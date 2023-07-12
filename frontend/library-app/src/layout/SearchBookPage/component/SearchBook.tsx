@@ -26,7 +26,7 @@ export const SearchBook:React.FC<{book:BookModel}> = (props) => {
             <div className="card border-0">
               <div className="card-body">
                 <h6 className="card-title">{props.book.author}</h6>
-                <h5 className="card-title">{props.book.id} . {props.book.title}</h5>
+                <h5 className="card-title">{props.book.id} . {props.book.title} ---  {props.book.category}</h5>
                 <p className="card-text">{props.book.description}</p>
               </div>
             </div>

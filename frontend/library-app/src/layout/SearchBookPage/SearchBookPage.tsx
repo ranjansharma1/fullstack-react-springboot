@@ -12,6 +12,7 @@ export const SearchBookPage = () => {
   const [totalResult, setTotalResult] = useState(0);
   const [searchBook, setSearchBook] = useState("");
   const [searchURL, setSearchURL] = useState("");
+  const [bookCategory, setBookCategory] = useState("Book Category");
 
   const baseUrl: string = "http://localhost:8080/api/books"; //this should not change
   let url: string = ""; // this value will be changed as per requirements.
@@ -56,8 +57,7 @@ export const SearchBookPage = () => {
       console.log(error.massage);
     });
   }, [searchURL]); // this searchurl, will be loaded everytime whenevere its value changed
-  
-  
+
   //This will display Error Data when server is down
   const renderHttpError = () => {
     if (httpError) {
@@ -73,7 +73,8 @@ export const SearchBookPage = () => {
     setPage(page + 1);
     if (searchURL === "") {
       url = `${baseUrl}?page=${page + 1}&size=5`;
-    } else {
+    }
+     else {
       url = `${baseUrl}/search/findByTitleContaining?title=${searchBook}&size=5&page=${
         page + 1
       }`;
@@ -99,6 +100,30 @@ export const SearchBookPage = () => {
       setPage(0); // Reset page to 0
       setBookAPI([]); // Reset bookAPI state
       setSearchURL("");
+    }
+    setBookCategory("Book Category");
+    console.log("book: " +bookCategory)
+  };
+
+  const handleCategoryChange = (value: string) => {
+    const lowercaseValue = value.toLowerCase();
+
+    const categoryMappings: { [key: string]: string } = {
+      fe: "Frontend",
+      be: "Backend",
+      data: "Data Science",
+      devops: "Devops",
+    };
+
+    const mappedValue = categoryMappings[lowercaseValue] || "ALL";
+
+    setBookCategory(mappedValue);
+    if (mappedValue !== "ALL") {
+      setSearchURL(
+        `${baseUrl}/search/findByCategory?category=${lowercaseValue}`
+      );
+    } else {
+      setSearchURL(baseUrl);
     }
   };
 
@@ -127,32 +152,61 @@ export const SearchBookPage = () => {
           <div className="col-4">
             <div className="dropdown">
               <button
+                id="dropdownMenuButton"
                 className="btn btn-secondary dropdown-toggle"
                 type="button"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Book Category
+                {bookCategory}
               </button>
 
-              <ul className="dropdown-menu">
-                <li>
+              <ul
+                className="dropdown-menu"
+                aria-labelledby="dropdownMenuButton"
+              >
+                <li
+                  onClick={() => {
+                    handleCategoryChange("All");
+                  }}
+                >
                   <a className="dropdown-item" href="#">
                     All
                   </a>
                 </li>
-                <li>
+                <li
+                  onClick={() => {
+                    handleCategoryChange("fe");
+                  }}
+                >
                   <a className="dropdown-item" href="#">
                     Frontend
                   </a>
                 </li>
-                <li>
+                <li
+                  onClick={() => {
+                    handleCategoryChange("be");
+                  }}
+                >
                   <a className="dropdown-item" href="#">
-                    Data
+                    Backend
                   </a>
                 </li>
-                <li>
+                <li
+                  onClick={() => {
+                    handleCategoryChange("data");
+                  }}
+                >
+                  <a className="dropdown-item" href="#">
+                    Data Science
+                  </a>
+                </li>
+                <li
+                  onClick={() => {
+                    handleCategoryChange("devops");
+                  }}
+                >
                   <a className="dropdown-item" href="#">
                     Devops
                   </a>
