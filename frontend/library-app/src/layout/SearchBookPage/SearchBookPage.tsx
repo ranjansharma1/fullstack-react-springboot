@@ -2,16 +2,20 @@ import { useEffect, useState } from "react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import BookModel from "../../models/BookModel";
 import { SearchBook } from "./component/SearchBook";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const SearchBookPage = () => {
   const [bookAPI, setBookAPI] = useState<BookModel[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [httpError, setHttpError] = useState(null);
+  const [page, setPage] = useState(0);
+  const [totalResult, setTotalResult] = useState(0);
 
   useEffect(() => {
     const fetchBooks = async () => {
       const baseUrl: string = "http://localhost:8080/api/books";
-      const url: string = `${baseUrl}`;
+      const url: string = `${baseUrl}?size=5&page=${page}`;
+      setIsLoading(true)
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Something went wrong");
@@ -33,7 +37,10 @@ export const SearchBookPage = () => {
         });
       }
       setBookAPI(loadedBookfromDatabase);
+      setTotalResult(responseJSON.page.totalElements)
+      console.log("Total Elements: " + responseJSON.page.totalElements);
       setIsLoading(false);
+      // setLoading(false)
     };
     fetchBooks().catch((error: any) => {
       setIsLoading(false);
@@ -41,17 +48,29 @@ export const SearchBookPage = () => {
       console.log(error.massage);
     });
   }, []);
+  const renderHttpError =() => {
+    if (httpError) {
+      return (
+        <div className="container m-5 text-center text-danger">
+          <h1>{httpError}</h1>
+        </div>
+      );
+    }
 
-  if (isLoading) {
-    return <SpinnerLoading />;
   }
-  if (httpError) {
-    return (
-      <div className="container m-5 text-center text-danger">
-        <h1>{httpError}</h1>
-      </div>
-    );
-  }
+  
+  const fetchMoreData = async () => {
+    setPage(page + 1);
+    const url = `http://localhost:8080/api/books?page=${page + 1}&size=5`;
+    console.log("page: " + page);
+    setIsLoading(true);
+    let data = await fetch(url);
+    let parseData = await data.json();
+    // console.log(parseData);
+    setBookAPI(bookAPI.concat(parseData._embedded.books));
+    setTotalResult(parseData.page.totalElements)
+    setIsLoading(false);
+  };
   return (
     <section>
       <div className="container mt-3">
@@ -105,11 +124,20 @@ export const SearchBookPage = () => {
           </div>
         </div>
         <div>
-          <h4>Number of Results : (22)</h4> 
-          <p>1 to 5 to 22 Items:</p>
+          <h4>Number of Books Available : {totalResult}</h4> 
+          <p>1 to {(page+1)*5} to {totalResult} Items:</p>
+          {isLoading && <SpinnerLoading /> || renderHttpError()}
+        <InfiniteScroll
+          dataLength={bookAPI.length}
+          next={fetchMoreData}
+          hasMore={bookAPI.length !== totalResult}
+          loader={<SpinnerLoading />}
+        >
           {bookAPI.map((book)=>(
             <SearchBook book={book} key={book.id}/>
           ))}
+          </InfiniteScroll>
+          
         </div>
       </div>
     </section>
