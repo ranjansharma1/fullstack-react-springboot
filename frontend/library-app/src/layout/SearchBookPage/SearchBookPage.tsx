@@ -17,38 +17,43 @@ export const SearchBookPage = () => {
   const baseUrl: string = "http://localhost:8080/api/books"; // this should not change
   let url = `${baseUrl}?size=5&page=0`; // Set the page to 0 for new searches
 
+  const categories: { [key: string]: string } = {
+    All: "All",
+    fe: "Frontend",
+    be: "Backend",
+    data: "Data Science",
+    devops: "Devops",
+  };
+
   useEffect(() => {
     const fetchBooks = async () => {
-      if (searchURL) { //this will only execute when searchURL is set to "";
+      setIsLoading(true);
+      if (searchURL) {
+        //this will only execute when searchURL is set to "";
         url = searchURL;
       }
-      setIsLoading(true);
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error("Something went wrong");
-        }
-        const responseJSON = await response.json();
-        const responseJSONData = responseJSON._embedded.books;
-        const loadedBookfromDatabase: BookModel[] = [];
-    
-        for (const key in responseJSONData) {
-          loadedBookfromDatabase.push({
-            id: responseJSONData[key].id,
-            title: responseJSONData[key].title,
-            author: responseJSONData[key].author,
-            description: responseJSONData[key].description,
-            copies: responseJSONData[key].copies,
-            copiesAvailable: responseJSONData[key].copiesAvailable,
-            category: responseJSONData[key].category,
-            img: responseJSONData[key].img,
-          });
-        }
-        setBookAPI(loadedBookfromDatabase);
-        setTotalResult(responseJSON.page.totalElements);
-      } catch (error: any) {
-        setHttpError(error.message);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Something went wrong");
       }
+      const responseJSON = await response.json();
+      const responseJSONData = responseJSON._embedded.books;
+      const loadedBookfromDatabase: BookModel[] = [];
+
+      for (const key in responseJSONData) {
+        loadedBookfromDatabase.push({
+          id: responseJSONData[key].id,
+          title: responseJSONData[key].title,
+          author: responseJSONData[key].author,
+          description: responseJSONData[key].description,
+          copies: responseJSONData[key].copies,
+          copiesAvailable: responseJSONData[key].copiesAvailable,
+          category: responseJSONData[key].category,
+          img: responseJSONData[key].img,
+        });
+      }
+      setBookAPI(loadedBookfromDatabase);
+      setTotalResult(responseJSON.page.totalElements);
       setIsLoading(false);
     };
 
@@ -60,59 +65,47 @@ export const SearchBookPage = () => {
   }, [searchURL]);
 
   const fetchMoreData = async () => {
-    const nextPage = page + 1;
-    if(searchURL===""){
-      url = `${baseUrl}?page=${nextPage}&size=5`;
-    }else{
-      url=`${searchURL}&page=${nextPage}&size=5`
-    }
     setIsLoading(true);
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-      const parseData = await response.json();
-      // the spread operator (...) is used to create a new array that contains the previous books (prevBooks) as well as the new books fetched from parseData._embedded.books. It is concating the array adding to the previos array...
-      setBookAPI((prevBooks) => [...prevBooks, ...parseData._embedded.books]);
-      setTotalResult(parseData.page.totalElements);
-    } catch (error: any) {
-      setHttpError(error.message);
+    const nextPage = page + 1;
+    if (searchURL === "") {
+      url = `${baseUrl}?page=${nextPage}&size=5`;
+    } else {
+      url = `${searchURL}&page=${nextPage}&size=5`;
     }
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
+    const parseData = await response.json();
+    // the spread operator (...) is used to create a new array that contains the previous books (prevBooks) as well as the new books fetched from parseData._embedded.books. It is concating the array adding to the previos array...
+    setBookAPI((prevBooks) => [...prevBooks, ...parseData._embedded.books]);
+    setTotalResult(parseData.page.totalElements);
     setIsLoading(false);
     setPage(nextPage);
   };
-  
 
   const searchHandleChange = () => {
     setPage(0); // Reset page to 0
+    setBookAPI([]); // Reset to empty books
     if (searchBook) {
-      setSearchURL(`${baseUrl}/search/findByTitleContaining?title=${searchBook}`);
+      setSearchURL(
+        `${baseUrl}/search/findByTitleContaining?title=${searchBook}`
+      );
     } else {
       setSearchURL("");
     }
     setBookCategory("Book Category");
   };
-  
 
   const handleCategoryChange = (value: string) => {
     setPage(0); // Reset page to 0
-    const lowercaseValue = value.toLowerCase();
-
-    const categoryMappings: { [key: string]: string } = {
-      fe: "Frontend",
-      be: "Backend",
-      data: "Data Science",
-      devops: "Devops",
-    };
-
-    const mappedValue = categoryMappings[lowercaseValue] || "ALL";
-
-    setBookCategory(mappedValue);
-    if (mappedValue !== "ALL") {
-      setSearchURL(`${baseUrl}/search/findByCategory?category=${lowercaseValue}`);
-    } else {
+    setBookAPI([]);
+    setBookCategory(categories[value]);
+    console.log("category : " + categories[value]);
+    if (value === "All") {
       setSearchURL("");
+    } else {
+      setSearchURL(`${baseUrl}/search/findByCategory?category=${value}`);
     }
   };
 
@@ -165,56 +158,20 @@ export const SearchBookPage = () => {
                 className="dropdown-menu"
                 aria-labelledby="dropdownMenuButton"
               >
-                <li
-                  onClick={() => {
-                    handleCategoryChange("All");
-                  }}
-                >
-                  <a className="dropdown-item" href="#">
-                    All
-                  </a>
-                </li>
-                <li
-                  onClick={() => {
-                    handleCategoryChange("fe");
-                  }}
-                >
-                  <a className="dropdown-item" href="#">
-                    Frontend
-                  </a>
-                </li>
-                <li
-                  onClick={() => {
-                    handleCategoryChange("be");
-                  }}
-                >
-                  <a className="dropdown-item" href="#">
-                    Backend
-                  </a>
-                </li>
-                <li
-                  onClick={() => {
-                    handleCategoryChange("data");
-                  }}
-                >
-                  <a className="dropdown-item" href="#">
-                    Data Science
-                  </a>
-                </li>
-                <li
-                  onClick={() => {
-                    handleCategoryChange("devops");
-                  }}
-                >
-                  <a className="dropdown-item" href="#">
-                    Devops
-                  </a>
-                </li>
+                {Object.entries(categories).map(([key, value]) => (
+                  <li key={key} onClick={() => handleCategoryChange(key)}>
+                    <a className="dropdown-item" href="#">
+                      {value}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
-        {totalResult > 0 ? (
+        {isLoading ? (
+          <SpinnerLoading />
+        ) : totalResult > 0 ? (
           <div>
             <h4>Number of Books Available : {totalResult}</h4>
             <p>
