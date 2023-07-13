@@ -14,98 +14,89 @@ export const SearchBookPage = () => {
   const [searchURL, setSearchURL] = useState("");
   const [bookCategory, setBookCategory] = useState("Book Category");
 
-  const baseUrl: string = "http://localhost:8080/api/books"; //this should not change
-  let url: string = ""; // this value will be changed as per requirements.
+  const baseUrl: string = "http://localhost:8080/api/books"; // this should not change
+  let url = `${baseUrl}?size=5&page=0`; // Set the page to 0 for new searches
 
   useEffect(() => {
     const fetchBooks = async () => {
-      if (searchURL === "") {
-        url = `${baseUrl}?size=5&page=${page}`;
-      } else {
+      if (searchURL) { //this will only execute when searchURL is set to "";
         url = searchURL;
       }
       setIsLoading(true);
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+        const responseJSON = await response.json();
+        const responseJSONData = responseJSON._embedded.books;
+        const loadedBookfromDatabase: BookModel[] = [];
+    
+        for (const key in responseJSONData) {
+          loadedBookfromDatabase.push({
+            id: responseJSONData[key].id,
+            title: responseJSONData[key].title,
+            author: responseJSONData[key].author,
+            description: responseJSONData[key].description,
+            copies: responseJSONData[key].copies,
+            copiesAvailable: responseJSONData[key].copiesAvailable,
+            category: responseJSONData[key].category,
+            img: responseJSONData[key].img,
+          });
+        }
+        setBookAPI(loadedBookfromDatabase);
+        setTotalResult(responseJSON.page.totalElements);
+      } catch (error: any) {
+        setHttpError(error.message);
+      }
+      setIsLoading(false);
+    };
+
+    fetchBooks().catch((error: any) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+      console.log(error.message);
+    });
+  }, [searchURL]);
+
+  const fetchMoreData = async () => {
+    const nextPage = page + 1;
+    if(searchURL===""){
+      url = `${baseUrl}?page=${nextPage}&size=5`;
+    }else{
+      url=`${searchURL}&page=${nextPage}&size=5`
+    }
+    setIsLoading(true);
+    try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
-      const responseJSON = await response.json();
-      const responseJSONData = responseJSON._embedded.books;
-      const loadedBookfromDatabase: BookModel[] = [];
-
-      for (const key in responseJSONData) {
-        loadedBookfromDatabase.push({
-          id: responseJSONData[key].id,
-          title: responseJSONData[key].title,
-          author: responseJSONData[key].author,
-          description: responseJSONData[key].description,
-          copies: responseJSONData[key].copies,
-          copiesAvailable: responseJSONData[key].copiesAvailable,
-          category: responseJSONData[key].category,
-          img: responseJSONData[key].img,
-        });
-      }
-      setBookAPI(loadedBookfromDatabase);
-      setTotalResult(responseJSON.page.totalElements);
-      console.log("Total Elements: " + responseJSON.page.totalElements);
-      setIsLoading(false);
-      // setLoading(false)
-    };
-    fetchBooks().catch((error: any) => {
-      setIsLoading(false);
+      const parseData = await response.json();
+      // the spread operator (...) is used to create a new array that contains the previous books (prevBooks) as well as the new books fetched from parseData._embedded.books. It is concating the array adding to the previos array...
+      setBookAPI((prevBooks) => [...prevBooks, ...parseData._embedded.books]);
+      setTotalResult(parseData.page.totalElements);
+    } catch (error: any) {
       setHttpError(error.message);
-      console.log(error.massage);
-    });
-  }, [searchURL]); // this searchurl, will be loaded everytime whenevere its value changed
-
-  //This will display Error Data when server is down
-  const renderHttpError = () => {
-    if (httpError) {
-      return (
-        <div className="container m-5 text-center text-danger">
-          <h1>{httpError}</h1>
-        </div>
-      );
     }
-  };
-
-  const fetchMoreData = async () => {
-    setPage(page + 1);
-    if (searchURL === "") {
-      url = `${baseUrl}?page=${page + 1}&size=5`;
-    }
-     else {
-      url = `${baseUrl}/search/findByTitleContaining?title=${searchBook}&size=5&page=${
-        page + 1
-      }`;
-    }
-    console.log("page: " + page);
-    setIsLoading(true);
-    let data = await fetch(url);
-    let parseData = await data.json();
-    // console.log(parseData);
-    setBookAPI(bookAPI.concat(parseData._embedded.books));
-    setTotalResult(parseData.page.totalElements);
     setIsLoading(false);
+    setPage(nextPage);
   };
+  
 
   const searchHandleChange = () => {
-    if (searchBook != "") {
-      setPage(0); // Reset page to 0
-      setBookAPI([]); // Reset bookAPI state
-      setSearchURL(
-        `${baseUrl}/search/findByTitleContaining?title=${searchBook}&size=5&page=${page}`
-      );
+    setPage(0); // Reset page to 0
+    if (searchBook) {
+      setSearchURL(`${baseUrl}/search/findByTitleContaining?title=${searchBook}`);
     } else {
-      setPage(0); // Reset page to 0
-      setBookAPI([]); // Reset bookAPI state
       setSearchURL("");
     }
     setBookCategory("Book Category");
-    console.log("book: " +bookCategory)
   };
+  
 
   const handleCategoryChange = (value: string) => {
+    setPage(0); // Reset page to 0
     const lowercaseValue = value.toLowerCase();
 
     const categoryMappings: { [key: string]: string } = {
@@ -119,11 +110,19 @@ export const SearchBookPage = () => {
 
     setBookCategory(mappedValue);
     if (mappedValue !== "ALL") {
-      setSearchURL(
-        `${baseUrl}/search/findByCategory?category=${lowercaseValue}`
-      );
+      setSearchURL(`${baseUrl}/search/findByCategory?category=${lowercaseValue}`);
     } else {
-      setSearchURL(baseUrl);
+      setSearchURL("");
+    }
+  };
+
+  const renderHttpError = () => {
+    if (httpError) {
+      return (
+        <div className="container m-5 text-center text-danger">
+          <h1>{httpError}</h1>
+        </div>
+      );
     }
   };
 
