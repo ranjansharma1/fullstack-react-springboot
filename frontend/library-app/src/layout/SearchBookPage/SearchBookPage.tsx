@@ -32,6 +32,7 @@ export const SearchBookPage = () => {
         //this will only execute when searchURL is set to "";
         url = searchURL;
       }
+      // console.log(url);
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Something went wrong");
@@ -70,8 +71,9 @@ export const SearchBookPage = () => {
     if (searchURL === "") {
       url = `${baseUrl}?page=${nextPage}&size=5`;
     } else {
-      url = `${searchURL}&page=${nextPage}&size=5`;
+      url = `${searchURL}&page=${nextPage}`;
     }
+    // console.log("fetchmoredata: " + url);
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Something went wrong");
@@ -89,7 +91,7 @@ export const SearchBookPage = () => {
     setBookAPI([]); // Reset to empty books
     if (searchBook) {
       setSearchURL(
-        `${baseUrl}/search/findByTitleContaining?title=${searchBook}`
+        `${baseUrl}/search/findByTitleContaining?title=${searchBook}&size=5`
       );
     } else {
       setSearchURL("");
@@ -105,7 +107,7 @@ export const SearchBookPage = () => {
     if (value === "All") {
       setSearchURL("");
     } else {
-      setSearchURL(`${baseUrl}/search/findByCategory?category=${value}`);
+      setSearchURL(`${baseUrl}/search/findByCategory?category=${value}&size=5`);
     }
   };
 
@@ -169,16 +171,14 @@ export const SearchBookPage = () => {
             </div>
           </div>
         </div>
-        {isLoading ? (
-          <SpinnerLoading />
-        ) : totalResult > 0 ? (
+        {totalResult > 0 ? (
           <div>
             <h4>Number of Books Available : {totalResult}</h4>
             <p>
               1 to {(page + 1) * 5 < totalResult ? (page + 1) * 5 : totalResult}{" "}
               of {totalResult} Items:
             </p>
-            {(isLoading && <SpinnerLoading />) || renderHttpError()}
+            {isLoading || renderHttpError()}
             <InfiniteScroll
               dataLength={bookAPI.length}
               next={fetchMoreData}
@@ -191,16 +191,22 @@ export const SearchBookPage = () => {
             </InfiniteScroll>
           </div>
         ) : (
-          <div className="m-5">
-            <h3>Can't find what you are looking for?</h3>
-            <a
-              type="button"
-              className="btn btn-primary btn-md px-4 me-md-2 fw-bold text-white"
-              href="#"
-            >
-              Library Services
-            </a>
-          </div>
+          <>
+            {isLoading ? (
+              <SpinnerLoading />
+            ) : (
+              <div className="m-5">
+                <h3>Can't find what you are looking for?</h3>
+                <a
+                  type="button"
+                  className="btn btn-primary btn-md px-4 me-md-2 fw-bold text-white"
+                  href="#"
+                >
+                  Library Services
+                </a>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
