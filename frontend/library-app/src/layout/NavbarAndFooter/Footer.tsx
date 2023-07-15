@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -8,8 +9,8 @@ const Footer = () => {
           <p>&copy; DwR All Right Reserved </p>
         </div>
         <div className="col-md-4 text-md-end text-center " >
-          <a href="#" className="mx-3" style={{ color:"white", textDecoration:"none"}}>Home</a>
-          <a href="#" className="mx-3" style={{ color:"white", textDecoration:"none"}}>Search Book</a>
+          <Link to="/" className="mx-3" style={{ color:"white", textDecoration:"none"}}>Home</Link>
+          <Link to="/search" className="mx-3" style={{ color:"white", textDecoration:"none"}}>Search Book</Link>
         </div>
       </div>
     </footer>
