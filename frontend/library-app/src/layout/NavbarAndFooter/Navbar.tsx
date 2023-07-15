@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navbar =()=> {
   return (
-    <nav className="navbar navbar-expand-lg " style={{backgroundColor: "#e3f2fd"}}>
+    <nav className="navbar navbar-expand-lg sticky-top" style={{backgroundColor: "#e3f2fd"}}>
       <div className="container-fluid">
         <a   className="navbar-brand" href="#">DwR</a>
         <button

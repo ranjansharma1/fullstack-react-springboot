@@ -9,17 +9,19 @@ import { NoPage } from "./layout/NoPage";
 
 function App() {
   return (
-    <main className="App ">
+    <div className="d-flex flex-column min-vh-100">
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/search" element={<SearchBookPage />} />
-          <Route path="/*" element={<NoPage />} />
-        </Routes>
+        <main className="App" style={{ flex: "1" }}>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/search" element={<SearchBookPage />} />
+            <Route path="/*" element={<NoPage />} />
+          </Routes>
+        </main>
         <Footer />
       </BrowserRouter>
-    </main>
+    </div>
   );
 }
 
