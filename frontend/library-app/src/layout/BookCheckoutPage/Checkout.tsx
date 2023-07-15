@@ -1,0 +1,20 @@
+
+export const Checkout = () => {
+  return (
+    <div className="card container ms-2" >
+        <div className="card-body">
+            <p> <b>0/5</b> books Checked out</p>
+            <hr />
+            <h3 className="text-success">Available</h3>
+            <div className="mb-3 row">
+                <span className="col"> <b>10 </b>Copies</span>
+                <span className="col"> <b>10</b> Available </span>
+            </div>
+            <button className="btn btn-success" type="button">Sign In</button>
+            <hr />
+            <p>This number can change until placing order has been complete</p>
+            <p>Sign in to be able to leave a review</p>
+        </div>
+    </div>
+  )
+}
