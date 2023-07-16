@@ -92,7 +92,7 @@ export const BookCheckoutPage = () => {
             </div>
           </div>
           <div>
-            <StarsReview size={32} />
+            <StarsReview rating={2.5} size={32} />
           </div>
         </div>
         <div className="col-md-4 d-flex my-3">

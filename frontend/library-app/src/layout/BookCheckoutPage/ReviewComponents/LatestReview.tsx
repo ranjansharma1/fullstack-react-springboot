@@ -11,7 +11,7 @@ export const LatestReview = () => {
             <h6>Sept 5, 2023</h6>
             <p >This book is preety good, giving 5 rating</p>
           </div>
-          <StarsReview size={16} />
+          <StarsReview rating={3.5} size={16} />
         </div>
         <hr />
         <button type="button" className="btn btn-primary">
