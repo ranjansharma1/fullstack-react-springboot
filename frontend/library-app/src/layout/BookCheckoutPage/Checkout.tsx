@@ -1,5 +1,6 @@
+import BookModel from "../../models/BookModel"
 
-export const Checkout = () => {
+export const Checkout:React.FC<{book: BookModel| undefined}> = (props) => {
   return (
     <div className="card container ms-2" >
         <div className="card-body">
@@ -7,8 +8,8 @@ export const Checkout = () => {
             <hr />
             <h3 className="text-success">Available</h3>
             <div className="mb-3 row">
-                <span className="col"> <b>10 </b>Copies</span>
-                <span className="col"> <b>10</b> Available </span>
+                <span className="col"> <b>{props.book?.copies}</b> Copies</span>
+                <span className="col"> <b>{props.book?.copiesAvailable}</b> Available </span>
             </div>
             <button className="btn btn-success" type="button">Sign In</button>
             <hr />

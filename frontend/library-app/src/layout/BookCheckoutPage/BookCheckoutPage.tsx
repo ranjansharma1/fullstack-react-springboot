@@ -1,8 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import book1 from "../../images/BooksImages/book1.png";
 import { Checkout } from "./Checkout";
 import { StarsReview } from "./ReviewComponents/StarsReview";
 import { LatestReview } from "./ReviewComponents/LatestReview";
+import BookModel from "../../models/BookModel";
+import { SpinnerLoading } from "../Utils/SpinnerLoading";
 
 /**
  * window.location.pathname.split("/")[2]:---------------------->
@@ -14,49 +16,91 @@ import { LatestReview } from "./ReviewComponents/LatestReview";
  */
 
 export const BookCheckoutPage = () => {
-  const bookId = window.location.pathname.split("/")[2];
-  console.log(`BookCheckoutPage  ` + bookId);
+  const [book, setBook] = useState<BookModel>();
+  const [isLoading, setisLoading] = useState(true);
+  const [httpError, sethttpError] = useState(null);
 
-  const id = useParams();
-  console.log(`BookCheckoutPage  ` + id.toString());
+  const bookId = window.location.pathname.split("/")[2]; //check Note for more details
+  console.log(`Book ID  ` + bookId);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const url: string = `http://localhost:8080/api/books/${bookId}`;
+      console.log("URL: " + url);
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Something Went wrong with fetch");
+      }
+
+      const responseJSON = await response.json();
+      const loadedBookfromDatabase: BookModel = {
+        id: responseJSON.id,
+        title: responseJSON.title,
+        author: responseJSON.author,
+        description: responseJSON.description,
+        copies: responseJSON.copies,
+        copiesAvailable: responseJSON.copiesAvailable,
+        category: responseJSON.category,
+        img: responseJSON.img,
+      };
+      setBook(loadedBookfromDatabase);
+      setisLoading(false);
+    };
+    fetchBooks().catch((error: any) => {
+      setisLoading(false);
+      sethttpError(error.message);
+    });
+  }, []);
+
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
+
+  if (httpError) {
+    return (
+      <div className="container m-5 text-center text-danger">
+        <p>{httpError}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5">
       <div className="row me-3">
         <div className="col-md-2 mt-3 d-flex justify-content-center">
-          <img src={book1} width="151" height="233" alt="book" />
+          {/*The ?. operator is used to access the img property of the book object.*/}
+          {book?.img ? (
+            <img src={book?.img} width="151" height="233" alt="book" />
+          ) : (
+            <img
+              src={require("../../images/BooksImages/book1.png")}
+              width="151"
+              height="233"
+              alt="book"
+            />
+          )}
         </div>
         <div className="col-md-6 ">
-          <div className="card pe-5 border-0" >
+          <div className="card pe-5 border-0">
             <div className="card-body">
-              <h5 className="card-title">Book Title</h5>
+              <h5 className="card-title">{book?.title}</h5>
               <h6 className="card-subtitle mb-2 text-primary">
-                Book Author
+                {book?.author}
               </h6>
-              <p className="card-text">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Cupiditate, ipsum quos. Fuga quasi, vitae quisquam
-                exercitationem, ipsa aliquam, eius non labore perspiciatis alias
-                earum! Iusto mollitia voluptas quae necessitatibus ea optio
-                consectetur animi fuga et officia. Quidem ipsam in sequi
-                doloremque doloribus nam eum deserunt eos dicta pariatur aliquid
-                obcaecati architecto cum ut possimus, numquam, nulla ex. At,
-                amet odio? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magni quo ab sunt qui reprehenderit? Et quam optio doloribus nemo, assumenda aspernatur, beatae aliquam soluta temporibus impedit accusantium eveniet, debitis architecto nisi saepe libero hic dolor vero ducimus est. Sed officiis dolore ex voluptates. Iure aliquam soluta amet ullam! Quas repudiandae iusto hic incidunt esse. Doloribus alias aliquid sequi molestiae obcaecati!
-              </p>
+              <p className="card-text">{book?.description}</p>
             </div>
           </div>
           <div>
-          <StarsReview size={32}/>
+            <StarsReview size={32} />
           </div>
         </div>
         <div className="col-md-4 d-flex my-3">
-        <Checkout/>
+          <Checkout book={book} />
         </div>
       </div>
       <hr />
-      <LatestReview/>
-      
-      
+      <LatestReview />
     </div>
   );
 };

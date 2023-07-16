@@ -1,6 +1,7 @@
 import React from "react";
 import BookModel from "../../../models/BookModel";
 import book1 from "../../../images/BooksImages/book1.png";
+import { Link } from "react-router-dom";
 
 // interface bookModel {
 //   id: number;
@@ -28,7 +29,7 @@ export const ReturnBook: React.FC<{ book: BookModel }> = (props) => {
                 }
       <h6 className="mt-2">{props.book.title}</h6>
       <p>{props.book.description?.slice(0,200)}...</p>
-      <a className='btn btn-primary text-white' href='#'>Reserve</a>
+      <Link className='btn btn-primary text-white' to={`checkout/${props.book.id}`}>Reserve</Link>
     </div>
   );
 };
