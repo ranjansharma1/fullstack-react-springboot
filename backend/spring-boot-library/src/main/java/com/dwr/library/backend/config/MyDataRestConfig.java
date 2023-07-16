@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import com.dwr.library.backend.entity.Book;
+import com.dwr.library.backend.entity.Review;
 
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
@@ -17,8 +18,13 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 	public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
 		HttpMethod[] theUnsupportedActions = { HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE, HttpMethod.PUT };
 
+		//This will show Id For Respective class (Expose Primary Key)
 		config.exposeIdsFor(Book.class);
+		config.exposeIdsFor(Review.class);
+		
+		//This will restrict the access for creating, updating and deleting or editing the table
 		disableHttpMethods(Book.class, config, theUnsupportedActions);
+		disableHttpMethods(Review.class, config, theUnsupportedActions);
 
 		/* Configure CORS Mapping */
 		cors.addMapping(config.getBasePath() + "/**").allowedOrigins(theAllowedOrigins);
