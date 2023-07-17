@@ -5,6 +5,7 @@ import { StarsReview } from "./ReviewComponents/StarsReview";
 import { LatestReview } from "./ReviewComponents/LatestReview";
 import BookModel from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import ReviewModel from "../../models/ReviewModel";
 
 /**
  * window.location.pathname.split("/")[2]:---------------------->
@@ -16,19 +17,28 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
  */
 
 export const BookCheckoutPage = () => {
+
+  //Book Checkout
   const [book, setBook] = useState<BookModel>();
   const [isLoading, setisLoading] = useState(true);
   const [httpError, sethttpError] = useState(null);
 
+  // Review State
+  const [reviews, setReviews] = useState<ReviewModel[]>([])
+  const [totalStars, setTotalStars] = useState(0);
+  const [isLoadingReview, setIsLoadingReview] = useState(true);
+
   const bookId = window.location.pathname.split("/")[2]; //check Note for more details
-  console.log(`Book ID  ` + bookId);
+  // console.log(`Book ID  ` + bookId);
+
+  const baseUrl: string = "http://localhost:8080/api";
 
   useEffect(() => {
     const fetchBooks = async () => {
-      const url: string = `http://localhost:8080/api/books/${bookId}`;
-      console.log("URL: " + url);
+      const bookurl: string = `${baseUrl}/books/${bookId}`;
+      console.log("Bookurl: " + bookurl);
 
-      const response = await fetch(url);
+      const response = await fetch(bookurl);
       if (!response.ok) {
         throw new Error("Something Went wrong with fetch");
       }
@@ -53,7 +63,42 @@ export const BookCheckoutPage = () => {
     });
   }, []);
 
-  if (isLoading) {
+  useEffect(() => {
+    const fetchBookReviews = async () => {
+      const reviewurl: string = `${baseUrl}/reviews/search/findByBookId?bookId=${bookId}`;
+      console.log("reviewurl: " + reviewurl);
+      const response = await fetch(reviewurl);
+      const responseJSON = await response.json();
+      const responseJSONData = responseJSON._embedded.reviews;
+      const loadReviewsFromDatabse: ReviewModel[] = [];
+      let totalRating:number=0;
+      for (const key in responseJSONData) {
+        loadReviewsFromDatabse.push({
+          id: responseJSONData[key].id,
+          book_id: responseJSONData[key].book_id,
+          userEmail: responseJSONData[key].userEmail,
+          date: responseJSONData[key].date,
+          rating: responseJSONData[key].rating,
+          reviewDescription: responseJSONData[key].reviewDescription,
+        });
+        totalRating=totalRating+responseJSONData[key].rating;
+      }
+
+      //This will execute when loadReviewFromDatabase is null
+      if(loadReviewsFromDatabse){
+        setTotalStars(Number((Math.round((totalRating / loadReviewsFromDatabse.length) * 2) / 2).toFixed(1)))
+      }      
+      setReviews(loadReviewsFromDatabse);
+      setIsLoadingReview(false);
+    };
+
+    fetchBookReviews().catch((error: any) => {
+      setIsLoadingReview(false);
+      sethttpError(error.message);
+    });
+  }, []);
+
+  if (isLoading || isLoadingReview) {
     return <SpinnerLoading />;
   }
 
@@ -92,7 +137,7 @@ export const BookCheckoutPage = () => {
             </div>
           </div>
           <div>
-            <StarsReview rating={2.5} size={32} />
+            <StarsReview rating={totalStars} size={32} />
           </div>
         </div>
         <div className="col-md-4 d-flex my-3">
@@ -100,7 +145,7 @@ export const BookCheckoutPage = () => {
         </div>
       </div>
       <hr />
-      <LatestReview />
+      <LatestReview reviews={reviews} bookId={book?.id}/>
     </div>
   );
 };
