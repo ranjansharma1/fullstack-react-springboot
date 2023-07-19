@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import exploreNewBooksImg1 from "../../../images/exploreNewBooksImg3.jpg";
 
 export const ExploreNewBooks=()=> {
@@ -14,9 +15,9 @@ export const ExploreNewBooks=()=> {
           <div className="">
             <h1>Find your next adventure</h1>
             <p className="fw-bolder">Where would you like to go next?</p>
-            <button type="button" className="btn btn-primary fw-semibold">
+            <Link to="/search" className="btn btn-primary fw-semibold">
               Explore top books
-            </button>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,28 +1,62 @@
-  import "./App.css";
+import "./App.css";
 import { Homepage } from "./layout/Hompage/Homepage";
 import Footer from "./layout/NavbarAndFooter/Footer";
 import Navbar from "./layout/NavbarAndFooter/Navbar";
 import { SearchBookPage } from "./layout/SearchBookPage/SearchBookPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { NoPage } from "./layout/NoPage";
 import { BookCheckoutPage } from "./layout/BookCheckoutPage/BookCheckoutPage";
+import { oktaConfig } from "./lib/oktaConfig";
+import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
+import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
+import LoginWidget from "./auth/LoginWidget";
+
+const oktaAuth = new OktaAuth(oktaConfig);
 
 function App() {
+
+  const customAuthHandler = () => {
+    history.push('/login');
+  }
+
+  const history = useHistory();
+
+  const restoreOriginalUri = async (_oktaAuth: any, originalUri: any) => {
+    history.replace(toRelativeUrl(originalUri || '/', window.location.origin));
+  };
+
   return (
     <div className="d-flex flex-column min-vh-100">
-      <BrowserRouter>
-        <main className="App" style={{ flex: "1" }}>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/search" element={<SearchBookPage />} />
-            <Route path="/*" element={<NoPage />} />
-            <Route path="/checkout/:id" element={<BookCheckoutPage/>} />
-          
-          </Routes>
-        </main>
-        <Footer />
-      </BrowserRouter>
+      <main className="App" style={{ flex: "1" }}>
+      <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
+        <Navbar />
+        <Switch>
+          {/* <Routes> */}
+          <Route path='/' exact>
+            <Redirect to='/home' />
+          </Route>
+          <Route path='/home'>
+            <Homepage />
+          </Route>
+          <Route path='/search'>
+            <SearchBookPage />
+          </Route>
+          <Route path='/checkout/:bookId'>
+            <BookCheckoutPage/>
+          </Route>
+          {/* <Route path='/*'>
+            <NoPage />
+          </Route> */}
+          <Route path='/login' render={
+            () => <LoginWidget config={oktaConfig} /> 
+            } 
+          />
+          <Route path='/login/callback' component={LoginCallback} />
+          {/* </Routes> */}
+        </Switch>
+        </Security>
+      </main>
+      <Footer />
     </div>
   );
 }
