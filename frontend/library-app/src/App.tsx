@@ -7,7 +7,7 @@ import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { NoPage } from "./layout/NoPage";
 import { BookCheckoutPage } from "./layout/BookCheckoutPage/BookCheckoutPage";
 import { oktaConfig } from "./lib/oktaConfig";
-import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
+import { Security, LoginCallback } from "@okta/okta-react";
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import LoginWidget from "./auth/LoginWidget";
 

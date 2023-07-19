@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Getting Started with Library App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -21,8 +21,8 @@ You will also see any lint errors in the console.
 ### OKTA Configuration
 1. Create OKTA Account at : https://developer.okta.com/
 2. Add a new user For Login:
-    Email: testuser@email.com
-    password: ranj12345
+    - Email: testuser@email.com
+    - password: ranj12345
 3. Create a new Application: Create App Intigration> OIDC> Single Page Application
 4. Set URL Path: localhost:3000
 5. Install Dependencies
