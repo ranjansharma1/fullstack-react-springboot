@@ -1,6 +1,6 @@
 package com.dwr.library.backend.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 @Entity

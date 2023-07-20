@@ -3,7 +3,7 @@ package com.dwr.library.backend.entity;
 
 
 import org.hibernate.annotations.CreationTimestamp;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.sql.Date;
 import lombok.Data;
 

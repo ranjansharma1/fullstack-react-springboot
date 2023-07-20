@@ -11,7 +11,7 @@ import com.dwr.library.backend.dao.CheckoutRepository;
 import com.dwr.library.backend.entity.Book;
 import com.dwr.library.backend.entity.Checkout;
 
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 /**
@@ -85,7 +85,7 @@ public class BookService {
 	// It will count total amount of book Checked by User
 	public int totalBookCheckedByUser(String userEmail) {
 		List<Checkout> checkedBooks = checkoutRepository.findByUserEmail(userEmail);
-		System.out.println("Total checked Books: " + checkedBooks);
+//		System.out.println("Total checked Books: " + checkedBooks);
 		return checkedBooks.size();
 	}
 
