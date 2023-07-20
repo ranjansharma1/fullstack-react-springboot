@@ -1,7 +1,10 @@
+import { Link } from "react-router-dom";
 import hero1 from "../../../images/Heros1.jpg";
 import hero2 from "../../../images/Heros2.jpg";
+import { useOktaAuth } from "@okta/okta-react";
 
 export const Heros = () => {
+  const { authState } = useOktaAuth();
   return (
     <section className="container my-5 ">
       <div className="row">
@@ -30,9 +33,19 @@ export const Heros = () => {
                 Whether it is to learn a new skill or grow within one, we will
                 be able to provide the top content for you!
               </p>
-              <button className="btn btn-primary" type="button">
-                Sign up
-              </button>
+              {authState?.isAuthenticated ? (
+                <Link
+                  type="button"
+                  className="btn btn-primary btn-md"
+                  to="/search"
+                >
+                  Explore Top Books
+                </Link>
+              ) : (
+                <Link className="btn btn-primary" type="button" to="/login">
+                  Sign up
+                </Link>
+              )}
             </div>
           </div>
         </div>

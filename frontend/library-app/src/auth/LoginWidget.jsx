@@ -7,8 +7,8 @@ const LoginWidget = ({ config }) => {
     const { oktaAuth, authState } = useOktaAuth();
     const onSuccess = (tokens) => {
         oktaAuth.handleLoginRedirect(tokens);
-        console.log("Access Token: ", tokens.accessToken);
-        console.log("ID Token: ", tokens.idToken);
+        console.log("Token: ", tokens);
+        // console.log("ID Token: ", tokens.idToken);
     };
 
     const onError = (err) => {
