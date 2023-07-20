@@ -1,6 +1,7 @@
 package com.dwr.library.backend.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class BookService {
 	private BookRepository bookRepository;
 	private CheckoutRepository checkoutRepository;
 
+	// It Will add the book In Checkout List, If book is already not added
 	public Book checkoutBook(String email, Long bookId) throws Exception {
 		Optional<Book> book = bookRepository.findById(bookId);
 		Checkout validateCheckout = checkoutRepository.findByUserEmailAndBookId(email, bookId);
@@ -68,6 +70,23 @@ public class BookService {
 		checkoutRepository.save(checkedBook);
 
 		return book.get();
+	}
+
+	// It will check whether book is added in checkout list or not for that
+	// particular user
+	public Boolean IsCheckedBook(String userEmail, Long bookId) {
+		Checkout checkedBook = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
+		if (checkedBook != null)
+			return true;
+		else
+			return false;
+	}
+
+	// It will count total amount of book Checked by User
+	public int totalBookCheckedByUser(String userEmail) {
+		List<Checkout> checkedBooks = checkoutRepository.findByUserEmail(userEmail);
+		System.out.println("Total checked Books: " + checkedBooks);
+		return checkedBooks.size();
 	}
 
 }
