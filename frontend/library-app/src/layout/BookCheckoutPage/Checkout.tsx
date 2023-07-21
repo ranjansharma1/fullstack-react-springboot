@@ -45,7 +45,6 @@ export const Checkout: React.FC<{
     <div className="card container ms-2">
       <div className="card-body">
         <p>
-          {" "}
           <b>{props.currentCheckedBook}/5</b> books Checked out
         </p>
         <hr />
@@ -58,12 +57,10 @@ export const Checkout: React.FC<{
         )}
         <div className="mb-3 row">
           <span className="col">
-            {" "}
             <b>{props.book?.copies}</b> Copies
           </span>
           <span className="col">
-            {" "}
-            <b>{props.book?.copiesAvailable}</b> Available{" "}
+            <b>{props.book?.copiesAvailable}</b> Available
           </span>
         </div>
         {checkoutBookRender()}
