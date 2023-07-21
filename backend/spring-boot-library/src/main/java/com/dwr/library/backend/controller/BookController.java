@@ -7,6 +7,7 @@ import com.dwr.library.backend.entity.Book;
 import com.dwr.library.backend.service.BookService;
 import com.dwr.library.backend.utils.ExtractJWT;
 
+@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {

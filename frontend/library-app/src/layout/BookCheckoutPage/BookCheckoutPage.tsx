@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import book1 from "../../images/BooksImages/book1.png";
 import { Checkout } from "./Checkout";
 import { StarsReview } from "./ReviewComponents/StarsReview";
 import { LatestReview } from "./ReviewComponents/LatestReview";
 import BookModel from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import ReviewModel from "../../models/ReviewModel";
+import { useOktaAuth } from "@okta/okta-react";
 
 /**
  * window.location.pathname.split("/")[2]:---------------------->
@@ -14,11 +14,20 @@ import ReviewModel from "../../models/ReviewModel";
  *
  * .split("/")[2]: It splits the path string into an array using the "/" character as the separator. In the above example, it would result in the array ["", "checkout", "123"].
  *                                                   0       1         2
+ * 
+ * 
+ * const { authState } = useOktaAuth();: This line of code is using destructuring
+ *                  assignment to extract authState, 
+ *                  from the return value of the useOktaAuth hook.
+ * authState: This represents the current authentication state of the user. 
+ *            It contains information like whether the user is authenticated or not,
+ *           the access token, and the user profile.
  */
 
 export const BookCheckoutPage = () => {
+  const {authState}=useOktaAuth();
 
-  //Book Checkout
+  //Book Checkout State
   const [book, setBook] = useState<BookModel>();
   const [isLoading, setisLoading] = useState(true);
   const [httpError, sethttpError] = useState(null);
@@ -28,15 +37,22 @@ export const BookCheckoutPage = () => {
   const [totalStars, setTotalStars] = useState(0);
   const [isLoadingReview, setIsLoadingReview] = useState(true);
 
+  //Current User checkout State
+  const [currentCheckedBook, setCurrentCheckedBook] = useState(0);
+  const [isLoadingCurrentCheckedBook, setIsLoadingCurrentCheckedBook] = useState(true)
+
+
+
   const bookId = window.location.pathname.split("/")[2]; //check Note for more details
   // console.log(`Book ID  ` + bookId);
 
   const baseUrl: string = "http://localhost:8080/api";
 
+  //It will load book for checkout
   useEffect(() => {
     const fetchBooks = async () => {
       const bookurl: string = `${baseUrl}/books/${bookId}`;
-      console.log("Bookurl: " + bookurl);
+      // console.log("Bookurl: " + bookurl);
 
       const response = await fetch(bookurl);
       if (!response.ok) {
@@ -63,10 +79,11 @@ export const BookCheckoutPage = () => {
     });
   }, []);
 
+  //It will show review
   useEffect(() => {
     const fetchBookReviews = async () => {
       const reviewurl: string = `${baseUrl}/reviews/search/findByBookId?bookId=${bookId}`;
-      console.log("reviewurl: " + reviewurl);
+      // console.log("reviewurl: " + reviewurl);
       const response = await fetch(reviewurl);
       const responseJSON = await response.json();
       const responseJSONData = responseJSON._embedded.reviews;
@@ -98,7 +115,45 @@ export const BookCheckoutPage = () => {
     });
   }, []);
 
-  if (isLoading || isLoadingReview) {
+  //It will count total book checkout for user
+
+  /**
+   * The if statement is using both authState and authState.isAuthenticated to 
+   *    check if the user is authenticated. 
+   *    The condition authState checks if authState is truthy (i.e., not null or undefined), 
+   *    and then authState.isAuthenticated checks if the user is authenticated.
+   * 
+   */
+  useEffect(()=>{
+    const fetchUserCurrentCheckedBook=async () => {
+      if(authState && authState.isAuthenticated ){
+        const url= `${baseUrl}/books/secure/totalcheckedbooks`
+        // console.log("current checkout url: " + url)
+        const requestedOption={
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+            'content-type': 'application/json'
+          }
+        };
+        const currentCheckedBookResponse = await fetch(url, requestedOption);
+        if(!currentCheckedBookResponse.ok){
+          throw new Error("Something Went Wrong. Please try again");
+        }
+        const currentCheckedBookResponseJSON= await currentCheckedBookResponse.json();
+        setCurrentCheckedBook(currentCheckedBookResponseJSON);
+      }
+      setIsLoadingCurrentCheckedBook(false)
+    }
+
+    fetchUserCurrentCheckedBook().catch((error:any)=>{
+      setIsLoadingCurrentCheckedBook(false);
+      sethttpError(error.massage);
+    })
+
+  },[])
+
+  if (isLoading || isLoadingReview  || isLoadingCurrentCheckedBook) {
     return <SpinnerLoading />;
   }
 
@@ -141,7 +196,7 @@ export const BookCheckoutPage = () => {
           </div>
         </div>
         <div className="col-md-4 d-flex my-3">
-          <Checkout book={book} />
+          <Checkout book={book} currentCheckedBook={currentCheckedBook}/>
         </div>
       </div>
       <hr />
