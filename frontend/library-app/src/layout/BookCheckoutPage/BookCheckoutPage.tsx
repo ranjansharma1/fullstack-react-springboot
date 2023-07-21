@@ -22,6 +22,16 @@ import { useOktaAuth } from "@okta/okta-react";
  * authState: This represents the current authentication state of the user. 
  *            It contains information like whether the user is authenticated or not,
  *           the access token, and the user profile.
+ * 
+ * 
+ * 
+ * useState(()=>{...
+ * },[authState, IsBookChecked]); * 
+ *      The useEffect hook's dependency array determines when the effect should be re-executed. 
+ *        In this case, including authState or IsBookChecked in the dependency array means 
+ *        that the effect will be re-executed whenever the authState or IsBookChecked changes. 
+ *        This is useful because if the user logs in or logs out, the authState will change,
+ *         and you might want to fetch the user's checked-out book status again
  */
 
 export const BookCheckoutPage = () => {
@@ -79,7 +89,7 @@ export const BookCheckoutPage = () => {
       setisLoading(false);
       sethttpError(error.message);
     });
-  }, []);
+  }, [isBookChecked]);
 
   //It will show review
   useEffect(() => {
@@ -152,8 +162,9 @@ export const BookCheckoutPage = () => {
       sethttpError(error.massage);
     })
 
-  },[]);
+  },[authState,isBookChecked]);
 
+  //It will check whether book has been checked or not
   useEffect(()=>{
     const fetchBookCheckoutState= async()=>{
       if(authState && authState.isAuthenticated){
@@ -180,7 +191,25 @@ export const BookCheckoutPage = () => {
       sethttpError(error.massage);
     });  
 
-  },[])
+  },[authState]);//authstate will be executed, wheneve page is loaded , It will retain data
+
+
+  async function checkoutBook(){
+    const url=`${baseUrl}/books/secure/checkout?bookId=${bookId}`;
+    console.log("url: " + url);
+      const requestedOption={
+        method: 'PUT',
+        headers: {
+            Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+            'Content-Type': 'application/json'
+        }
+      }
+      const response= await fetch(url,requestedOption);
+      if(!response){
+        throw new Error("Something went wrong");
+      }
+      setIsBookChecked(true);
+  }
 
   if (isLoading || isLoadingReview  || isLoadingTotalCheckedBook ||isLoadingCheckoutBook) {
     return <SpinnerLoading />;
@@ -225,7 +254,7 @@ export const BookCheckoutPage = () => {
           </div>
         </div>
         <div className="col-md-4 d-flex my-3">
-          <Checkout book={book} currentCheckedBook={totalCheckedBook} isBookChecked={isBookChecked} isAuthenticated={authState?.isAuthenticated}/>
+          <Checkout book={book} currentCheckedBook={totalCheckedBook} isBookChecked={isBookChecked} isAuthenticated={authState?.isAuthenticated} checkoutBook={checkoutBook}/>
         </div>
       </div>
       <hr />

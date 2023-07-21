@@ -6,12 +6,12 @@ export const Checkout: React.FC<{
   currentCheckedBook: number;
   isBookChecked: Boolean;
   isAuthenticated: any;
+  checkoutBook:any;
 }> = (props) => {
   function checkoutBookRender() {
-    console.log("Checkout render : ");
     if (props.isAuthenticated) {
       if (!props.isBookChecked && props.currentCheckedBook < 5)
-        return ( <button type="button" className="btn btn-primary"> Checkout </button> );
+        return ( <button type="button" className="btn btn-primary" onClick={()=>{props.checkoutBook()}}> Checkout </button> );
       else if (props.isBookChecked)
         return (
           <h6 className="text-success">
