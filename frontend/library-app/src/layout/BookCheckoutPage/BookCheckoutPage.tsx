@@ -38,10 +38,12 @@ export const BookCheckoutPage = () => {
   const [isLoadingReview, setIsLoadingReview] = useState(true);
 
   //Current User checkout State
-  const [currentCheckedBook, setCurrentCheckedBook] = useState(0);
-  const [isLoadingCurrentCheckedBook, setIsLoadingCurrentCheckedBook] = useState(true)
+  const [totalCheckedBook, setTotalCheckedBook] = useState(0);
+  const [isLoadingTotalCheckedBook, setIsLoadingTotalCheckedBook] = useState(true)
 
-
+  //Is Book Checkout?
+  const [isBookChecked, setIsBookChecked] = useState(false);
+  const [isLoadingCheckoutBook, setIsLoadingCheckoutBook] = useState(true)
 
   const bookId = window.location.pathname.split("/")[2]; //check Note for more details
   // console.log(`Book ID  ` + bookId);
@@ -114,10 +116,8 @@ export const BookCheckoutPage = () => {
       sethttpError(error.message);
     });
   }, []);
-
-  //It will count total book checkout for user
-
-  /**
+  
+  /**It will count total book checkout for user
    * The if statement is using both authState and authState.isAuthenticated to 
    *    check if the user is authenticated. 
    *    The condition authState checks if authState is truthy (i.e., not null or undefined), 
@@ -136,24 +136,53 @@ export const BookCheckoutPage = () => {
             'content-type': 'application/json'
           }
         };
-        const currentCheckedBookResponse = await fetch(url, requestedOption);
-        if(!currentCheckedBookResponse.ok){
-          throw new Error("Something Went Wrong. Please try again");
+        const response = await fetch(url, requestedOption);
+        if(!response.ok){
+          throw new Error("Something Went Wrong");
         }
-        const currentCheckedBookResponseJSON= await currentCheckedBookResponse.json();
-        setCurrentCheckedBook(currentCheckedBookResponseJSON);
+        const responseJSON= await response.json();
+        // console.log("responseJSON: " + responseJSON);
+        setTotalCheckedBook(responseJSON);
       }
-      setIsLoadingCurrentCheckedBook(false)
+      setIsLoadingTotalCheckedBook(false)
     }
 
     fetchUserCurrentCheckedBook().catch((error:any)=>{
-      setIsLoadingCurrentCheckedBook(false);
+      setIsLoadingTotalCheckedBook(false);
       sethttpError(error.massage);
     })
 
+  },[]);
+
+  useEffect(()=>{
+    const fetchBookCheckoutState= async()=>{
+      if(authState && authState.isAuthenticated){
+        const url=`${baseUrl}/books/secure/ischeckout?bookId=${bookId}`;
+        const requestedOption={
+          method:'GET',
+          headers:{
+            Authorization:`Bearer ${authState.accessToken?.accessToken}`,
+            'content-type': 'application/json'
+          }
+        }
+        const response= await fetch(url,requestedOption);
+        if(!response){
+          throw new Error("Something went wrong");
+        }
+        const responseJSON=await response.json();
+        setIsBookChecked(responseJSON);
+      }
+      setIsLoadingCheckoutBook(false);
+    };
+
+    fetchBookCheckoutState().catch((error:any)=>{
+      setIsLoadingCheckoutBook(false);
+      sethttpError(error.massage);
+    });  
+
   },[])
 
-  if (isLoading || isLoadingReview  || isLoadingCurrentCheckedBook) {
+  if (isLoading || isLoadingReview  || isLoadingTotalCheckedBook ||isLoadingCheckoutBook) {
     return <SpinnerLoading />;
   }
 
@@ -196,7 +225,7 @@ export const BookCheckoutPage = () => {
           </div>
         </div>
         <div className="col-md-4 d-flex my-3">
-          <Checkout book={book} currentCheckedBook={currentCheckedBook}/>
+          <Checkout book={book} currentCheckedBook={totalCheckedBook} isBookChecked={isBookChecked} isAuthenticated={authState?.isAuthenticated}/>
         </div>
       </div>
       <hr />

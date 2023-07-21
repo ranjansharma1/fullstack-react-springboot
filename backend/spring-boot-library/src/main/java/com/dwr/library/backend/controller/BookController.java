@@ -6,6 +6,17 @@ import org.springframework.web.bind.annotation.*;
 import com.dwr.library.backend.entity.Book;
 import com.dwr.library.backend.service.BookService;
 import com.dwr.library.backend.utils.ExtractJWT;
+/**
+ * @CrossOrigin("http://localhost:3000") is an annotation used in Spring Framework to allow HTTP requests 
+ * 				from the specified origin ("http://localhost:3000") to access the resources exposed by the annotated controller. 
+ * 				It enables Cross-Origin Resource Sharing (CORS) to prevent the browser from blocking requests from different domains, 
+ * 				making it possible for your frontend application running on "http://localhost:3000" to communicate with the backend server.
+ * 
+ *Note that you can also specify multiple allowed origins by providing an array of strings to the @CrossOrigin annotation, 
+ *				like `@CrossOrigin({"http://localhost:3000", "http://example.com"})
+ *
+ * */
+
 
 @CrossOrigin("http://localhost:3000")
 @RestController
