@@ -29,9 +29,26 @@ import com.dwr.library.backend.entity.Review;
  * allowing for the control of the result set's size and ordering. Pageable is
  * an interface in Spring Data that provides methods for specifying pagination
  * parameters like page number, page size, and sorting options.
+ * 
+ * *
+	 * 
+	 * Review findByBookId(@RequestParam("book_id") Long bookId);
+	 * 
+	 * It will expose this link
+	 * http://localhost:8080/api/reviews/search/findByBookId{?bookId}
+	 * 
  */
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-	Page<Review> findByBookId(@RequestParam("book_id") Long bookId, Pageable pageable);
+	
+	/* It will expose this link
+	 * http://localhost:8080/api/reviews/search/findByBookId{?bookId,page,size,sort}
+	 * 
+	 * */
+	
+	Page<Review> findByBookId(@RequestParam("book_id") Long bookId, Pageable pageable);	
+
+	Review findByUserEmailAndBookId(String userEmail, Long bookId);
+	
 }

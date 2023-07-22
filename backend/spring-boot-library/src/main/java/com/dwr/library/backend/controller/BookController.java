@@ -15,6 +15,8 @@ import com.dwr.library.backend.utils.ExtractJWT;
  *Note that you can also specify multiple allowed origins by providing an array of strings to the @CrossOrigin annotation, 
  *				like `@CrossOrigin({"http://localhost:3000", "http://example.com"})
  *
+ * POST API::
+ * Authorization -> Type - Bearer Token -> Token number get from user login as access token
  * */
 
 

@@ -1,4 +1,4 @@
-package com.dwr.library.backend.service;
+ package com.dwr.library.backend.service;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.dwr.library.backend.dao.CheckoutRepository;
 import com.dwr.library.backend.entity.Book;
 import com.dwr.library.backend.entity.Checkout;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 
 /**
