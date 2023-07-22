@@ -72,8 +72,7 @@ public class BookService {
 		return book.get();
 	}
 
-	// It will check whether book is added in checkout list or not for that
-	// particular user
+	// It will check whether book is added in checkout list or not for that particular user
 	public Boolean IsCheckedBook(String userEmail, Long bookId) {
 		Checkout checkedBook = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
 		if (checkedBook != null)

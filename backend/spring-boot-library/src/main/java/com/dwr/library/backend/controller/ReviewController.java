@@ -61,8 +61,12 @@ public class ReviewController {
 		return reviewService.submitReview(userEmail, reviewRequest);
 	}
 	
+	
+	/**http://localhost:8080/api/reviews/secure?bookId=1
+	 * It will check whether book review done by current user.
+	 * */
 	@GetMapping("/secure")
-	public boolean isReviewListed(@RequestHeader(value="Authorization") String token, @RequestParam("bookId") Long bookId) throws Exception {
+	public boolean isReviewListedByCurrentUser(@RequestHeader(value="Authorization") String token, @RequestParam("bookId") Long bookId) throws Exception {
 		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
 		if(userEmail==null)
 				throw new Exception("User Email not found!");
