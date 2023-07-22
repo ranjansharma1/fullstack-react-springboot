@@ -6,6 +6,7 @@ import BookModel from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import ReviewModel from "../../models/ReviewModel";
 import { useOktaAuth } from "@okta/okta-react";
+import ReviewRequestModel from "../../models/ReviewRequestModel";
 
 /**
  * window.location.pathname.split("/")[2]:---------------------->
@@ -48,8 +49,8 @@ export const BookCheckoutPage = () => {
   const [isLoadingReview, setIsLoadingReview] = useState(true);
 
   //Book Review Added By user
-  const [isReviewAdded, setIsReviewAdded] = useState(false)
-  const [isLoadingUserReview, setIsLoadingUserReview] = useState(true)
+  const [isReviewAdded, setIsReviewAdded] = useState(false);
+  const [isLoadingUserReview, setIsLoadingUserReview] = useState(true);
 
   //Current User checkout State
   const [totalCheckedBook, setTotalCheckedBook] = useState(0);
@@ -241,6 +242,28 @@ export const BookCheckoutPage = () => {
       setIsBookChecked(true);
   }
 
+  async function submitReview(starRating: number, reviewDescription: string) {
+    let bookId: number = 0;
+    if (book?.id) {
+        bookId = book.id;
+    }
+
+    const reviewRequestModel = new ReviewRequestModel(starRating, bookId, reviewDescription);
+    const url = `http://localhost:8080/api/reviews/secure`;
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reviewRequestModel)
+    };
+    const returnResponse = await fetch(url, requestOptions);
+    if (!returnResponse.ok) {
+        throw new Error('Something went wrong!');
+    }
+    setIsReviewAdded(true);
+  }
 
 
   if (isLoading || isLoadingReview  || isLoadingTotalCheckedBook ||isLoadingCheckoutBook ||isLoadingUserReview) {
@@ -286,7 +309,7 @@ export const BookCheckoutPage = () => {
           </div>
         </div>
         <div className="col-md-4 d-flex my-3">
-          <Checkout book={book} currentCheckedBook={totalCheckedBook} isBookChecked={isBookChecked} isAuthenticated={authState?.isAuthenticated} checkoutBook={checkoutBook} isReviewAdded={isReviewAdded}/>
+          <Checkout book={book} currentCheckedBook={totalCheckedBook} isBookChecked={isBookChecked} isAuthenticated={authState?.isAuthenticated} checkoutBook={checkoutBook} isReviewAdded={isReviewAdded} submitReview={submitReview}/>
         </div>
       </div>
       <hr />

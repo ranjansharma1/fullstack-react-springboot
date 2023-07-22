@@ -9,6 +9,7 @@ export const Checkout: React.FC<{
   isAuthenticated: any;
   checkoutBook: any;
   isReviewAdded:any;
+  submitReview: any;
 }> = (props) => {
   function checkoutBookRender() {
     if (props.isAuthenticated) {
@@ -46,7 +47,7 @@ export const Checkout: React.FC<{
   function reviewBookRender(){
     if(props.isAuthenticated){
       if(!props.isReviewAdded)
-        return <AddNewReview/>
+        return <AddNewReview submitReview={props.submitReview}/>
       return <h6 className="text-success">Thanks for your Feedback!</h6>
     }
     return <p className="text-danger">Sign in to be able to leave a review</p>;

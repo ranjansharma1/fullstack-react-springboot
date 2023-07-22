@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { StarsReview } from "./StarsReview";
 
-export const AddNewReview = () => {
+export const AddNewReview:React.FC<{submitReview:any}> = (props) => {
     const [rating, setRating] = useState(0);
+    const [displayDiscriptionBox, setDisplayDiscriptionBox] = useState(false);
+    const [reviewDescription, setReviewDescription] = useState("");
 
     const starValue=(value:any)=>{
         setRating(value);
+        setDisplayDiscriptionBox(true);
     }
   return (
     <div className="dropdown">
@@ -26,6 +29,20 @@ export const AddNewReview = () => {
             <li><button onClick={() => starValue(5)} className='dropdown-item'>5 star</button></li>
         </ul>
         <StarsReview rating={rating} size={32}/>
+        {displayDiscriptionBox&&
+            <form action="#">
+                <hr />
+                <div>
+                    <label className='form-label'>
+                        Description
+                    </label>
+                    <textarea className='form-control' id='submitReviewDescription' placeholder='Leave a comment'
+                        rows={3} onChange={e => setReviewDescription(e.target.value)}>
+                    </textarea>
+                </div>
+                <button type='button' className='btn btn-primary mt-3' onClick={()=>props.submitReview(rating,reviewDescription)}>Submit Review</button>
+            </form>
+        }
     </div>
   );
 };
