@@ -47,6 +47,10 @@ export const BookCheckoutPage = () => {
   const [totalStars, setTotalStars] = useState(0);
   const [isLoadingReview, setIsLoadingReview] = useState(true);
 
+  //Book Review Added By user
+  const [isReviewAdded, setIsReviewAdded] = useState(false)
+  const [isLoadingUserReview, setIsLoadingUserReview] = useState(true)
+
   //Current User checkout State
   const [totalCheckedBook, setTotalCheckedBook] = useState(0);
   const [isLoadingTotalCheckedBook, setIsLoadingTotalCheckedBook] = useState(true)
@@ -91,7 +95,7 @@ export const BookCheckoutPage = () => {
     });
   }, [isBookChecked]);
 
-  //It will show review
+  //It will show reviews
   useEffect(() => {
     const fetchBookReviews = async () => {
       const reviewurl: string = `${baseUrl}/reviews/search/findByBookId?bookId=${bookId}`;
@@ -125,8 +129,34 @@ export const BookCheckoutPage = () => {
       setIsLoadingReview(false);
       sethttpError(error.message);
     });
-  }, []);
+  }, [isReviewAdded]); //It will reload whenever isReviewAdded value changed
   
+  useEffect(()=>{
+    const fetchUserReviewBook= async()=>{
+      if(authState && authState.isAuthenticated){
+        const bookReviewUrl:string=`${baseUrl}/reviews/secure?bookId=${bookId}`;
+        console.log(bookReviewUrl);
+        const requestOptions = {
+          method: 'GET',
+          headers: {
+              Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+              'Content-Type': 'application/json'
+          }
+        };
+        const userReview = await fetch(bookReviewUrl, requestOptions);
+        if(!userReview.ok)
+          throw new Error(`Something Went Wrong`);
+        const userReviewJSON= await userReview.json();
+        setIsReviewAdded(userReviewJSON);
+      }
+      setIsLoadingUserReview(false);
+    }
+    fetchUserReviewBook().catch((error: any) => {
+      setIsLoadingUserReview(false)
+      sethttpError(error.message);
+    });
+  },[authState])
+
   /**It will count total book checkout for user
    * The if statement is using both authState and authState.isAuthenticated to 
    *    check if the user is authenticated. 
@@ -211,7 +241,9 @@ export const BookCheckoutPage = () => {
       setIsBookChecked(true);
   }
 
-  if (isLoading || isLoadingReview  || isLoadingTotalCheckedBook ||isLoadingCheckoutBook) {
+
+
+  if (isLoading || isLoadingReview  || isLoadingTotalCheckedBook ||isLoadingCheckoutBook ||isLoadingUserReview) {
     return <SpinnerLoading />;
   }
 
@@ -254,7 +286,7 @@ export const BookCheckoutPage = () => {
           </div>
         </div>
         <div className="col-md-4 d-flex my-3">
-          <Checkout book={book} currentCheckedBook={totalCheckedBook} isBookChecked={isBookChecked} isAuthenticated={authState?.isAuthenticated} checkoutBook={checkoutBook}/>
+          <Checkout book={book} currentCheckedBook={totalCheckedBook} isBookChecked={isBookChecked} isAuthenticated={authState?.isAuthenticated} checkoutBook={checkoutBook} isReviewAdded={isReviewAdded}/>
         </div>
       </div>
       <hr />
