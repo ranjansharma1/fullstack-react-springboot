@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { ManageBookModel } from "./ManageBookModel"
 
 export const BorrowedSingleBookItem = () => {
     return (
@@ -13,7 +14,7 @@ export const BorrowedSingleBookItem = () => {
                         <h6 className="card-subtitle mb-2 text-danger">Past due by - 8 days</h6>
                         <div>
                             <div className="list-group mt-3">
-                                <button className="list-group-item list-group-item-action">Manage Book</button>
+                                <button className="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#myModal">Manage Book</button>
                                 <Link to='/search' className="list-group-item list-group-item-action">Search More Books?</Link>
                             </div>
                         </div>
@@ -24,6 +25,7 @@ export const BorrowedSingleBookItem = () => {
                 </div>
             </div>
             <hr />
+            <ManageBookModel/>
         </div>
     )
 }
