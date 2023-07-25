@@ -1,6 +1,10 @@
  package com.dwr.library.backend.service;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +14,7 @@ import com.dwr.library.backend.dao.BookRepository;
 import com.dwr.library.backend.dao.CheckoutRepository;
 import com.dwr.library.backend.entity.Book;
 import com.dwr.library.backend.entity.Checkout;
+import com.dwr.library.backend.responsemodels.BorrowedBookResponse;
 
 import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
@@ -86,6 +91,35 @@ public class BookService {
 		List<Checkout> checkedBooks = checkoutRepository.findByUserEmail(userEmail);
 //		System.out.println("Total checked Books: " + checkedBooks);
 		return checkedBooks.size();
+	}
+	
+	//It will show all the Borrowed book that is taken by User
+	public List<BorrowedBookResponse> totalCheckedBookList(String userEmail){
+		List<BorrowedBookResponse> bookResponses=new ArrayList<>();
+		List<Checkout> checkedBooks = checkoutRepository.findByUserEmail(userEmail);
+		Optional<Book> book = null;
+		int daysleft;
+		for(Checkout checkout: checkedBooks) {
+			daysleft=calculateDaysDifference(checkout.getCheckoutDate(), checkout.getReturnDate());
+			book = bookRepository.findById(checkout.getBookId());
+			bookResponses.add(new BorrowedBookResponse(daysleft, book));
+		}
+		System.out.println("Total Borrowed Books: "+bookResponses.size());
+		return bookResponses;
+	}
+	
+	/*
+	 * static: indicates that the method calculateDaysDifference belongs to the class itself and not to instances (objects) of the class. 
+	 * 			This means that you can call the method directly using the class name without creating an instance of the class.*/
+
+	public static int calculateDaysDifference(String checkoutDate, String returnDate) {
+        // Parse the date strings into LocalDate objects
+        LocalDate checkoutDateObj = LocalDate.parse(checkoutDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate returnDateObj = LocalDate.parse(returnDate, DateTimeFormatter.ISO_LOCAL_DATE);
+ 
+        // Calculate the difference between checkoutDate and returnDate
+        long daysDifference = ChronoUnit.DAYS.between(checkoutDateObj, returnDateObj);
+        return Math.toIntExact(daysDifference); // Convert the long value to int
 	}
 
 }

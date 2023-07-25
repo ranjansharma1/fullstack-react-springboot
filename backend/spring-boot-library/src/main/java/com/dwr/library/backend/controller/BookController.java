@@ -1,9 +1,12 @@
 package com.dwr.library.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.dwr.library.backend.entity.Book;
+import com.dwr.library.backend.responsemodels.BorrowedBookResponse;
 import com.dwr.library.backend.service.BookService;
 import com.dwr.library.backend.utils.ExtractJWT;
 /**
@@ -15,7 +18,7 @@ import com.dwr.library.backend.utils.ExtractJWT;
  *Note that you can also specify multiple allowed origins by providing an array of strings to the @CrossOrigin annotation, 
  *				like `@CrossOrigin({"http://localhost:3000", "http://example.com"})
  *
- * POST API::
+ * POST API:TOKEN:
  * Authorization -> Type - Bearer Token -> Token number get from user login as access token
  * */
 
@@ -58,5 +61,12 @@ public class BookController {
 		int total=bookService.totalBookCheckedByUser(userEmail);
 		System.out.println("Total book checked by user: "+total);
 		return total;
+	}
+	
+	//RestAPI: http://localhost:8080/api/books/secure/borrowedbook
+	@GetMapping("/secure/borrowedbook")
+	public List<BorrowedBookResponse> borrowedBookList(@RequestHeader(value = "Authorization") String token) {
+		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+		return bookService.totalCheckedBookList(userEmail);
 	}
 }

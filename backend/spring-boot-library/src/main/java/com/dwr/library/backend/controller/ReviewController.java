@@ -30,6 +30,12 @@ import com.dwr.library.backend.utils.ExtractJWT;
  * @RequestParam is used in Spring to extract query parameters or form data from the request 
  * 				and map them to method parameters in a controller method
  * 
+ * 
+ * @Autowired is a Spring Framework annotation used for automatic dependency injection. 
+			It allows Spring to automatically wire (inject) instances of required dependencies into a class, 
+			reducing the need for manual object creation and management.
+ * 
+ * 
  * POST API::
  * Authorization -> Type - Bearer Token -> Token number get from user login as access token
  * 
