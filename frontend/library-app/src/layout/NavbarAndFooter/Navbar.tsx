@@ -12,7 +12,7 @@ const Navbar =()=> {
 
   const handleLogout = async () => oktaAuth.signOut();
 
-  console.log(authState);
+  // console.log(authState);
 
   return (
     <nav className="navbar navbar-expand-lg sticky-top" style={{backgroundColor: "#e3f2fd"}}>

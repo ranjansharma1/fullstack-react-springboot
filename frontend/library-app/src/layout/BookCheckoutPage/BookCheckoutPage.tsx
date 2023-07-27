@@ -136,7 +136,7 @@ export const BookCheckoutPage = () => {
     const fetchUserReviewBook= async()=>{
       if(authState && authState.isAuthenticated){
         const bookReviewUrl:string=`${baseUrl}/reviews/secure?bookId=${bookId}`;
-        console.log(bookReviewUrl);
+        // console.log(bookReviewUrl);
         const requestOptions = {
           method: 'GET',
           headers: {
@@ -227,7 +227,7 @@ export const BookCheckoutPage = () => {
 
   async function checkoutBook(){
     const url=`${baseUrl}/books/secure/checkout?bookId=${bookId}`;
-    console.log("url: " + url);
+    // console.log("url: " + url);
       const requestedOption={
         method: 'PUT',
         headers: {

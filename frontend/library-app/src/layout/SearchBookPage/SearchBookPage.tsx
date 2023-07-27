@@ -61,7 +61,7 @@ export const SearchBookPage = () => {
     fetchBooks().catch((error: any) => {
       setIsLoading(false);
       setHttpError(error.message);
-      console.log(error.message);
+      // console.log(error.message);
     });
   }, [searchURL]);
 
@@ -103,7 +103,7 @@ export const SearchBookPage = () => {
     setPage(0); // Reset page to 0
     setBookAPI([]);
     setBookCategory(categories[value]);
-    console.log("category : " + categories[value]);
+    // console.log("category : " + categories[value]);
     if (value === "All") {
       setSearchURL("");
     } else {

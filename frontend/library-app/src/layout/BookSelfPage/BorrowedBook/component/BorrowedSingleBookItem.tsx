@@ -41,7 +41,7 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                                 </div>
                                 <hr />
                                 <p className="card-text">Help Other to find their adventure by reviewing your books</p>
-                                <Link to="#" className="card-link btn btn-primary" type="button">Leave a Review</Link>
+                                <Link to={`/checkout/${borrowed.book.id}`} className="card-link btn btn-primary" type="button">Leave a Review</Link>
                             </div>
                         </div>
                     </div>

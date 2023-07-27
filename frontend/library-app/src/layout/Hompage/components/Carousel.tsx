@@ -42,7 +42,7 @@ export const Carousel = () => {
     fetchBooks().catch((error: any) => {
       setIsLoading(false);
       setHttpError(error.message);
-      console.log(error.massage);
+      // console.log(error.massage);
     });
   }, []);
 
