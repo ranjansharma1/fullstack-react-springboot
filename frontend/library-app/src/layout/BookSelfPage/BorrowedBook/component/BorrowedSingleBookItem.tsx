@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { ManageBookModel } from "./ManageBookModel"
 import BorrowedBook from "../../../../models/BorrowedBook"
 
-export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[] }> = (props) => {
+export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[] , returnBook:any}> = (props) => {
     return (
         <div>
             {props.borrowedBookList.map(borrowed =>
@@ -46,7 +46,7 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                         </div>
                     </div>
                     <hr />
-                    <ManageBookModel borrowed={borrowed} />
+                    <ManageBookModel borrowed={borrowed} returnBook={props.returnBook}/>
                 </div>
 
             )}

@@ -52,7 +52,7 @@ public class BookService {
 	private BookRepository bookRepository;
 	private CheckoutRepository checkoutRepository;
 
-	// It Will add the book In Checkout List, If book is already not added
+	//1. It Will add the book In Checkout List, If book is already not added
 	public Book checkoutBook(String email, Long bookId) throws Exception {
 		Optional<Book> book = bookRepository.findById(bookId);
 		Checkout validateCheckout = checkoutRepository.findByUserEmailAndBookId(email, bookId);
@@ -77,7 +77,7 @@ public class BookService {
 		return book.get();
 	}
 
-	// It will check whether book is added in checkout list or not for that particular user
+	//2. It will check whether book is added in checkout list or not for that particular user
 	public Boolean IsCheckedBook(String userEmail, Long bookId) {
 		Checkout checkedBook = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
 		if (checkedBook != null)
@@ -86,15 +86,15 @@ public class BookService {
 			return false;
 	}
 
-	// It will count total amount of book Checked by User
+	//3. It will count total amount of book Checked by User
 	public int totalBookCheckedByUser(String userEmail) {
 		List<Checkout> checkedBooks = checkoutRepository.findByUserEmail(userEmail);
 //		System.out.println("Total checked Books: " + checkedBooks);
 		return checkedBooks.size();
 	}
 	
-	//It will show all the Borrowed book that is taken by User
-	public List<BorrowedBookResponse> totalCheckedBookList(String userEmail){
+	//4. It will show all the Borrowed book that is taken by User
+ 	public List<BorrowedBookResponse> totalCheckedBookList(String userEmail){
 		List<BorrowedBookResponse> bookResponses=new ArrayList<>();
 		List<Checkout> checkedBooks = checkoutRepository.findByUserEmail(userEmail);
 		Optional<Book> book = null;
@@ -111,7 +111,6 @@ public class BookService {
 	/*
 	 * static: indicates that the method calculateDaysDifference belongs to the class itself and not to instances (objects) of the class. 
 	 * 			This means that you can call the method directly using the class name without creating an instance of the class.*/
-
 	public static int calculateDaysDifference(String checkoutDate, String returnDate) {
         // Parse the date strings into LocalDate objects
         LocalDate checkoutDateObj = LocalDate.parse(checkoutDate, DateTimeFormatter.ISO_LOCAL_DATE);
@@ -121,5 +120,21 @@ public class BookService {
         long daysDifference = ChronoUnit.DAYS.between(checkoutDateObj, returnDateObj);
         return Math.toIntExact(daysDifference); // Convert the long value to int
 	}
-
+	
+	//5. 	It will return the book from checkout database
+	public String returnBorrowedBook(String userEmail, Long bookId) throws Exception {
+		Optional<Book> book=bookRepository.findById(bookId);
+		Checkout checkedBook=checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
+		System.out.println(book);
+		System.out.println(checkedBook);
+		if(!book.isPresent() || checkedBook==null) {
+			
+			throw new Exception("Book does not exist or not checked out by user");
+		}
+		book.get().setCopiesAvailable(book.get().getCopiesAvailable()+1);
+		bookRepository.save(book.get());
+		System.out.println(book.get().getCopiesAvailable());
+		checkoutRepository.deleteById(checkedBook.getId());
+		return "Book return successfully!";
+	}
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useOktaAuth } from "@okta/okta-react"
-import BorroweBook from "../../../models/BorrowedBook";
 import { BorrowedSingleBookItem } from "./component/BorrowedSingleBookItem"
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import BorrowedBook from "../../../models/BorrowedBook";
@@ -11,6 +10,7 @@ export const BorrowedbookPage = () => {
     const [borrowedBookList, setBorrowedBookList] = useState<BorrowedBook[]>([]);
     const [isLoadingBorrowedBookPage, setIsLoadingBorrowedBookPage] = useState(true);
     const [httpError, sethttpError] = useState(null);
+    const [checkout, setCheckout] = useState(false);
     const baseUrl: string = "http://localhost:8080/api";
 
     useEffect(() => {
@@ -37,7 +37,7 @@ export const BorrowedbookPage = () => {
                 };
                 setBorrowedBookList(borrowedBooksFromDatabase);
                 setIsLoadingBorrowedBookPage(false);
-                console.log(borrowedBooksFromDatabase);
+                // console.log(borrowedBooksFromDatabase);
             }
         }
         fetchBorrowedBookList().catch((error: any) => {
@@ -45,8 +45,23 @@ export const BorrowedbookPage = () => {
             sethttpError(error.massage);
         })
 
-    }, [])
+    }, [authState, checkout]);
 
+    async function returnBook(bookId: number) {
+        const url = `http://localhost:8080/api/books/secure/return?bookId=${bookId}`;
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+        const returnResponse = await fetch(url, requestOptions);
+        if (!returnResponse.ok) {
+            throw new Error('Something went wrong!');
+        }
+        setCheckout(!checkout);
+    }
 
     if (isLoadingBorrowedBookPage) {
         return <SpinnerLoading />
@@ -63,7 +78,7 @@ export const BorrowedbookPage = () => {
             {borrowedBookList.length > 0 ?
                 <>
                     <h4>Current Books:</h4>
-                    <BorrowedSingleBookItem borrowedBookList={borrowedBookList} />
+                    <BorrowedSingleBookItem borrowedBookList={borrowedBookList} returnBook={returnBook}/>
 
                 </>
                 :

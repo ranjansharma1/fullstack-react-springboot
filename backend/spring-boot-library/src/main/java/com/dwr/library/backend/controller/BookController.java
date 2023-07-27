@@ -31,7 +31,7 @@ public class BookController {
 	@Autowired
 	private BookService bookService;
 
-	// RestAPI: http://localhost:8080/api/books/secure/checkout?bookId=20
+	//1. PutAPI: http://localhost:8080/api/books/secure/checkout?bookId=20
 	@PutMapping("/secure/checkout")
 	public Book checkedbook(@RequestHeader(value = "Authorization") String token, @RequestParam Long bookId)
 			throws Exception {
@@ -43,7 +43,7 @@ public class BookController {
 		return book;
 	}
 
-	// RestAPI: http://localhost:8080/api/books/secure/ischeckout?bookId=20
+	//2. GetAPI: http://localhost:8080/api/books/secure/ischeckout?bookId=20
 	@GetMapping("/secure/ischeckout")
 	public Boolean IscheckedBook(@RequestHeader(value = "Authorization") String token, @RequestParam Long bookId) {
 		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
@@ -54,7 +54,7 @@ public class BookController {
 		return Ischecked;
 	}
 
-	// RestAPI: http://localhost:8080/api/books/secure/totalcheckedbooks
+	//3. GetAPI: http://localhost:8080/api/books/secure/totalcheckedbooks
 	@GetMapping("/secure/totalcheckedbooks")
 	public int totalCheckedBooksByUser(@RequestHeader(value = "Authorization") String token) {
 		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
@@ -63,10 +63,17 @@ public class BookController {
 		return total;
 	}
 	
-	//RestAPI: http://localhost:8080/api/books/secure/borrowedbook
+	//4. GetAPI: http://localhost:8080/api/books/secure/borrowedbook
 	@GetMapping("/secure/borrowedbook")
 	public List<BorrowedBookResponse> borrowedBookList(@RequestHeader(value = "Authorization") String token) {
 		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
 		return bookService.totalCheckedBookList(userEmail);
+	}
+
+	//5. PutAPI: http://localhost:8080/api/books/secure/return?bookId=3
+	@PutMapping("/secure/return")
+	public String returnBook(@RequestHeader(value = "Authorization") String token, @RequestParam Long bookId) throws Exception {
+		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+		return bookService.returnBorrowedBook(userEmail, bookId);
 	}
 }

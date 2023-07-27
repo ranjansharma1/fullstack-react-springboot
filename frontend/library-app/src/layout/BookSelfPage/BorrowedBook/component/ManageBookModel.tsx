@@ -15,7 +15,7 @@ When you set data-bs-backdrop="static", it prevents the modal from being closed 
 *  6. data-bs-keyboard='false':
 When you set data-bs-keyboard="false", it disables the ability to close the modal by pressing the "Escape" key. This attribute complements the data-bs-backdrop attribute by controlling the keyboard interaction with the modal. Even if data-bs-backdrop is set to "static," if data-bs-keyboard is set to "false," the modal cannot be dismissed by pressing the "Escape" key.
  */
-export const ManageBookModel: React.FC<{ borrowed: BorrowedBook }> = (props) => {
+export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any }> = (props) => {
     return (
         <div className="modal" id={`book${props.borrowed.book.id}`} aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
             <div className="modal-dialog">
@@ -56,7 +56,8 @@ export const ManageBookModel: React.FC<{ borrowed: BorrowedBook }> = (props) => 
                             </p>
                         }
                         <div className="container list-group">
-                            <button type="button" className="list-group-item list-group-item-action" >Return Book</button>
+                            <button onClick={() => props.returnBook(props.borrowed.book.id)} type="button" data-bs-dismiss='modal' className='list-group-item list-group-item-action' aria-current='true'>Return Book</button>
+                            
                             <button type="button" className="list-group-item list-group-item-action">Renew Book for 7days</button>
                         </div>
                     </div>
