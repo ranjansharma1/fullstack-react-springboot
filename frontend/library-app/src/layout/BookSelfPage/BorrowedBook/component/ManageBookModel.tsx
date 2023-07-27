@@ -1,3 +1,5 @@
+import React from "react"
+import BorrowedBook from "../../../../models/BorrowedBook"
 
 
 /**How Botstrap Model Works
@@ -13,9 +15,9 @@ When you set data-bs-backdrop="static", it prevents the modal from being closed 
 *  6. data-bs-keyboard='false':
 When you set data-bs-keyboard="false", it disables the ability to close the modal by pressing the "Escape" key. This attribute complements the data-bs-backdrop attribute by controlling the keyboard interaction with the modal. Even if data-bs-backdrop is set to "static," if data-bs-keyboard is set to "false," the modal cannot be dismissed by pressing the "Escape" key.
  */
-export const ManageBookModel = () => {
+export const ManageBookModel: React.FC<{ borrowed: BorrowedBook }> = (props) => {
     return (
-        <div className="modal" id="myModal" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
+        <div className="modal" id={`book${props.borrowed.book.id}`} aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -25,16 +27,34 @@ export const ManageBookModel = () => {
                     <div className="modal-body">
                         <div className="row">
                             <div className="col-md-2 d-flex justify-content-center my-2">
-                                <img src={require("../../../../images/BooksImages/book1.png")} width="56" height="87" alt="book" />
+                                {props.borrowed.book.img ? (
+                                    <img src={props.borrowed.book.img} width="56" height="87" alt="book" />
+                                ) : (
+                                    <img src={require("../../../../images/BooksImages/book1.png")} width="56" height="87" alt="book" />
+                                )}
                             </div>
                             <div className="col-md-10">
-                                <h6>Luv, Lene</h6>
-                                <h5>Become a Guru in JavaScript</h5>
+                                <h6>{props.borrowed.book.author}</h6>
+                                <h5>{props.borrowed.book.title}</h5>
                             </div>
 
                         </div>
                         <hr />
-                        <p className="text-secondary">Due in 7 days.</p>
+                        {props.borrowed.daysLeft > 0 &&
+                            <p className='text-secondary'>
+                                Due in {props.borrowed.daysLeft} days.
+                            </p>
+                        }
+                        {props.borrowed.daysLeft === 0 &&
+                            <p className='text-success'>
+                                Due Today.
+                            </p>
+                        }
+                        {props.borrowed.daysLeft < 0 &&
+                            <p className='text-danger'>
+                                Past due by {props.borrowed.daysLeft} days.
+                            </p>
+                        }
                         <div className="container list-group">
                             <button type="button" className="list-group-item list-group-item-action" >Return Book</button>
                             <button type="button" className="list-group-item list-group-item-action">Renew Book for 7days</button>

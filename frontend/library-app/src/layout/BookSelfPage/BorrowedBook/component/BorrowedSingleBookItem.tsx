@@ -35,7 +35,7 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                                 }
                                 <div>
                                     <div className="list-group mt-3">
-                                        <button className="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#myModal">Manage Book</button>
+                                        <button className="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target={`#book${borrowed.book.id}`}>Manage Book</button>
                                         <Link to='/search' className="list-group-item list-group-item-action">Search More Books?</Link>
                                     </div>
                                 </div>
@@ -46,7 +46,7 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                         </div>
                     </div>
                     <hr />
-                    <ManageBookModel/>
+                    <ManageBookModel borrowed={borrowed} />
                 </div>
 
             )}
