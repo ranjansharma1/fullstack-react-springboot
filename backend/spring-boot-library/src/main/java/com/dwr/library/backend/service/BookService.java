@@ -104,7 +104,7 @@ public class BookService {
 			book = bookRepository.findById(checkout.getBookId());
 			bookResponses.add(new BorrowedBookResponse(daysleft, book));
 		}
-		System.out.println("Total Borrowed Books: "+bookResponses.size());
+//		System.out.println("Total Borrowed Books: "+bookResponses.size());
 		return bookResponses;
 	}
 	
@@ -125,16 +125,42 @@ public class BookService {
 	public String returnBorrowedBook(String userEmail, Long bookId) throws Exception {
 		Optional<Book> book=bookRepository.findById(bookId);
 		Checkout checkedBook=checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
-		System.out.println(book);
-		System.out.println(checkedBook);
 		if(!book.isPresent() || checkedBook==null) {
 			
 			throw new Exception("Book does not exist or not checked out by user");
 		}
 		book.get().setCopiesAvailable(book.get().getCopiesAvailable()+1);
 		bookRepository.save(book.get());
-		System.out.println(book.get().getCopiesAvailable());
 		checkoutRepository.deleteById(checkedBook.getId());
 		return "Book return successfully!";
+	}
+	
+	//6. Renew Borrow book for next 7days
+	public String renewBook(String userEmail, Long bookId) throws Exception {
+		Checkout checkedBook=checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
+		if(checkedBook==null) {			
+			throw new Exception("Book does not exist or not checked out by user");
+		}
+
+		// Get the current date
+		LocalDate currentDate = LocalDate.now();
+
+		// Parse the return date from the checkedBook
+		LocalDate returnDate = LocalDate.parse(checkedBook.getReturnDate());
+
+		// Check if the returnDate is after the current date
+		if (returnDate.isAfter(currentDate)) {
+		    // If the returnDate is after the current date, extend it by 7 days
+		    returnDate = returnDate.plusDays(7);
+		}
+
+		// Update the returnDate in the checkedBook to the extended date
+		checkedBook.setReturnDate(returnDate.toString());
+//		System.out.println(currentDate);
+//		System.out.println(returnDate);
+		
+		checkoutRepository.save(checkedBook);		
+		
+		return "Book Renewed for 7 days";		
 	}
 }

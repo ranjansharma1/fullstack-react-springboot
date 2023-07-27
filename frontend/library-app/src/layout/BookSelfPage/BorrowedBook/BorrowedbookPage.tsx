@@ -48,7 +48,23 @@ export const BorrowedbookPage = () => {
     }, [authState, checkout]);
 
     async function returnBook(bookId: number) {
-        const url = `http://localhost:8080/api/books/secure/return?bookId=${bookId}`;
+        const url = `${baseUrl}/books/secure/return?bookId=${bookId}`;
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+        const returnResponse = await fetch(url, requestOptions);
+        if (!returnResponse.ok) {
+            throw new Error('Something went wrong!');
+        }
+        setCheckout(!checkout);
+    }
+
+    async function renewBook(bookId: number) {
+        const url = `${baseUrl}/books/secure/renew?bookId=${bookId}`;
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -78,7 +94,7 @@ export const BorrowedbookPage = () => {
             {borrowedBookList.length > 0 ?
                 <>
                     <h4>Current Books:</h4>
-                    <BorrowedSingleBookItem borrowedBookList={borrowedBookList} returnBook={returnBook}/>
+                    <BorrowedSingleBookItem borrowedBookList={borrowedBookList} returnBook={returnBook} renewBook={renewBook} />
 
                 </>
                 :

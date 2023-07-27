@@ -76,4 +76,13 @@ public class BookController {
 		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
 		return bookService.returnBorrowedBook(userEmail, bookId);
 	}
+	
+	//6. PutAPI: http://localhost:8080/api/books/secure/renew?bookId=8
+	@PutMapping("/secure/renew")
+	public String renewBook(@RequestHeader(value = "Authorization") String token, @RequestParam Long bookId) throws Exception {
+		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+		
+		return bookService.renewBook(userEmail, bookId);
+		
+	}
 }

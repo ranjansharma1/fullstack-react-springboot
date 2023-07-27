@@ -14,8 +14,11 @@ When you set data-bs-backdrop="static", it prevents the modal from being closed 
 
 *  6. data-bs-keyboard='false':
 When you set data-bs-keyboard="false", it disables the ability to close the modal by pressing the "Escape" key. This attribute complements the data-bs-backdrop attribute by controlling the keyboard interaction with the modal. Even if data-bs-backdrop is set to "static," if data-bs-keyboard is set to "false," the modal cannot be dismissed by pressing the "Escape" key.
+*
+*
+*(event) => event.preventDefault(): If the condition is true (the book is overdue), this function is executed when the button is clicked. The event.preventDefault() is used to prevent the default behavior of the button click. In other words, when the book is overdue, clicking the button won't trigger any action. It effectively disables the button click.
  */
-export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any }> = (props) => {
+export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any, renewBook: any }> = (props) => {
     return (
         <div className="modal" id={`book${props.borrowed.book.id}`} aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
             <div className="modal-dialog">
@@ -56,9 +59,35 @@ export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any
                             </p>
                         }
                         <div className="container list-group">
-                            <button onClick={() => props.returnBook(props.borrowed.book.id)} type="button" data-bs-dismiss='modal' className='list-group-item list-group-item-action' aria-current='true'>Return Book</button>
-                            
-                            <button type="button" className="list-group-item list-group-item-action">Renew Book for 7days</button>
+                            <button
+                                onClick={() => props.returnBook(props.borrowed.book.id)}
+                                type="button"
+                                data-bs-dismiss='modal'
+                                className='list-group-item list-group-item-action' aria-current='true'
+                            >
+                                Return Book
+                            </button>
+
+                            <button
+                                onClick={
+                                    props.renewBook.daysLeft < 0 ?
+                                        (event) => event.preventDefault()
+                                        :
+                                        () => props.renewBook(props.borrowed.book.id)
+                                }
+                                type="button"
+                                data-bs-dismiss='modal'
+                                className={
+                                    props.borrowed.daysLeft < 0 ?
+                                        'list-group-item list-group-item-action inactiveLink' :
+                                        'list-group-item list-group-item-action'
+                                }
+                            >
+
+                                {props.borrowed.daysLeft < 0 ?
+                                    'Late dues cannot be renewed' : 'Renew Book for 7 days'
+                                }
+                            </button>
                         </div>
                     </div>
                     <div className="modal-footer">
