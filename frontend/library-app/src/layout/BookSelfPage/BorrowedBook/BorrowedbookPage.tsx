@@ -4,6 +4,7 @@ import BorroweBook from "../../../models/BorrowedBook";
 import { BorrowedSingleBookItem } from "./component/BorrowedSingleBookItem"
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import BorrowedBook from "../../../models/BorrowedBook";
+import { Link } from "react-router-dom";
 
 export const BorrowedbookPage = () => {
     const { authState } = useOktaAuth();
@@ -23,15 +24,15 @@ export const BorrowedbookPage = () => {
                         'Content-Type': 'application/json'
                     }
                 };
-                const response= await fetch(url,requestOptions);
-                if(!response.ok)
+                const response = await fetch(url, requestOptions);
+                if (!response.ok)
                     throw new Error("Something went wrong");
-                const responseJSON= await response.json();
-                const borrowedBooksFromDatabase:BorrowedBook[]=[];
-                for(const key in responseJSON){
+                const responseJSON = await response.json();
+                const borrowedBooksFromDatabase: BorrowedBook[] = [];
+                for (const key in responseJSON) {
                     borrowedBooksFromDatabase.push({
-                        daysLeft:responseJSON[key].daysLeft,
-                        book:responseJSON[key].book
+                        daysLeft: responseJSON[key].daysLeft,
+                        book: responseJSON[key].book
                     })
                 };
                 setBorrowedBookList(borrowedBooksFromDatabase);
@@ -59,8 +60,22 @@ export const BorrowedbookPage = () => {
     }
     return (
         <div className="container mt-3 ">
-            <h4>Current Books:</h4>
-            <BorrowedSingleBookItem borrowedBookList={borrowedBookList}/>
+            {borrowedBookList.length > 0 ?
+                <>
+                    <h4>Current Books:</h4>
+                    <BorrowedSingleBookItem borrowedBookList={borrowedBookList} />
+
+                </>
+                :
+                <>
+                    <h3 className='my-3'>
+                        Currently no loans
+                    </h3>
+                    <Link className='btn btn-primary' to={`search`}>
+                        Search for a new book
+                    </Link>
+                </>
+            }
         </div>
     )
 }
