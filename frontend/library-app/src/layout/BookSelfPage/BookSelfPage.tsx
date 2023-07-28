@@ -5,6 +5,7 @@
  */
 
 import { BorrowedbookPage } from "./BorrowedBook/BorrowedbookPage";
+import { HistoryBookPage } from "./HistoryBook/HistoryBookPage";
 
 export const BookSelfPage = () => {
 
@@ -20,7 +21,9 @@ export const BookSelfPage = () => {
                 <div className="tab-pane fade show active" id="nav-borrowed" role="tabpanel" aria-labelledby="nav-borrowed-tab" >
                     <BorrowedbookPage/>
                 </div>
-                <div className="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab" >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas illo itaque quod magnam quasi. Autem unde corporis provident libero, perspiciatis atque reprehenderit qui enim recusandae commodi reiciendis modi impedit rem? Molestiae laboriosam excepturi odio atque, eveniet saepe autem dolore dicta ab dolor quae magni exercitationem facilis deserunt cupiditate perspiciatis veritatis obcaecati eligendi esse iste ducimus! Perferendis nihil enim repellendus necessitatibus. ...</div>
+                <div className="tab-pane fade" id="nav-history" role="tabpanel" >
+                    <HistoryBookPage/>
+                </div>
             </div>
 
 
