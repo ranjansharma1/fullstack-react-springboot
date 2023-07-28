@@ -80,8 +80,7 @@ public class BookService {
 		return book.get();
 	}
 
-	// 2. It will check whether book is added in checkout list or not for that
-	// particular user
+	// 2. It will check whether book is added in checkout list or not for that particular user
 	public Boolean IsCheckedBook(String userEmail, Long bookId) {
 		Checkout checkedBook = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
 		if (checkedBook != null)
@@ -106,7 +105,7 @@ public class BookService {
 		for (Checkout checkout : checkedBooks) {
 			daysleft = calculateDaysDifference(checkout.getCheckoutDate(), checkout.getReturnDate());
 			book = bookRepository.findById(checkout.getBookId());
-			bookResponses.add(new BorrowedBookResponse(daysleft, book));
+			bookResponses.add(new BorrowedBookResponse(daysleft, book, checkout.getCheckoutDate()));
 		}
 //		System.out.println("Total Borrowed Books: "+bookResponses.size());
 		return bookResponses;

@@ -13,5 +13,6 @@ import lombok.Data;
 public class BorrowedBookResponse {
 	private int daysLeft;
 	private Optional<Book> book;
+	private String checkoutDate;
 
 }

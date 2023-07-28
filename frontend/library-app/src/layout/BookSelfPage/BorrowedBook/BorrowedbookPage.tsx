@@ -32,7 +32,8 @@ export const BorrowedbookPage = () => {
                 for (const key in responseJSON) {
                     borrowedBooksFromDatabase.push({
                         daysLeft: responseJSON[key].daysLeft,
-                        book: responseJSON[key].book
+                        book: responseJSON[key].book,
+                        checkoutDate: responseJSON[key].checkoutDate
                     })
                 };
                 setBorrowedBookList(borrowedBooksFromDatabase);

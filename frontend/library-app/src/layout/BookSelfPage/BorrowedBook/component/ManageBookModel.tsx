@@ -39,6 +39,7 @@ export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any
                             <div className="col-md-10">
                                 <h6>{props.borrowed.book.author}</h6>
                                 <h5>{props.borrowed.book.title}</h5>
+                                <p>Issue Date: {props.borrowed.checkoutDate} </p>
                             </div>
 
                         </div>
