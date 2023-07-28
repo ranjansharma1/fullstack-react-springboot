@@ -147,17 +147,19 @@ public class BookService {
 
 		// Parse the return date from the checkedBook
 		LocalDate returnDate = LocalDate.parse(checkedBook.getReturnDate());
-
+		//It set the return date in past date
+//		returnDate=returnDate.minusDays(35);
 		// Check if the returnDate is after the current date
 		if (returnDate.isAfter(currentDate)) {
 		    // If the returnDate is after the current date, extend it by 7 days
 		    returnDate = returnDate.plusDays(7);
 		}
+		
+		//It set the return date in past date
+//		returnDate=returnDate.minusDays(35);
 
 		// Update the returnDate in the checkedBook to the extended date
 		checkedBook.setReturnDate(returnDate.toString());
-//		System.out.println(currentDate);
-//		System.out.println(returnDate);
 		
 		checkoutRepository.save(checkedBook);		
 		
