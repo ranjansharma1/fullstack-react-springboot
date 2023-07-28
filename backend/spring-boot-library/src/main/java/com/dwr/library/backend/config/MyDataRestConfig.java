@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import com.dwr.library.backend.entity.Book;
+import com.dwr.library.backend.entity.History;
 import com.dwr.library.backend.entity.Review;
 
 @Configuration
@@ -21,6 +22,7 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 		//This will show Id For Respective class (Expose Primary Key)
 		config.exposeIdsFor(Book.class);
 		config.exposeIdsFor(Review.class);
+		config.exposeIdsFor(History.class);
 		
 		//This will restrict the access for creating, updating and deleting or editing the table
 		disableHttpMethods(Book.class, config, theUnsupportedActions);

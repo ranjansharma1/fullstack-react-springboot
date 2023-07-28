@@ -1,7 +1,10 @@
 package com.dwr.library.backend.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dwr.library.backend.entity.History;
 
@@ -36,4 +39,6 @@ import com.dwr.library.backend.entity.History;
 @Repository
 public interface HistoryRepository extends JpaRepository<History, Long> {
 
+	//Exposed URL: http://localhost:8080/api/histories/search/findBookByUserEmail?userEmail=testuser@email.com
+	List<History> findBookByUserEmail(@RequestParam("email") String userEmail);
 }
