@@ -34,7 +34,7 @@ import com.dwr.library.backend.entity.Review;
 	 * 
 	 * Review findByBookId(@RequestParam("book_id") Long bookId);
 	 * 
-	 * It will expose this link
+	 * This Repository will expose this link
 	 * http://localhost:8080/api/reviews/search/findByBookId{?bookId}
 	 * 
  */
@@ -42,13 +42,10 @@ import com.dwr.library.backend.entity.Review;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 	
-	/* It will expose this link
-	 * http://localhost:8080/api/reviews/search/findByBookId{?bookId,page,size,sort}
-	 * 
-	 * */
-	
+	//Expose Link: http://localhost:8080/api/reviews/search/findByBookId{?bookId,page,size,sort}
 	Page<Review> findByBookId(@RequestParam("book_id") Long bookId, Pageable pageable);	
 
+	//Expose Link: http://localhost:8080/api/reviews/search/findByUserEmailAndBookId{?userEmail,bookId}
 	Review findByUserEmailAndBookId(String userEmail, Long bookId);
 	
 }

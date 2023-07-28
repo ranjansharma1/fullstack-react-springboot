@@ -19,12 +19,14 @@ import com.dwr.library.backend.entity.Checkout;
  *             application.
  *
  * 
- * 
+ *  This Repository will expose this link: http://localhost:8080/api/checkouts
  */
 
 @Repository
 public interface CheckoutRepository extends JpaRepository<Checkout, Long> {
+	//Exposed Link: http://localhost:8080/api/checkouts/search/findByUserEmailAndBookId{?userEmail,bookId}
 	Checkout findByUserEmailAndBookId(String userEmail, Long bookId);
 
+	//Exposed Link: http://localhost:8080/api/checkouts/search/findByUserEmail{?email}
 	List<Checkout> findByUserEmail(String email);
 }

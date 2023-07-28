@@ -1,4 +1,4 @@
- package com.dwr.library.backend.service;
+package com.dwr.library.backend.service;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.dwr.library.backend.dao.BookRepository;
 import com.dwr.library.backend.dao.CheckoutRepository;
+import com.dwr.library.backend.dao.HistoryRepository;
 import com.dwr.library.backend.entity.Book;
 import com.dwr.library.backend.entity.Checkout;
+import com.dwr.library.backend.entity.History;
 import com.dwr.library.backend.responsemodels.BorrowedBookResponse;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +53,9 @@ import lombok.AllArgsConstructor;
 public class BookService {
 	private BookRepository bookRepository;
 	private CheckoutRepository checkoutRepository;
+	private HistoryRepository historyRepository;
 
-	//1. It Will add the book In Checkout List, If book is already not added
+	// 1. It Will add the book In Checkout List, If book is already not added
 	public Book checkoutBook(String email, Long bookId) throws Exception {
 		Optional<Book> book = bookRepository.findById(bookId);
 		Checkout validateCheckout = checkoutRepository.findByUserEmailAndBookId(email, bookId);
@@ -77,7 +80,8 @@ public class BookService {
 		return book.get();
 	}
 
-	//2. It will check whether book is added in checkout list or not for that particular user
+	// 2. It will check whether book is added in checkout list or not for that
+	// particular user
 	public Boolean IsCheckedBook(String userEmail, Long bookId) {
 		Checkout checkedBook = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
 		if (checkedBook != null)
@@ -86,59 +90,78 @@ public class BookService {
 			return false;
 	}
 
-	//3. It will count total amount of book Checked by User
+	// 3. It will count total amount of book Checked by User
 	public int totalBookCheckedByUser(String userEmail) {
 		List<Checkout> checkedBooks = checkoutRepository.findByUserEmail(userEmail);
 //		System.out.println("Total checked Books: " + checkedBooks);
 		return checkedBooks.size();
 	}
-	
-	//4. It will show all the Borrowed book that is taken by User
- 	public List<BorrowedBookResponse> totalCheckedBookList(String userEmail){
-		List<BorrowedBookResponse> bookResponses=new ArrayList<>();
+
+	// 4. It will show all the Borrowed book that is taken by User
+	public List<BorrowedBookResponse> totalCheckedBookList(String userEmail) {
+		List<BorrowedBookResponse> bookResponses = new ArrayList<>();
 		List<Checkout> checkedBooks = checkoutRepository.findByUserEmail(userEmail);
 		Optional<Book> book = null;
 		int daysleft;
-		for(Checkout checkout: checkedBooks) {
-			daysleft=calculateDaysDifference(checkout.getCheckoutDate(), checkout.getReturnDate());
+		for (Checkout checkout : checkedBooks) {
+			daysleft = calculateDaysDifference(checkout.getCheckoutDate(), checkout.getReturnDate());
 			book = bookRepository.findById(checkout.getBookId());
 			bookResponses.add(new BorrowedBookResponse(daysleft, book));
 		}
 //		System.out.println("Total Borrowed Books: "+bookResponses.size());
 		return bookResponses;
 	}
-	
+
 	/*
-	 * static: indicates that the method calculateDaysDifference belongs to the class itself and not to instances (objects) of the class. 
-	 * 			This means that you can call the method directly using the class name without creating an instance of the class.*/
+	 * static: indicates that the method calculateDaysDifference belongs to the
+	 * class itself and not to instances (objects) of the class. This means that you
+	 * can call the method directly using the class name without creating an
+	 * instance of the class.
+	 */
 	public static int calculateDaysDifference(String checkoutDate, String returnDate) {
-        // Parse the date strings into LocalDate objects
-        LocalDate checkoutDateObj = LocalDate.parse(checkoutDate, DateTimeFormatter.ISO_LOCAL_DATE);
-        LocalDate returnDateObj = LocalDate.parse(returnDate, DateTimeFormatter.ISO_LOCAL_DATE);
- 
-        // Calculate the difference between checkoutDate and returnDate
-        long daysDifference = ChronoUnit.DAYS.between(checkoutDateObj, returnDateObj);
-        return Math.toIntExact(daysDifference); // Convert the long value to int
+		// Parse the date strings into LocalDate objects
+		LocalDate checkoutDateObj = LocalDate.parse(checkoutDate, DateTimeFormatter.ISO_LOCAL_DATE);
+		LocalDate returnDateObj = LocalDate.parse(returnDate, DateTimeFormatter.ISO_LOCAL_DATE);
+
+		// Calculate the difference between checkoutDate and returnDate
+		long daysDifference = ChronoUnit.DAYS.between(checkoutDateObj, returnDateObj);
+		return Math.toIntExact(daysDifference); // Convert the long value to int
 	}
-	
-	//5. 	It will return the book from checkout database
+
+	// 5. It will return the book from checkout database
 	public String returnBorrowedBook(String userEmail, Long bookId) throws Exception {
-		Optional<Book> book=bookRepository.findById(bookId);
-		Checkout checkedBook=checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
-		if(!book.isPresent() || checkedBook==null) {
-			
-			throw new Exception("Book does not exist or not checked out by user");
+		// Find the book by its ID in the 'bookRepository'.
+		Optional<Book> book = bookRepository.findById(bookId);
+
+		// Find the checkout entry for the given user email and book ID in the 'checkoutRepository'.
+		Checkout checkedBook = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
+
+		// Check if the book does not exist or is not checked out by the user.
+		if (!book.isPresent() || checkedBook == null) {
+			throw new Exception("Book does not exist or not checked out by the user");
 		}
-		book.get().setCopiesAvailable(book.get().getCopiesAvailable()+1);
+
+		// Increase the available copies of the book by 1 and save it back to the 'bookRepository'.
+		book.get().setCopiesAvailable(book.get().getCopiesAvailable() + 1);
 		bookRepository.save(book.get());
+
+		// Create a new 'History' entry with checkout details and book information.
+		History newHistory = new History(userEmail, checkedBook.getCheckoutDate(), LocalDate.now().toString(),
+				book.get().getTitle(), book.get().getAuthor(), book.get().getDescription(), book.get().getImg());
+
+		// Save the new history entry to the 'historyRepository'.
+		historyRepository.save(newHistory);
+
+		// Delete the checkout entry for the book and user from the 'checkoutRepository'.
 		checkoutRepository.deleteById(checkedBook.getId());
+
 		return "Book return successfully!";
 	}
-	
-	//6. Renew Borrow book for next 7days
+
+	// 6. Renew Borrow book for next 7days
 	public String renewBook(String userEmail, Long bookId) throws Exception {
-		Checkout checkedBook=checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
-		if(checkedBook==null) {			
+		Checkout checkedBook = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
+		if (checkedBook == null) {
 			throw new Exception("Book does not exist or not checked out by user");
 		}
 
@@ -147,22 +170,21 @@ public class BookService {
 
 		// Parse the return date from the checkedBook
 		LocalDate returnDate = LocalDate.parse(checkedBook.getReturnDate());
-		//It set the return date in past date
-//		returnDate=returnDate.minusDays(35);
+		
 		// Check if the returnDate is after the current date
 		if (returnDate.isAfter(currentDate)) {
-		    // If the returnDate is after the current date, extend it by 7 days
-		    returnDate = returnDate.plusDays(7);
+			// If the returnDate is after the current date, extend it by 7 days
+			returnDate = returnDate.plusDays(7);
 		}
-		
-		//It set the return date in past date
+
+		// It set the return date in past date
 //		returnDate=returnDate.minusDays(35);
 
 		// Update the returnDate in the checkedBook to the extended date
 		checkedBook.setReturnDate(returnDate.toString());
-		
-		checkoutRepository.save(checkedBook);		
-		
-		return "Book Renewed for 7 days";		
+
+		checkoutRepository.save(checkedBook);
+
+		return "Book Renewed for 7 days";
 	}
 }

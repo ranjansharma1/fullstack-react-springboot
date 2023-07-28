@@ -1,12 +1,10 @@
 package com.dwr.library.backend.dao;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.dwr.library.backend.entity.Book;
+import com.dwr.library.backend.entity.History;
+
 
 /**
  * This class allows Spring to automatically create an implementation of this
@@ -32,15 +30,10 @@ import com.dwr.library.backend.entity.Book;
  * Pageable is an interface in Spring Data that provides methods for specifying pagination parameters like page number,
  * page size, and sorting options.
  * 
- * 
- *  This Repository will expose this link: http://localhost:8080/api/books
+ * This Repository will expose this link: http://localhost:8080/api/histories
  */
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
-	//Exposed Link: http://localhost:8080/api/books/search/findByTitleContaining{?title,page,size,sort}
-	Page<Book> findByTitleContaining(@RequestParam("title") String title, Pageable pageable);
+public interface HistoryRepository extends JpaRepository<History, Long> {
 
-	//Exposed Link: http://localhost:8080/api/books/search/findByCategory{?category,page,size,sort}
-	Page<Book> findByCategory(@RequestParam("category") String category, Pageable pageable);
 }
