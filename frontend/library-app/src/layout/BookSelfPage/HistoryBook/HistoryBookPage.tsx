@@ -3,6 +3,7 @@ import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import HistoryModel from "../../../models/HistoryModel";
 import { useOktaAuth } from "@okta/okta-react";
 import { Link } from "react-router-dom";
+import { Pagination } from "../../Utils/Pagination";
 
 
 export const HistoryBookPage = () => {
@@ -12,12 +13,17 @@ export const HistoryBookPage = () => {
   const [bookHistories, setbookHistories] = useState<HistoryModel[]>([])
   const [isLoadingHistoryPage, setIsLoadingHistoryPage] = useState(true);
   const [httpError, setHttpError] = useState(null);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
   const baseUrl: string = 'http://localhost:8080/api';
 
   useEffect(() => {
     const fetchHistories = async () => {
       if (authState && authState.isAuthenticated) {
-        const url = `${baseUrl}/histories/search/findBookByUserEmail?userEmail=${authState.accessToken?.claims.sub}`;
+        const url = `${baseUrl}/histories/search/findBooksByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=${currentPage - 1}&size=5`;
         console.log(url);
         const requestOptions = {
           method: 'GET',
@@ -31,8 +37,8 @@ export const HistoryBookPage = () => {
           throw new Error('Something went wrong!');
         }
         const responseJSON = await response.json();
-        const responseJSONData = responseJSON._embedded.histories;
-        setbookHistories(responseJSONData);
+        setbookHistories(responseJSON._embedded.histories);
+        setTotalPages(responseJSON.page.totalPages);
         setIsLoadingHistoryPage(false);
       }
     }
@@ -40,7 +46,7 @@ export const HistoryBookPage = () => {
       setIsLoadingHistoryPage(false);
       setHttpError(error.massage);
     });
-  },[authState]);
+  },[authState,currentPage]);
 
 
 
@@ -54,6 +60,8 @@ export const HistoryBookPage = () => {
       </div>
     );
   }
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className='m-3'>
@@ -90,6 +98,7 @@ export const HistoryBookPage = () => {
           </Link>
         </>
       }
+      {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate}/>}
     </div>
   )
 }

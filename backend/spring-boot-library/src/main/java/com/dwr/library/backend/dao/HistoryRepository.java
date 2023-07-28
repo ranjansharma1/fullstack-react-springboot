@@ -2,6 +2,8 @@ package com.dwr.library.backend.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,5 +42,6 @@ import com.dwr.library.backend.entity.History;
 public interface HistoryRepository extends JpaRepository<History, Long> {
 
 	//Exposed URL: http://localhost:8080/api/histories/search/findBookByUserEmail?userEmail=testuser@email.com
-	List<History> findBookByUserEmail(@RequestParam("email") String userEmail);
+	//Exposed URL: http://localhost:8080/api/histories/search/findBooksByUserEmail{?userEmail,page,size,sort}
+	Page<History> findBooksByUserEmail(@RequestParam("email") String userEmail, Pageable pageable);
 }
