@@ -28,15 +28,7 @@ export const BorrowedbookPage = () => {
                 if (!response.ok)
                     throw new Error("Something went wrong");
                 const responseJSON = await response.json();
-                const borrowedBooksFromDatabase: BorrowedBook[] = [];
-                for (const key in responseJSON) {
-                    borrowedBooksFromDatabase.push({
-                        daysLeft: responseJSON[key].daysLeft,
-                        book: responseJSON[key].book,
-                        checkoutDate: responseJSON[key].checkoutDate
-                    })
-                };
-                setBorrowedBookList(borrowedBooksFromDatabase);
+                setBorrowedBookList(responseJSON);
                 setIsLoadingBorrowedBookPage(false);
                 // console.log(borrowedBooksFromDatabase);
             }

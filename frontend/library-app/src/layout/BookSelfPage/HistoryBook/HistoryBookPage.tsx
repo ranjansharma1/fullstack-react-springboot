@@ -24,7 +24,7 @@ export const HistoryBookPage = () => {
     const fetchHistories = async () => {
       if (authState && authState.isAuthenticated) {
         const url = `${baseUrl}/histories/search/findBooksByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=${currentPage - 1}&size=5`;
-        console.log(url);
+        // console.log(url);
         const requestOptions = {
           method: 'GET',
           headers: {

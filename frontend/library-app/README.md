@@ -28,3 +28,30 @@ You will also see any lint errors in the console.
 5. Install Dependencies
     - npm install @okta/okta-react@6.4.3
     - npm install @okta/okta-signin-widget@6.3.3
+
+### Using less code to increase readability
+1. const responseJSONData = responseJSON._embedded.books;
+      const loadedBookfromDatabase: BookModel[] = [];
+
+      for (const key in responseJSONData) {
+        loadedBookfromDatabase.push({
+          id: responseJSONData[key].id,
+          title: responseJSONData[key].title,
+          author: responseJSONData[key].author,
+          description: responseJSONData[key].description,
+          copies: responseJSONData[key].copies,
+          copiesAvailable: responseJSONData[key].copiesAvailable,
+          category: responseJSONData[key].category,
+          img: responseJSONData[key].img,
+        });
+      }
+      setBookAPI(loadedBookfromDatabase);
+    -- It is suggested to use when
+        1. ou need to perform some additional operations or data manipulation on each book object before using it in your application.
+        2.The data from the API response is not in the exact format you need, and you have to convert it to match a specific interface or type, like the BookModel.
+
+2. setbookHistories(responseJSON._embedded.books);
+    It is suggeested when-
+        1. The data returned from the API is already in the desired format and directly usable in your application without any additional transformation or manipulation.
+        2. You don't need to perform any specific operations on each book object before using it.
+    Note: In general, if the API response already provides the data in the format required by your application (in this case, the BookModel interface), you can directly use responseJSON._embedded.books and avoid the extra overhead of the loop and manual transformation. However, if there is a need to modify or adapt the data before using it, then you would opt for the first code snippet with the loop and transformation logic.

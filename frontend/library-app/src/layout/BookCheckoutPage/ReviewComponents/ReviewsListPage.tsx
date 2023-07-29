@@ -31,20 +31,7 @@ export const ReviewsListPage = () => {
                 throw new Error("Something went wrong");
             const responseJSON = await response.json();
             const responseJSONData = responseJSON._embedded.reviews;
-            const loadAllReviewsFromDatabse: ReviewModel[] = [];
-            for (const key in responseJSONData) {
-                loadAllReviewsFromDatabse.push({
-                    id: responseJSONData[key].id,
-                    book_id: responseJSONData[key].book_id,
-                    userEmail: responseJSONData[key].userEmail,
-                    date: responseJSONData[key].date,
-                    rating: responseJSONData[key].rating,
-                    reviewDescription: responseJSONData[key].reviewDescription,
-                });
-            };
-
-            // console.log("loadResponse: "+ loadAllReviewsFromDatabse.length);
-            setReviews(loadAllReviewsFromDatabse);
+            setReviews(responseJSONData);
             setIsLoadingReviews(false)
         }
         fetchReviews().catch((error: any) => {

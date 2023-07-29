@@ -21,22 +21,7 @@ export const Carousel = () => {
         throw new Error("Something went wrong");
       }
       const responseJSON = await response.json();
-      const responseJSONData = responseJSON._embedded.books;
-      const loadedBookfromDatabase: BookModel[] = [];
-
-      for (const key in responseJSONData) {
-        loadedBookfromDatabase.push({
-          id: responseJSONData[key].id,
-          title: responseJSONData[key].title,
-          author: responseJSONData[key].author,
-          description: responseJSONData[key].description,
-          copies: responseJSONData[key].copies,
-          copiesAvailable: responseJSONData[key].copiesAvailable,
-          category: responseJSONData[key].category,
-          img: responseJSONData[key].img,
-        });
-      }
-      setBookAPI(loadedBookfromDatabase);
+      setBookAPI(responseJSON._embedded.books);
       setIsLoading(false);
     };
     fetchBooks().catch((error: any) => {

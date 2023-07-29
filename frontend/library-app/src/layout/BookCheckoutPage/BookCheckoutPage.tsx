@@ -77,17 +77,7 @@ export const BookCheckoutPage = () => {
       }
 
       const responseJSON = await response.json();
-      const loadedBookfromDatabase: BookModel = {
-        id: responseJSON.id,
-        title: responseJSON.title,
-        author: responseJSON.author,
-        description: responseJSON.description,
-        copies: responseJSON.copies,
-        copiesAvailable: responseJSON.copiesAvailable,
-        category: responseJSON.category,
-        img: responseJSON.img,
-      };
-      setBook(loadedBookfromDatabase);
+      setBook(responseJSON);
       setisLoading(false);
     };
     fetchBooks().catch((error: any) => {
