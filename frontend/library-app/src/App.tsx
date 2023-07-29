@@ -12,6 +12,7 @@ import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import LoginWidget from "./auth/LoginWidget";
 import { ReviewsListPage } from "./layout/BookCheckoutPage/ReviewComponents/ReviewsListPage";
 import { BookSelfPage } from "./layout/BookSelfPage/BookSelfPage";
+import { ServicesPage } from "./layout/ServicesPage/ServicesPage";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -58,6 +59,9 @@ function App() {
           {/* <SecureRoute> is not a built-in component provided by the library. Instead, it's typically a custom component that developers create to implement authentication and access control for certain routes. */}
           <SecureRoute path="/shelf">
             <BookSelfPage/>
+          </SecureRoute>
+          <SecureRoute path="/services">
+            <ServicesPage/>
           </SecureRoute>
         </Switch>
         </Security>
