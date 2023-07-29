@@ -31,8 +31,14 @@ public class SecurityConfig {
 		http.csrf().disable();
 
 		// Protect endpoints at /api/<type>/secure
-		http.authorizeRequests(configurer -> configurer.antMatchers("/api/books/secure/**", "/api/reviews/secure/**").authenticated())
-				.oauth2ResourceServer().jwt();
+		http.authorizeRequests(configurer -> 
+							configurer.antMatchers(
+										"/api/books/secure/**", 
+										"/api/reviews/secure/**", 
+										"/api/libraries/secure/**")
+							.authenticated())
+							.oauth2ResourceServer()
+							.jwt();
 
 		// Add CORS filters
 		http.cors();
