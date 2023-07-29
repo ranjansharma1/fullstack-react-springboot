@@ -29,6 +29,7 @@ import com.dwr.library.backend.utils.ExtractJWT;
  * user login as access token
  */
 
+@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/libraries")
 public class LibraryController {

@@ -6,9 +6,9 @@ import { useOktaAuth } from '@okta/okta-react';
 const Navbar =()=> {
   const { oktaAuth, authState } = useOktaAuth();
 
-  if (!authState) {
-    return <SpinnerLoading />
-  }
+  // if (!authState) {
+  //   return <SpinnerLoading />
+  // }
 
   const handleLogout = async () => oktaAuth.signOut();
 
@@ -41,7 +41,7 @@ const Navbar =()=> {
                 Search Books
               </NavLink>
             </li>
-            {authState.isAuthenticated &&
+            {authState?.isAuthenticated &&
             <li className="nav-item">
               <NavLink className="nav-link" to="/shelf">
                 My Library
@@ -50,7 +50,7 @@ const Navbar =()=> {
 }
           </ul>
           <ul className="navbar-nav ms-auto">
-            {!authState.isAuthenticated ?
+            {!authState?.isAuthenticated ?
               <li className='nav-item m-1'>
                 <NavLink type='button' className='btn btn-outline-success' to='/login'>Sign in</NavLink>
               </li>
