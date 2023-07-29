@@ -1,7 +1,10 @@
 package com.dwr.library.backend.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dwr.library.backend.entity.Library;
 
@@ -34,5 +37,6 @@ import com.dwr.library.backend.entity.Library;
 
 @Repository
 public interface LibraryRepository extends JpaRepository<Library, Long> {
+	Page<Library> findByUserEmail(@RequestParam String userEmail, Pageable pageable);
 
 }

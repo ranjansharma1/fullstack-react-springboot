@@ -25,14 +25,12 @@ export const PostQuestion = () => {
                 },
                 body: JSON.stringify(postRequest)
             };
-            setShowAlert(true);
-            // console.log(postRequest)
             const submitResponse = await fetch(url, requestOptions);
-            // console.log(submitResponse)
             if (!submitResponse.ok)
                 throw new Error("Something Went Wrong");
 
             // Show the alert
+            setShowAlert(true);
             setAlertMessage("Your query submitted successfully!");
 
             // Hide the alert after 3 seconds
@@ -56,7 +54,7 @@ export const PostQuestion = () => {
                     {showAlert && (
                         <div className="alert alert-success alert-dismissible fade show" role="alert">
                             {alertMessage}
-                        <button type="button" className="btn-close" onClick={() => setShowAlert(false)}></button>
+                            <button type="button" className="btn-close" onClick={() => setShowAlert(false)}></button>
                         </div>
                     )}
                     <div className="mb-3">
