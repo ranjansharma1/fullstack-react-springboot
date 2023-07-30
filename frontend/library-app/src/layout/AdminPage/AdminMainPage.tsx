@@ -30,7 +30,7 @@ export const AdminMainPage = () => {
 
                     <button onClick={changeQuantityOfBooksClickFunction} className="nav-link" id="nav-admin-tab" data-bs-toggle="tab" data-bs-target="#nav-admin" type="button" role="tab" aria-controls="nav-admin" aria-selected="false">Change Quantity</button>
                     
-                    <button onClick={messagesClickFunction} className="nav-link" id="nav-massage-tab" data-bs-toggle="tab" data-bs-target="#nav-massage" type="button" role="tab" aria-controls="nav-massage" aria-selected="false">massage Massages</button>
+                    <button onClick={messagesClickFunction} className="nav-link" id="nav-massage-tab" data-bs-toggle="tab" data-bs-target="#nav-massage" type="button" role="tab" aria-controls="nav-massage" aria-selected="false">Admin Massages</button>
                 </div>
             </nav>
             <div className="tab-content" id="nav-tabContent">
