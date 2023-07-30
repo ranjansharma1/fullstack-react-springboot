@@ -52,7 +52,7 @@ public class LibraryService {
 	public Library responseQuestion(String adminEmail, AdminQuestionRequest adminQuestionRequest ) throws Exception {
 		Optional<Library> question= libraryRepository.findById(adminQuestionRequest.getId());
 		if(!question.isPresent()) {
-			throw new Exception("Question Not Found");
+			throw new Exception("Question with this id not Found");
 		}
 		question.get().setResponse(adminQuestionRequest.getResponse());
 		question.get().setAdminEmail(adminEmail);
