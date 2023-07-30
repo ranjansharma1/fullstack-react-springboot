@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import LibraryModel from "../../../models/LibraryModel";
 import { useOktaAuth } from "@okta/okta-react";
-import { error } from "console";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const ResponsePage = () => {
 
@@ -11,12 +11,16 @@ export const ResponsePage = () => {
   const [isLoadingQuestionResponse, setIsLoadingQuestionResponse] = useState(true);
   const [httpError, sethttpError] = useState(null);
 
+  //Infifnite Loading
+  const [page, setPage] = useState(0);
+  const [totalResult, setTotalResult] = useState(0);
+
   const baseURL: string = "http://localhost:8080/api";
 
   useEffect(() => {
     const fetchQuestionList = async () => {
       if (authState?.isAuthenticated) {
-        const url: string = `${baseURL}/libraries/search/findByUserEmail?userEmail=${authState.accessToken?.claims.sub}`;
+        const url: string = `${baseURL}/libraries/search/findByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=0&size=5`;
         const requestOptions = {
           method: 'GET',
           headers: {
@@ -41,9 +45,21 @@ export const ResponsePage = () => {
   }, [authState]);
 
 
-  if (isLoadingQuestionResponse) {
-    return <SpinnerLoading />;
-  }
+  const fetchMoreData = async () => {
+    setIsLoadingQuestionResponse(true);
+    const nextPage = page + 1;
+    const url: string = `${baseURL}/libraries/search/findByUserEmail?userEmail=${authState?.accessToken?.claims.sub}&page=${nextPage}&size=5`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
+    const parseData = await response.json();
+    // the spread operator (...) is used to create a new array that contains the previous books (prevBooks) as well as the new books fetched from parseData._embedded.libraries. It is concating the array adding to the previos array...
+    setQuestions((prevBooks) => [...prevBooks, ...parseData._embedded.libraries]);
+    setTotalResult(parseData.page.totalElements);
+    setIsLoadingQuestionResponse(false);
+    setPage(nextPage);
+  };
 
   if (httpError) {
     return (
@@ -58,19 +74,27 @@ export const ResponsePage = () => {
       {questions.length > 0 ?
         <div >
           <h5 className="my-3">Current Q/A:</h5>
-          {questions.map(question => (
-            <div key={question.id} className="card shadow rounded m-3">
-              <div className="card-body">
-                <h5 className="card-title">Case #{question.id}: {question.title}</h5>
-                <h6 className="card-subtitle mb-2 text-body-secondary">{question.userEmail}</h6>
-                <p className="card-text">{question.question}</p>
-                <hr />
-                <h5>Response:</h5>
-                <p>Pending Response from administration. Please be patient.</p>
+          {isLoadingQuestionResponse && <SpinnerLoading />}
+          <InfiniteScroll
+            dataLength={questions.length}
+            next={fetchMoreData}
+            hasMore={questions.length !== totalResult}
+            loader={<SpinnerLoading />}
+          >
+            {questions.map(question => (
+              <div key={question.id} className="card shadow rounded m-3">
+                <div className="card-body">
+                  <h5 className="card-title">Case #{question.id}: {question.title}</h5>
+                  <h6 className="card-subtitle mb-2 text-body-secondary">{question.userEmail}</h6>
+                  <p className="card-text">{question.question}</p>
+                  <hr />
+                  <h5>Response:</h5>
+                  <p>Pending Response from administration. Please be patient.</p>
+                </div>
               </div>
-            </div>
+            ))}
+          </InfiniteScroll>
 
-          ))}
         </div>
 
         :
