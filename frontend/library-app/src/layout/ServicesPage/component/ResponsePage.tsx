@@ -96,9 +96,12 @@ export const ResponsePage = () => {
           </InfiniteScroll>
 
         </div>
-
         :
-        <h5>All questions you submit will be shown here</h5>
+        <>
+          {isLoadingQuestionResponse ? <SpinnerLoading /> :
+            <h5>All questions you submit will be shown here</h5>
+          }
+        </>
       }
     </div>
   )
