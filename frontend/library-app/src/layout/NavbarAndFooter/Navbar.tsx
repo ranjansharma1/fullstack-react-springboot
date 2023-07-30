@@ -1,9 +1,9 @@
 import React from "react";
-import {  NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { useOktaAuth } from '@okta/okta-react';
 
-const Navbar =()=> {
+const Navbar = () => {
   const { oktaAuth, authState } = useOktaAuth();
 
   // if (!authState) {
@@ -15,9 +15,9 @@ const Navbar =()=> {
   // console.log(authState);
 
   return (
-    <nav className="navbar navbar-expand-lg sticky-top" style={{backgroundColor: "#e3f2fd"}}>
+    <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: "#e3f2fd" }}>
       <div className="container-fluid">
-        <NavLink   className="navbar-brand" to="/home">DwR</NavLink>
+        <NavLink className="navbar-brand" to="/home">DwR</NavLink>
         <button
           className="navbar-toggler"
           type="button"
@@ -42,12 +42,19 @@ const Navbar =()=> {
               </NavLink>
             </li>
             {authState?.isAuthenticated &&
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/shelf">
-                My Library
-              </NavLink>
-            </li>
-}
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/shelf">
+                  My Library
+                </NavLink>
+              </li>
+            }
+            {authState?.isAuthenticated &&
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/admin">
+                  Admin
+                </NavLink>
+              </li>
+            }
           </ul>
           <ul className="navbar-nav ms-auto">
             {!authState?.isAuthenticated ?
@@ -65,4 +72,4 @@ const Navbar =()=> {
     </nav>
   );
 }
-export default  Navbar;
+export default Navbar;

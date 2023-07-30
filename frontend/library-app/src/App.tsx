@@ -13,6 +13,7 @@ import LoginWidget from "./auth/LoginWidget";
 import { ReviewsListPage } from "./layout/BookCheckoutPage/ReviewComponents/ReviewsListPage";
 import { BookSelfPage } from "./layout/BookSelfPage/BookSelfPage";
 import { ServicesPage } from "./layout/ServicesPage/ServicesPage";
+import { AdminMainPage } from "./layout/AdminPage/AdminMainPage";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -62,6 +63,9 @@ function App() {
           </SecureRoute>
           <SecureRoute path="/services">
             <ServicesPage/>
+          </SecureRoute>
+          <SecureRoute path="/admin">
+            <AdminMainPage/>
           </SecureRoute>
         </Switch>
         </Security>
