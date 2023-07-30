@@ -17,11 +17,12 @@ export const AddNewBook = () => {
             </div>
             <div className="col-md-3">
               <label htmlFor="validationCategory" className="form-label">Category</label>
-              <select className="form-select" aria-label="Default select example" id="validationCategory" required>
-                <option selected>Category</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select className="form-select" aria-label="Default select example" id="validationCategory" defaultValue="" required>
+                <option value="">All</option>
+                <option value="1">Frontend</option>
+                <option value="2">Backend</option>
+                <option value="3">Data Science</option>
+                <option value="4">Devops</option>
               </select>
             </div>
             <div className="col-md-12">
@@ -30,15 +31,14 @@ export const AddNewBook = () => {
             </div>
             <div className="col-md-5">
               <label htmlFor="validationCopies" className="form-label">Copies</label>
-              <input type="number" className="form-control" id="validationCopies" style={{width:"200px"}} required />
+              <input type="number" className="form-control" id="validationCopies" style={{ width: "200px" }} required />
             </div>
             <div className="col-md-6">
               <label htmlFor="validationImage" className="form-label">Upload Image</label>
               <input type="file" className="form-control" aria-label="file example" id="validationImage" />
             </div>
-            
             <div className="col-12 mt-5" >
-              <button style={{width:"inherit"}} className="btn btn-primary" type="submit" >Add Book</button>
+              <button style={{ width: "inherit" }} className="btn btn-primary" type="submit" >Add Book</button>
             </div>
           </form>
         </div>

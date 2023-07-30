@@ -2,8 +2,11 @@ import { useState } from "react";
 import { AddNewBook } from "./components/AddNewBook";
 import { ChangeQuantities } from "./components/ChangeQuantities";
 import { AdminMessages } from "./components/AdminMessages";
+import { useOktaAuth } from "@okta/okta-react";
+import { Redirect } from "react-router-dom";
 
 export const AdminMainPage = () => {
+    const {authState}=useOktaAuth();
     const [changeQuantityOfBooksClick, setChangeQuantityOfBooksClick] = useState(false);
     const [messagesClick, setMessagesClick] = useState(false);
 
@@ -20,6 +23,9 @@ export const AdminMainPage = () => {
     function messagesClickFunction() {
         setChangeQuantityOfBooksClick(false);
         setMessagesClick(true);
+    }
+    if (authState?.accessToken?.claims.userType === undefined) {
+        return <Redirect to='/home'/>
     }
     return (
         <section className="container mt-3">
