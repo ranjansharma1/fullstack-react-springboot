@@ -39,5 +39,8 @@ import com.dwr.library.backend.entity.Library;
 public interface LibraryRepository extends JpaRepository<Library, Long> {
 	//Enabling this link: http://localhost:8080/api/libraries/search/findByUserEmail{?userEmail,page,size,sort}
 	Page<Library> findByUserEmail(@RequestParam String userEmail, Pageable pageable);
+	
+	//Exposing this Link: http://localhost:8080/api/libraries/search/findByClosed{?closed,page,size,sort}
+	Page<Library> findByClosed(@RequestParam Boolean closed, Pageable pageable);
 
 }

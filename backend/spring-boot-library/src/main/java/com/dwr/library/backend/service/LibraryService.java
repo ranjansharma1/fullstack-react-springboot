@@ -1,10 +1,13 @@
 package com.dwr.library.backend.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dwr.library.backend.dao.LibraryRepository;
 import com.dwr.library.backend.entity.Library;
+import com.dwr.library.backend.requestmodels.AdminQuestionRequest;
 
 import lombok.AllArgsConstructor;
 
@@ -44,6 +47,19 @@ public class LibraryService {
 		Library services= new Library(questionRequest.getTitle(), questionRequest.getQuestion());
 		services.setUserEmail(userEmail);
 		return libraryRepository.save(services);		
+	}
+	
+	public Library responseQuestion(String adminEmail, AdminQuestionRequest adminQuestionRequest ) throws Exception {
+		Optional<Library> question= libraryRepository.findById(adminQuestionRequest.getId());
+		if(!question.isPresent()) {
+			throw new Exception("Question Not Found");
+		}
+		question.get().setResponse(adminQuestionRequest.getResponse());
+		question.get().setAdminEmail(adminEmail);
+		question.get().setClosed(true);
+		
+		
+		return libraryRepository.save(question.get());
 	}
 	
 }
