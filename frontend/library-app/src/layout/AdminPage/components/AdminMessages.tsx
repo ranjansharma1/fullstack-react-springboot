@@ -2,6 +2,8 @@ import { useOktaAuth } from "@okta/okta-react";
 import { useEffect, useState } from "react"
 import { AdminMassageItem } from "./AdminMassageItem";
 import LibraryModel from "../../../models/LibraryModel";
+import { SpinnerLoading } from "../../Utils/SpinnerLoading";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const AdminMessages = () => {
   const { authState } = useOktaAuth();
@@ -9,12 +11,16 @@ export const AdminMessages = () => {
   const [isLoadingQuestionResponse, setIsLoadingQuestionResponse] = useState(true);
   const [httpError, sethttpError] = useState(null);
 
+  //Infifnite Loading
+  const [page, setPage] = useState(0);
+  const [totalResult, setTotalResult] = useState(0);
+
   const baseURL: string = "http://localhost:8080/api";
 
   useEffect(() => {
     const fetchAdminResponse = async () => {
       if (authState?.isAuthenticated) {
-        const url: string = `${baseURL}/libraries/search/findByClosed?closed=false`;
+        const url: string = `${baseURL}/libraries/search/findByClosed?closed=false&page=0&size=5`;
         const requestOptions = {
           method: 'GET',
           headers: {
@@ -39,6 +45,23 @@ export const AdminMessages = () => {
     });
   }, [authState])
 
+  const fetchMoreData = async () => {
+    setIsLoadingQuestionResponse(true);
+    const nextPage = page + 1;
+    const url: string = `${baseURL}/libraries/search/findByClosed?closed=false&page=${nextPage}&size=5`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
+    const parseData = await response.json();
+    // the spread operator (...) is used to create a new array that contains the previous books (prevBooks) as well as the new books fetched from parseData._embedded.libraries. It is concating the array adding to the previos array...
+    setResponses((prevBooks) => [...prevBooks, ...parseData._embedded.libraries]);
+    setTotalResult(parseData.page.totalElements);
+    setIsLoadingQuestionResponse(false);
+    setPage(nextPage);
+  };
+
+
   if (httpError) {
     return (
       <div className="container m-5 text-center text-danger">
@@ -49,10 +72,28 @@ export const AdminMessages = () => {
 
   return (
     <div className="m-3">
-      <h4 className="mt-3">Pending Q/A :</h4>
-      {responses.map(response => (
-        <AdminMassageItem  key={response.id} response={response}/>
-      ))}
+      {responses.length > 0 ?
+        <>
+          <h4 className="mt-3">Pending Q/A :</h4>
+          {isLoadingQuestionResponse && <SpinnerLoading />}
+          <InfiniteScroll
+            dataLength={responses.length}
+            next={fetchMoreData}
+            hasMore={responses.length !== totalResult}
+            loader={<SpinnerLoading />}
+          >
+            {responses.map(response => (
+              <AdminMassageItem key={response.id} response={response} />
+            ))}
+          </InfiniteScroll>
+        </>
+        :
+        <>
+          {isLoadingQuestionResponse ? <SpinnerLoading /> :
+            <h4 className="mt-3"> No Pending Q/A :</h4>
+          }
+        </>
+      }
     </div>
   )
 }
