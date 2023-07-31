@@ -1,9 +1,11 @@
 import React, { useState } from "react"
 import LibraryModel from "../../../models/LibraryModel"
 import AdminResponseModel from "../../../models/AdminResponseModel"
+import { useOktaAuth } from "@okta/okta-react"
 
 export const AdminMassageItem: React.FC<{ response: LibraryModel, handleSubmitResponse: any }> = (props) => {
 
+    const { authState } = useOktaAuth();
     const [adminResponse, setAdminResponse] = useState('');
     function submitBtn() {
         if (props.response.id !== null && props.response.response !== '') {
@@ -25,7 +27,7 @@ export const AdminMassageItem: React.FC<{ response: LibraryModel, handleSubmitRe
                             <textarea onChange={e => setAdminResponse(e.target.value)} value={adminResponse} className='form-control' id='exampleFormControlTextarea1' rows={3} required />
                         </div>
                         <div>
-                            <button onClick={submitBtn} type='button' className='btn btn-primary mt-3'>
+                            <button disabled={!authState?.isAuthenticated || adminResponse === ""} onClick={submitBtn} type='button' className='btn btn-primary mt-3'>
                                 Submit Response
                             </button>
                         </div>

@@ -86,10 +86,17 @@ export const ResponsePage = () => {
                 <div className="card-body">
                   <h5 className="card-title">Case #{question.id}: {question.title}</h5>
                   <h6 className="card-subtitle mb-2 text-body-secondary">{question.userEmail}</h6>
-                  <p className="card-text">{question.question}</p>
+                  <p className="card-text bg-light text-danger">{question.question}</p>
                   <hr />
                   <h5>Response:</h5>
-                  <p>Pending Response from administration. Please be patient.</p>
+                  {question.closed ?
+                    <>
+                      <h6 className="card-subtitle mb-2 text-body-secondary">Admin ({question.adminEmail})</h6>
+                      <p className="card-text bg-light text-success">{question.response}</p>
+                    </>
+                    :
+                    <p className="card-text bg-light ">Pending Response from administration. Please be patient.</p>
+                  }
                 </div>
               </div>
             ))}
