@@ -4,6 +4,7 @@ import { AdminMassageItem } from "./AdminMassageItem";
 import LibraryModel from "../../../models/LibraryModel";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import InfiniteScroll from "react-infinite-scroll-component";
+import AdminResponseModel from "../../../models/AdminResponseModel";
 
 export const AdminMessages = () => {
   const { authState } = useOktaAuth();
@@ -14,6 +15,9 @@ export const AdminMessages = () => {
   //Infifnite Loading
   const [page, setPage] = useState(0);
   const [totalResult, setTotalResult] = useState(0);
+
+  //Check if response is submitted
+  const [isResponseSubmitted, setIsResponseSubmitted] = useState(false);
 
   const baseURL: string = "http://localhost:8080/api";
 
@@ -35,7 +39,7 @@ export const AdminMessages = () => {
         const responseData = await response.json();
         setResponses(responseData._embedded.libraries);
         setIsLoadingQuestionResponse(false);
-        console.log(responseData._embedded.libraries);
+        // console.log(responseData._embedded.libraries);
 
       }
     }
@@ -43,7 +47,7 @@ export const AdminMessages = () => {
       setIsLoadingQuestionResponse(false);
       sethttpError(error.massage);
     });
-  }, [authState])
+  }, [authState, isResponseSubmitted])
 
   const fetchMoreData = async () => {
     setIsLoadingQuestionResponse(true);
@@ -60,6 +64,26 @@ export const AdminMessages = () => {
     setIsLoadingQuestionResponse(false);
     setPage(nextPage);
   };
+
+  //handling response suubmit button
+  async function handleSubmitResponse(questionId: number, questionResponse: string) {
+    const url: string = `${baseURL}/libraries/secure/admin`
+    if (authState?.isAuthenticated && questionId !== null && questionResponse !== '') {
+      const adminResponse: AdminResponseModel = new AdminResponseModel(questionId, questionResponse);
+      const requestOptions = {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(adminResponse)
+      };
+      const response = await fetch(url, requestOptions);
+      if (!response.ok)
+        throw new Error("Something went wrong");
+      setIsResponseSubmitted(!isResponseSubmitted);
+    }
+  }
 
 
   if (httpError) {
@@ -83,7 +107,7 @@ export const AdminMessages = () => {
             loader={<SpinnerLoading />}
           >
             {responses.map(response => (
-              <AdminMassageItem key={response.id} response={response} />
+              <AdminMassageItem key={response.id} response={response} handleSubmitResponse={handleSubmitResponse} />
             ))}
           </InfiniteScroll>
         </>

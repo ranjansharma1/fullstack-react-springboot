@@ -17,30 +17,32 @@ import com.dwr.library.backend.entity.Library;
  * Page<Book>: This specifies the return type of the method. It indicates that
  * the method will return a page of Book objects. In Java, a Page is a data
  * structure that represents a chunk or segment of a larger collection of items,
- * allowing for pagination and efficient retrieval of
- * data. 
+ * allowing for pagination and efficient retrieval of data.
  * 
- * @RequestParam("category") String category: This annotation indicates
- * that the category parameter will be supplied as a request parameter when
- * invoking this method. The value within quotes, "category," corresponds to the
- * name of the request parameter. The String category parameter itself
- * represents the category value to be searched. 
+ * @RequestParam("category") String category: This annotation indicates that the
+ * category parameter will be supplied as a request parameter when invoking this
+ * method. The value within quotes, "category," corresponds to the name of the
+ * request parameter. The String category parameter itself represents the
+ * category value to be searched.
  * 
- * Pageable pageable: This parameter represents the pagination information, allowing for the control of
- * the result set's size and ordering. 
+ * Pageable pageable: This parameter represents the pagination information,
+ * allowing for the control of the result set's size and ordering.
  * 
- * Pageable is an interface in Spring Data that provides methods for specifying pagination parameters like page number,
- * page size, and sorting options.
+ * Pageable is an interface in Spring Data that provides methods for specifying
+ * pagination parameters like page number, page size, and sorting options.
  * 
- * This Repository will expose this link: http://localhost:8080/api/libraryServices{?page,size,sort}
+ * This Repository will expose this link:
+ * http://localhost:8080/api/libraryServices{?page,size,sort}
  */
 
 @Repository
 public interface LibraryRepository extends JpaRepository<Library, Long> {
-	//Enabling this link: http://localhost:8080/api/libraries/search/findByUserEmail{?userEmail,page,size,sort}
+	// Enabling this link:
+	// http://localhost:8080/api/libraries/search/findByUserEmail{?userEmail,page,size,sort}
 	Page<Library> findByUserEmail(@RequestParam String userEmail, Pageable pageable);
-	
-	//Exposing this Link: http://localhost:8080/api/libraries/search/findByClosed{?closed,page,size,sort}
+
+	// Exposing this Link:
+	// http://localhost:8080/api/libraries/search/findByClosed{?closed,page,size,sort}
 	Page<Library> findByClosed(@RequestParam Boolean closed, Pageable pageable);
 
 }

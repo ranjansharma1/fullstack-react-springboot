@@ -42,24 +42,23 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class LibraryService {
 	private LibraryRepository libraryRepository;
-	
+
 	public Library postQuestion(String userEmail, Library questionRequest) {
-		Library services= new Library(questionRequest.getTitle(), questionRequest.getQuestion());
+		Library services = new Library(questionRequest.getTitle(), questionRequest.getQuestion());
 		services.setUserEmail(userEmail);
-		return libraryRepository.save(services);		
+		return libraryRepository.save(services);
 	}
-	
-	public Library responseQuestion(String adminEmail, AdminQuestionRequest adminQuestionRequest ) throws Exception {
-		Optional<Library> question= libraryRepository.findById(adminQuestionRequest.getId());
-		if(!question.isPresent()) {
+
+	public Library responseQuestion(String adminEmail, AdminQuestionRequest adminQuestionRequest) throws Exception {
+		Optional<Library> question = libraryRepository.findById(adminQuestionRequest.getQuestionId());
+		if (!question.isPresent()) {
 			throw new Exception("Question with this id not Found");
 		}
 		question.get().setResponse(adminQuestionRequest.getResponse());
 		question.get().setAdminEmail(adminEmail);
 		question.get().setClosed(true);
-		
-		
+
 		return libraryRepository.save(question.get());
 	}
-	
+
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class AdminQuestionRequest {
-	private long id;
+	private long questionId;
 	private String response;
 }

@@ -54,18 +54,14 @@ public class LibraryController {
 		return libraryService.postQuestion(userEmail, questionRequest);
 	}
 
-	/**PUT API: http://localhost:8080/api/libraries/secure/admin 
-	 * {
-		    "id" :  3,
-		    "response" : "Working on this issue"
-		}	 
-	 * */
+	/**
+	 * PUT API: http://localhost:8080/api/libraries/secure/admin { "id" : 3,
+	 * "response" : "Working on this issue" }
+	 */
 	@PutMapping("/secure/admin")
 	public Library responseQuestion(@RequestHeader(value = "Authorization") String token,
 			@RequestBody AdminQuestionRequest admRequest) throws Exception {
-//		System.out.println(admRequest);
 		String adminEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
-		System.out.println("admin Email: "+adminEmail);
 		String admin = ExtractJWT.payloadJWTExtraction(token, "\"userType\"");
 		if (admin == null || !admin.equals("admin")) {
 			throw new Exception("Administration page only");
