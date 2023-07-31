@@ -35,7 +35,8 @@ public class SecurityConfig {
 							configurer.antMatchers(
 										"/api/books/secure/**", 
 										"/api/reviews/secure/**", 
-										"/api/libraries/secure/**")
+										"/api/libraries/secure/**",
+										"/api/admin/secure/**")
 							.authenticated())
 							.oauth2ResourceServer()
 							.jwt();
