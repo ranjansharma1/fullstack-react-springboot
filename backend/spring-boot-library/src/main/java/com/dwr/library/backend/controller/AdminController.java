@@ -26,6 +26,7 @@ import com.dwr.library.backend.utils.ExtractJWT;
  * Authorization -> Type - Bearer Token -> Token number get from user login as access token
  * */
 
+@CrossOrigin("http://localhost:3000")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -46,7 +47,7 @@ public class AdminController {
 		String admin = ExtractJWT.payloadJWTExtraction(token, "\"userType\"");
 		if (admin == null || !admin.equals("admin")) {
 			throw new Exception("Administration page only");
-		}		
+		}
 		return adminService.addNewBook(newBookRequest);
 	}
 
