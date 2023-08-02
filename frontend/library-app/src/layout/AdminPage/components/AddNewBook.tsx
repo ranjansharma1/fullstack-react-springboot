@@ -1,6 +1,7 @@
 import { useOktaAuth } from "@okta/okta-react";
 import { useState } from "react"
 import AddNewBookModel from "../../../models/AddNewBookModel";
+import AlertMassage from "../../Utils/AlertMassage";
 
 export const AddNewBook = () => {
   const { authState } = useOktaAuth();
@@ -13,12 +14,15 @@ export const AddNewBook = () => {
   const [category, setCategory] = useState('')
   const [img, setImg] = useState<any>(null)
 
+  //Display warning massages
+  const [displayWarning, setDisplayWarning] = useState(false);
+  const [alertMassage, setAlertMassage] = useState("")
+
   const baseURL: string = "http://localhost:8080/api";
 
   async function submitNewBook(event: any) {
     event.preventDefault();
     const url: string = `${baseURL}/admin/secure/newBook`;
-    console.log(url);
     if (authState?.isAuthenticated && title !== '' && author !== '' && description !== '' && copies >= 0 && category !== '') {
       const newBook: AddNewBookModel = new AddNewBookModel(title, author, description, copies, category);
       newBook.img = img;
@@ -40,6 +44,15 @@ export const AddNewBook = () => {
       setCategory('');
       setImg(null);
       console.log("Book Added successfully")
+
+      //Display Warning message
+      setDisplayWarning(true)
+      setAlertMassage("Book Submitted successfully")
+      // Hide the alert after 3 seconds
+      setTimeout(() => {
+        setDisplayWarning(false);
+        setAlertMassage("");
+      }, 3000);
     }
   }
 
@@ -80,11 +93,12 @@ export const AddNewBook = () => {
   return (
     <div>
       <div className="card rounded m-3">
+        {displayWarning && <AlertMassage massage={alertMassage} />}
         <div className="card-header">
           Add a New Book
         </div>
         <div className="card-body">
-          <form className="row g-3" method="POST">
+          <form className="row g-3 was-validated" method="POST" >
             <div className="col-md-6">
               <label htmlFor="validationAuthor" className="form-label">Title</label>
               <input onChange={e => setTitle(e.target.value)} value={title} type="text" className="form-control" id="validationAuthor" required />
@@ -118,7 +132,13 @@ export const AddNewBook = () => {
               <input type="file" className="form-control" aria-label="file example" id="validationImage" onChange={e => base64ConversionForImage(e)} />
             </div>
             <div className="col-12 mt-5" >
-              <button onClick={submitNewBook} className="btn btn-primary w-100" type="submit" >Add Book</button>
+              <button
+                disabled={!authState?.isAuthenticated || title === "" || author === "" || description === "" || category === ""}
+                onClick={submitNewBook}
+                className="btn btn-primary w-100"
+                type="submit" >
+                Add Book
+              </button>
             </div>
           </form>
         </div>

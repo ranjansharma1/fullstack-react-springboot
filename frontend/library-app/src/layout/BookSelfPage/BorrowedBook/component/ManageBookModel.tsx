@@ -18,7 +18,27 @@ When you set data-bs-keyboard="false", it disables the ability to close the moda
 *
 *(event) => event.preventDefault(): If the condition is true (the book is overdue), this function is executed when the button is clicked. The event.preventDefault() is used to prevent the default behavior of the button click. In other words, when the book is overdue, clicking the button won't trigger any action. It effectively disables the button click.
  */
-export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any, renewBook: any }> = (props) => {
+export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any, renewBook: any, setDisplayWarning: any, setAlertMassage:any }> = (props) => {
+    function returnBookBtn(){
+        props.returnBook(props.borrowed.book.id);
+        props.setDisplayWarning(true);
+        props.setAlertMassage("Book return successfully.");
+        // Hide the alert after 3 seconds
+        setTimeout(() => {
+            props.setDisplayWarning(false);
+            props.setAlertMassage('');
+        }, 3000);
+    }
+    function renewBookDateBtn(){
+        props.renewBook(props.borrowed.book.id);
+        props.setDisplayWarning(true);
+        props.setAlertMassage("Book Renewed for 7 days.");
+        // Hide the alert after 3 seconds
+        setTimeout(() => {
+            props.setDisplayWarning(false);
+            props.setAlertMassage('');
+        }, 3000);
+    }
     return (
         <div className="modal" id={`book${props.borrowed.book.id}`} aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
             <div className="modal-dialog">
@@ -61,7 +81,7 @@ export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any
                         }
                         <div className="container list-group">
                             <button
-                                onClick={() => props.returnBook(props.borrowed.book.id)}
+                                onClick={returnBookBtn}
                                 type="button"
                                 data-bs-dismiss='modal'
                                 className='list-group-item list-group-item-action' aria-current='true'
@@ -74,7 +94,7 @@ export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any
                                     props.renewBook.daysLeft < 0 ?
                                         (event) => event.preventDefault()
                                         :
-                                        () => props.renewBook(props.borrowed.book.id)
+                                        () => {renewBookDateBtn()}
                                 }
                                 type="button"
                                 data-bs-dismiss='modal'

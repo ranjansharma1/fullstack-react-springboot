@@ -1,15 +1,22 @@
 import React, { useState } from "react"
 import LibraryModel from "../../../models/LibraryModel"
-import AdminResponseModel from "../../../models/AdminResponseModel"
 import { useOktaAuth } from "@okta/okta-react"
 
-export const AdminMassageItem: React.FC<{ response: LibraryModel, handleSubmitResponse: any }> = (props) => {
+export const AdminMassageItem: React.FC<{ response: LibraryModel, handleSubmitResponse: any, setDisplayWarning: any, setAlertMassage:any }> = (props) => {
 
     const { authState } = useOktaAuth();
     const [adminResponse, setAdminResponse] = useState('');
     function submitBtn() {
         if (props.response.id !== null && props.response.response !== '') {
             props.handleSubmitResponse(props.response.id, adminResponse);
+
+            props.setDisplayWarning(true);
+            props.setAlertMassage("Response submitted successfully.");
+            // Hide the alert after 3 seconds
+            setTimeout(() => {
+                props.setDisplayWarning(false);
+                props.setAlertMassage('');
+            }, 3000);
         }
     }
     return (

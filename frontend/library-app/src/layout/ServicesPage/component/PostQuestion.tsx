@@ -1,14 +1,17 @@
 import { FormEvent, useState } from "react";
 import LibraryModel from "../../../models/LibraryModel";
 import { useOktaAuth } from "@okta/okta-react";
+import AlertMassage from "../../Utils/AlertMassage";
 
 export const PostQuestion = () => {
     const { authState } = useOktaAuth();
 
     const [title, setTitle] = useState("");
     const [question, setQuestion] = useState("");
-    const [alertMessage, setAlertMessage] = useState("");
-    const [showAlert, setShowAlert] = useState(false);
+
+    //Display warning massages
+    const [displayWarning, setDisplayWarning] = useState(false);
+    const [alertMassage, setAlertMassage] = useState("")
 
     const baseURL: string = "http://localhost:8080/api";
 
@@ -29,13 +32,13 @@ export const PostQuestion = () => {
             if (!submitResponse.ok)
                 throw new Error("Something Went Wrong");
 
-            // Show the alert
-            setShowAlert(true);
-            setAlertMessage("Your query submitted successfully!");
-
+            //Display Warning message
+            setDisplayWarning(true)
+            setAlertMassage("Your query submitted successfully!")
             // Hide the alert after 3 seconds
             setTimeout(() => {
-                setShowAlert(false);
+                setDisplayWarning(false);
+                setAlertMassage("");
             }, 3000);
 
             // Clear the form fields
@@ -46,17 +49,12 @@ export const PostQuestion = () => {
 
     return (
         <div className="card mt-3">
+            {displayWarning && <AlertMassage massage={alertMassage} />}
             <div className="card-header">
                 Ask Question to DWR Admin
             </div>
             <div className="card-body">
                 <form method="POST">
-                    {showAlert && (
-                        <div className="alert alert-success alert-dismissible fade show" role="alert">
-                            {alertMessage}
-                            <button type="button" className="btn-close" onClick={() => setShowAlert(false)}></button>
-                        </div>
-                    )}
                     <div className="mb-3">
                         <label htmlFor="title" className="form-label">Title</label>
                         <input onChange={e => setTitle(e.target.value)} value={title} type="text" className="form-control" id="title" required />

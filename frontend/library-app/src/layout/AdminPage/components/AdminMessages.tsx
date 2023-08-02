@@ -5,6 +5,7 @@ import LibraryModel from "../../../models/LibraryModel";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AdminResponseModel from "../../../models/AdminResponseModel";
+import AlertMassage from "../../Utils/AlertMassage";
 
 export const AdminMessages = () => {
   const { authState } = useOktaAuth();
@@ -18,6 +19,10 @@ export const AdminMessages = () => {
 
   //Check if response is submitted
   const [isResponseSubmitted, setIsResponseSubmitted] = useState(false);
+
+  //Display warning massages
+  const [displayWarning, setDisplayWarning] = useState(false);
+  const [alertMassage, setAlertMassage] = useState("");
 
   const baseURL: string = "http://localhost:8080/api";
 
@@ -98,6 +103,7 @@ export const AdminMessages = () => {
     <div className="m-3">
       {responses.length > 0 ?
         <>
+          {displayWarning && <AlertMassage massage={alertMassage} />}
           <h4 className="mt-3">Pending Q/A :</h4>
           {isLoadingQuestionResponse && <SpinnerLoading />}
           <InfiniteScroll
@@ -107,7 +113,7 @@ export const AdminMessages = () => {
             loader={<SpinnerLoading />}
           >
             {responses.map(response => (
-              <AdminMassageItem key={response.id} response={response} handleSubmitResponse={handleSubmitResponse} />
+              <AdminMassageItem key={response.id} response={response} handleSubmitResponse={handleSubmitResponse} setDisplayWarning={setDisplayWarning} setAlertMassage={setAlertMassage}/>
             ))}
           </InfiniteScroll>
         </>

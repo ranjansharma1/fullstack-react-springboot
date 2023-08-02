@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom"
 import { ManageBookModel } from "./ManageBookModel"
 import BorrowedBook from "../../../../models/BorrowedBook"
+import AlertMassage from "../../../Utils/AlertMassage"
+import { useState } from "react"
 
 export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[], returnBook: any, renewBook: any }> = (props) => {
+    //Display warning massages
+    const [displayWarning, setDisplayWarning] = useState(false);
+    const [alertMassage, setAlertMassage] = useState("")
+
     return (
         <div>
+            {displayWarning && <AlertMassage massage={alertMassage} />}
             {props.borrowedBookList.map(borrowed =>
                 <div key={borrowed.book.id}>
                     <div className="row mt-4 " >
@@ -46,7 +53,7 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                         </div>
                     </div>
                     <hr />
-                    <ManageBookModel borrowed={borrowed} returnBook={props.returnBook} renewBook={props.renewBook} />
+                    <ManageBookModel borrowed={borrowed} returnBook={props.returnBook} renewBook={props.renewBook} setDisplayWarning={setDisplayWarning} setAlertMassage={setAlertMassage}/>
                 </div>
 
             )}
