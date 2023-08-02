@@ -1,5 +1,7 @@
 package com.dwr.library.backend.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +42,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AdminService {
 	private BookRepository bookRepository;
-	
+
 	public Book addNewBook(AddNewBookRequest newBookRequest) {
-		Book newBook= new Book();
+		Book newBook = new Book();
 		newBook.setTitle(newBookRequest.getTitle());
 		newBook.setAuthor(newBookRequest.getAuthor());
 		newBook.setDescription(newBookRequest.getDescription());
@@ -52,6 +54,32 @@ public class AdminService {
 		newBook.setImg(newBookRequest.getImg());
 		return bookRepository.save(newBook);
 	}
-	
+
+	public String increaseBookQuantity(Long bookId) throws Exception {
+
+		Optional<Book> book = bookRepository.findById(bookId);
+		if (!book.isPresent()) {
+			throw new Exception("Book with this Id not Found");
+		}
+		book.get().setCopies(book.get().getCopies() + 1);
+		book.get().setCopiesAvailable(book.get().getCopiesAvailable() + 1);
+		bookRepository.save(book.get());
+
+		return "Book Quantity increased by 1";
+	}
+
+	public String decreaseBookQuantity(Long bookId) throws Exception {
+
+		Optional<Book> book = bookRepository.findById(bookId);
+		if (!book.isPresent() || book.get().getCopiesAvailable() <= 0 || book.get().getCopies() <= 0) {
+			throw new Exception("Book not found or quantity locked");
+		}
+
+		book.get().setCopies(book.get().getCopies() - 1);
+		book.get().setCopiesAvailable(book.get().getCopiesAvailable() - 1);
+		bookRepository.save(book.get());
+
+		return "Book Quantity decreased by 1";
+	}
 
 }
