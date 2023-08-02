@@ -66,6 +66,7 @@ public class AdminController {
 		return adminService.increaseBookQuantity(bookId);
 	}
 
+	// PUTAPI: http://localhost:8080/api/admin/secure/book/decrease?bookId=1
 	@PutMapping("/secure/book/decrease")
 	public String decreaseBookQuantity(@RequestHeader(value = "Authorization") String token, @RequestParam Long bookId)
 			throws Exception {
