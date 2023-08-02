@@ -1,34 +1,42 @@
-export const ChangeQuantities = () => {
-    return (
-        <div className="m-3">
-            <h4 className="mt-3">Number os Results: (23)</h4>
-            <h6 className="text-secondary">1 to 5 of 23 items</h6>
-            <div className="card p-3">
-                <div className=" row">
-                    <div className="col-md-3 d-flex justify-content-center align-items-center">
-                        <img src={require("../../../images/BooksImages/book1.png")} width="123" height="196" alt="default" />
-                    </div>
-                    <div className="card-body col-md-6">
-                        <h6 className="card-subtitle">Luv, Lena</h6>
-                        <h5 className="card-title">Become a Guru in Javascript</h5>
-                        <p className="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam rerum commodi, dolore veritatis assumenda molestiae dolorem reiciendis tenetur facere omnis iure, eligendi quas dolores consequatur eos eius fugit. Repellendus fugiat, quibusdam suscipit nisi quae architecto praesentium, beatae similique corporis quas incidunt. Velit quasi facere enim, vero molestias neque. Unde illo debitis consectetur enim culpa architecto saepe, dolorum cum quibusdam sequi!</p>
-                    </div>
-                    <div className="col-md-3">
-                        <p>Total Quantity: 10</p>
-                        <p>Books Remaining: 9</p>
-                        <div className="mb-3">
-                            <button type="button" className="btn btn-primary w-100">Add Quantity</button>
-                        </div>
-                        <div className="mb-3">
-                            <button type="button" className="btn btn-warning w-100">Decrease Quantity</button>
-                        </div>
-                        <div className="mb-3">
-                            <button type="button" className="btn btn-danger w-100" >Delete</button>
-                        </div>
-                    </div>
-                </div>
+import { error } from "console";
+import { useEffect, useState } from "react"
+import BookModel from "../../../models/BookModel";
+import { ChangeQuantitiesItem } from "./ChangeQuantitiesItem";
 
-            </div>
+export const ChangeQuantities = () => {
+
+    //Book usState
+    const [bookAPI, setBookAPI] = useState<BookModel[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [httpError, setHttpError] = useState(null);
+
+    const baseUrl: string = "http://localhost:8080/api"; // this should not change
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            const url: string = `${baseUrl}/books`;
+            const response = await fetch(url);
+            if (!response.ok)
+                throw new Error("Something went wrong");
+            const responseJSON = await response.json();
+            setBookAPI(responseJSON._embedded.books);
+            setIsLoading(false);
+            console.log(responseJSON._embedded.books)
+        }
+        fetchBooks().catch((error: any) => {
+            setIsLoading(false);
+            setHttpError(error.message);
+        })
+
+    }, [])
+
+    return (
+        <div className="m-1">
+            <h4 className="mt-3">Number os Results: ({bookAPI.length})</h4>
+            <h6 className="text-secondary">1 to 5 of {bookAPI.length} items</h6>
+            {bookAPI.map(book => (
+                <ChangeQuantitiesItem key={book.id} book={book}/>
+            ))}
         </div>
     )
 }
