@@ -2,6 +2,7 @@ package com.dwr.library.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -75,6 +76,17 @@ public class AdminController {
 			throw new Exception("Administration page only");
 		}
 		return adminService.decreaseBookQuantity(bookId);
+	}
+
+	//DELETE API: http://localhost:8080/api/admin/secure/book/delete?bookId=45
+	@DeleteMapping("/secure/book/delete")
+	public String deleteBook(@RequestHeader(value = "Authorization") String token, @RequestParam Long bookId)
+			throws Exception {
+		String admin = ExtractJWT.payloadJWTExtraction(token, "\"userType\"");
+		if (admin == null || !admin.equals("admin")) {
+			throw new Exception("Administration page only");
+		}
+		return adminService.deleteBook(bookId);
 	}
 
 }

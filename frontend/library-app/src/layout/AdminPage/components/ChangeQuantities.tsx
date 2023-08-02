@@ -21,6 +21,9 @@ export const ChangeQuantities = () => {
     const [searchURL, setSearchURL] = useState("");
     const [bookCategory, setBookCategory] = useState("Book Category");
 
+    //Delete book state
+    const [IsbookDeleted, setIsbookDeleted] = useState(false)
+
     const baseUrl: string = "http://localhost:8080/api/books"; // this should not change
     let url = `${baseUrl}?size=5&page=0`; // Set the page to 0 for new searches
 
@@ -51,7 +54,7 @@ export const ChangeQuantities = () => {
             setIsLoading(false);
             setHttpError(error.message);
         });
-    }, [searchURL]);
+    }, [searchURL, IsbookDeleted]);
 
     const fetchMoreData = async () => {
         setIsLoading(true);
@@ -102,6 +105,7 @@ export const ChangeQuantities = () => {
         }
     };
 
+
     return (
         <div className="container m-1">
             <div className="row my-3">
@@ -142,7 +146,7 @@ export const ChangeQuantities = () => {
                         loader={<SpinnerLoading />}
                     >
                         {bookAPI.map(book => (
-                            <ChangeQuantitiesItem key={book.id} book={book} />
+                            <ChangeQuantitiesItem key={book.id} book={book} setIsbookDeleted={setIsbookDeleted} />
                         ))}
                     </InfiniteScroll>
                 </>

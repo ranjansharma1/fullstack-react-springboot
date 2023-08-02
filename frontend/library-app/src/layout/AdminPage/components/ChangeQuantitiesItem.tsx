@@ -2,7 +2,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import BookModel from "../../../models/BookModel"
 import { useEffect, useState } from "react";
 
-export const ChangeQuantitiesItem: React.FC<{ book: BookModel }> = (props) => {
+export const ChangeQuantitiesItem: React.FC<{ book: BookModel, setIsbookDeleted: any }> = (props) => {
     const { authState } = useOktaAuth();
     const [quantity, setQuantity] = useState<number>(0);
     const [remaining, setRemaining] = useState<number>(0);
@@ -34,7 +34,7 @@ export const ChangeQuantitiesItem: React.FC<{ book: BookModel }> = (props) => {
         setQuantity(quantity + 1);
         setRemaining(remaining + 1);
         console.log(props.book.id)
-        console.log("Increase: ",url)
+        console.log("Increase: ", url)
         console.log('quantity: ' + quantity + ' remaining: ' + remaining);
 
     }
@@ -56,8 +56,25 @@ export const ChangeQuantitiesItem: React.FC<{ book: BookModel }> = (props) => {
         }
         setQuantity(quantity - 1);
         setRemaining(remaining - 1);
-        console.log("Decrease: ",url)
+        console.log("Decrease: ", url)
         console.log('quantity: ' + quantity + ' remaining: ' + remaining);
+    }
+
+    async function deleteBook() {
+        const url = `${baseUrl}/admin/secure/book/delete?bookId=${props.book?.id}`;
+        const requestOptions = {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const updateResponse = await fetch(url, requestOptions);
+        if (!updateResponse.ok) {
+            throw new Error('Something went wrong!');
+        }
+        props.setIsbookDeleted(true);
     }
     return (
         <div className="m-4" >
@@ -77,7 +94,7 @@ export const ChangeQuantitiesItem: React.FC<{ book: BookModel }> = (props) => {
                     </div>
                     <div className="card-body col-md-6">
                         <h6 className="card-subtitle">{props.book.author}</h6>
-                        <h5 className="card-title">{props.book.title}</h5>
+                        <h5 className="card-title">{props.book.id}. {props.book.title}</h5>
                         <p className="card-text">{props.book.description?.slice(0, 350)}...</p>
                     </div>
                     <div className="col-md-3">
@@ -91,7 +108,7 @@ export const ChangeQuantitiesItem: React.FC<{ book: BookModel }> = (props) => {
                             <button onClick={decreaseQuantity} type="button" className="btn btn-warning w-100">Decrease Quantity</button>
                         </div>
                         <div className="mb-3">
-                            <button type="button" className="btn btn-danger w-100" >Delete</button>
+                            <button onClick={deleteBook} type="button" className="btn btn-danger w-100" >Delete</button>
                         </div>
                     </div>
                 </div>

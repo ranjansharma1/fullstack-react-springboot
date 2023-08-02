@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dwr.library.backend.dao.BookRepository;
+import com.dwr.library.backend.dao.CheckoutRepository;
+import com.dwr.library.backend.dao.ReviewRepository;
 import com.dwr.library.backend.entity.Book;
 import com.dwr.library.backend.requestmodels.AddNewBookRequest;
 
@@ -42,6 +44,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AdminService {
 	private BookRepository bookRepository;
+	private CheckoutRepository checkoutRepository;
+	private ReviewRepository reviewRepository;
 
 	public Book addNewBook(AddNewBookRequest newBookRequest) {
 		Book newBook = new Book();
@@ -80,6 +84,18 @@ public class AdminService {
 		bookRepository.save(book.get());
 
 		return "Book Quantity decreased by 1";
+	}
+
+	public String deleteBook(Long bookId) throws Exception {
+		Optional<Book> book = bookRepository.findById(bookId);
+		if (!book.isPresent()) {
+			throw new Exception("Book with this Id not Found");
+		}
+		checkoutRepository.deleteAllByBookId(bookId);
+		reviewRepository.deleteAllByBookId(bookId);
+		bookRepository.deleteById(bookId);
+
+		return "Book Deleted Successfully";
 	}
 
 }
