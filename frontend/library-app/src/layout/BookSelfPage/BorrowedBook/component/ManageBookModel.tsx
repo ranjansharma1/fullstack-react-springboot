@@ -100,7 +100,7 @@ export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any
                                 data-bs-dismiss='modal'
                                 className={
                                     props.borrowed.daysLeft < 0 ?
-                                        'list-group-item list-group-item-action inactiveLink' :
+                                        'list-group-item list-group-item-action disabled' :
                                         'list-group-item list-group-item-action'
                                 }
                             >

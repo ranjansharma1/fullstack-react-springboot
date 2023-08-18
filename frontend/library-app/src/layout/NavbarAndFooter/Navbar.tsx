@@ -6,13 +6,9 @@ import { useOktaAuth } from '@okta/okta-react';
 const Navbar = () => {
   const { oktaAuth, authState } = useOktaAuth();
 
-  // if (!authState) {
-  //   return <SpinnerLoading />
-  // }
-
   const handleLogout = async () => oktaAuth.signOut();
 
-  console.log("user Type: "+authState?.accessToken?.claims.userType);
+  //console.log("user Type: "+authState?.accessToken?.claims.userType);
 
   return (
     <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: "#e3f2fd" }}>
