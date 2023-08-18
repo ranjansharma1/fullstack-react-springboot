@@ -5,9 +5,7 @@ import { useEffect, useState } from "react";
 export const ChangeQuantitiesItem: React.FC<{ book: BookModel, setIsbookDeleted: any }> = (props) => {
     const { authState } = useOktaAuth();
     const [quantity, setQuantity] = useState<number>(0);
-    const [remaining, setRemaining] = useState<number>(0);
-
-    const baseUrl: string = "http://localhost:8080/api"; // this should not change   
+    const [remaining, setRemaining] = useState<number>(0);  
 
     useEffect(() => {
         const fetchBookInState = () => {
@@ -18,7 +16,7 @@ export const ChangeQuantitiesItem: React.FC<{ book: BookModel, setIsbookDeleted:
     }, []);
 
     async function increaseQuantity() {
-        const url = `${baseUrl}/admin/secure/book/increase?bookId=${props.book?.id}`;
+        const url = `${process.env.REACT_APP_API}/admin/secure/book/increase?bookId=${props.book?.id}`;
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -41,7 +39,7 @@ export const ChangeQuantitiesItem: React.FC<{ book: BookModel, setIsbookDeleted:
 
     async function decreaseQuantity() {
         console.log(props.book.id)
-        const url = `${baseUrl}/admin/secure/book/decrease?bookId=${props.book?.id}`;
+        const url = `${process.env.REACT_APP_API}/admin/secure/book/decrease?bookId=${props.book?.id}`;
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -61,7 +59,7 @@ export const ChangeQuantitiesItem: React.FC<{ book: BookModel, setIsbookDeleted:
     }
 
     async function deleteBook() {
-        const url = `${baseUrl}/admin/secure/book/delete?bookId=${props.book?.id}`;
+        const url = `${process.env.REACT_APP_API}/admin/secure/book/delete?bookId=${props.book?.id}`;
         const requestOptions = {
             method: 'DELETE',
             headers: {

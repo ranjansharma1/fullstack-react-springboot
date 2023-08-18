@@ -15,12 +15,10 @@ export const ResponsePage = () => {
   const [page, setPage] = useState(0);
   const [totalResult, setTotalResult] = useState(0);
 
-  const baseURL: string = "http://localhost:8080/api";
-
   useEffect(() => {
     const fetchQuestionList = async () => {
       if (authState?.isAuthenticated) {
-        const url: string = `${baseURL}/libraries/search/findByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=0&size=5`;
+        const url: string = `${process.env.REACT_APP_API}/libraries/search/findByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=0&size=5`;
         const requestOptions = {
           method: 'GET',
           headers: {
@@ -48,7 +46,7 @@ export const ResponsePage = () => {
   const fetchMoreData = async () => {
     setIsLoadingQuestionResponse(true);
     const nextPage = page + 1;
-    const url: string = `${baseURL}/libraries/search/findByUserEmail?userEmail=${authState?.accessToken?.claims.sub}&page=${nextPage}&size=5`;
+    const url: string = `${process.env.REACT_APP_API}/libraries/search/findByUserEmail?userEmail=${authState?.accessToken?.claims.sub}&page=${nextPage}&size=5`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Something went wrong");

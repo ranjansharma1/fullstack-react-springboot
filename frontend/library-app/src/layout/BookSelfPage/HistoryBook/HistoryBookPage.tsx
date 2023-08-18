@@ -18,12 +18,11 @@ export const HistoryBookPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const baseUrl: string = 'http://localhost:8080/api';
 
   useEffect(() => {
     const fetchHistories = async () => {
       if (authState && authState.isAuthenticated) {
-        const url = `${baseUrl}/histories/search/findBooksByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=${currentPage - 1}&size=5`;
+        const url = `${process.env.REACT_APP_API}/histories/search/findBooksByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=${currentPage - 1}&size=5`;
         // console.log(url);
         const requestOptions = {
           method: 'GET',

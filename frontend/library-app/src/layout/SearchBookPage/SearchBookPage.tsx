@@ -14,7 +14,7 @@ export const SearchBookPage = () => {
   const [searchURL, setSearchURL] = useState("");
   const [bookCategory, setBookCategory] = useState("Book Category");
 
-  const baseUrl: string = "http://localhost:8080/api/books"; // this should not change
+  const baseUrl: string = `${process.env.REACT_APP_API}/books`; // this should not change
   let url = `${baseUrl}?size=5&page=0`; // Set the page to 0 for new searches
 
   const categories: { [key: string]: string } = {

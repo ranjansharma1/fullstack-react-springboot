@@ -18,11 +18,9 @@ export const AddNewBook = () => {
   const [displayWarning, setDisplayWarning] = useState(false);
   const [alertMassage, setAlertMassage] = useState("")
 
-  const baseURL: string = "http://localhost:8080/api";
-
   async function submitNewBook(event: any) {
     event.preventDefault();
-    const url: string = `${baseURL}/admin/secure/newBook`;
+    const url: string = `${process.env.REACT_APP_API}/admin/secure/newBook`;
     if (authState?.isAuthenticated && title !== '' && author !== '' && description !== '' && copies >= 0 && category !== '') {
       const newBook: AddNewBookModel = new AddNewBookModel(title, author, description, copies, category);
       newBook.img = img;

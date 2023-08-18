@@ -24,12 +24,10 @@ export const AdminMessages = () => {
   const [displayWarning, setDisplayWarning] = useState(false);
   const [alertMassage, setAlertMassage] = useState("");
 
-  const baseURL: string = "http://localhost:8080/api";
-
   useEffect(() => {
     const fetchAdminResponse = async () => {
       if (authState?.isAuthenticated) {
-        const url: string = `${baseURL}/libraries/search/findByClosed?closed=false&page=0&size=5`;
+        const url: string = `${process.env.REACT_APP_API}/libraries/search/findByClosed?closed=false&page=0&size=5`;
         const requestOptions = {
           method: 'GET',
           headers: {
@@ -57,7 +55,7 @@ export const AdminMessages = () => {
   const fetchMoreData = async () => {
     setIsLoadingQuestionResponse(true);
     const nextPage = page + 1;
-    const url: string = `${baseURL}/libraries/search/findByClosed?closed=false&page=${nextPage}&size=5`;
+    const url: string = `${process.env.REACT_APP_API}/libraries/search/findByClosed?closed=false&page=${nextPage}&size=5`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Something went wrong");
@@ -72,7 +70,7 @@ export const AdminMessages = () => {
 
   //handling response suubmit button
   async function handleSubmitResponse(questionId: number, questionResponse: string) {
-    const url: string = `${baseURL}/libraries/secure/admin`
+    const url: string = `${process.env.REACT_APP_API}/libraries/secure/admin`
     if (authState?.isAuthenticated && questionId !== null && questionResponse !== '') {
       const adminResponse: AdminResponseModel = new AdminResponseModel(questionId, questionResponse);
       const requestOptions = {

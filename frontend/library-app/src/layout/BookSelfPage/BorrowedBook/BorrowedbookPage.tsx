@@ -11,12 +11,11 @@ export const BorrowedbookPage = () => {
     const [isLoadingBorrowedBookPage, setIsLoadingBorrowedBookPage] = useState(true);
     const [httpError, sethttpError] = useState(null);
     const [checkout, setCheckout] = useState(false);
-    const baseUrl: string = "http://localhost:8080/api";
 
     useEffect(() => {
         const fetchBorrowedBookList = async () => {
             if (authState && authState.isAuthenticated) {
-                const url: string = `${baseUrl}/books/secure/borrowedbook`;
+                const url: string = `${process.env.REACT_APP_API}/books/secure/borrowedbook`;
                 const requestOptions = {
                     method: 'GET',
                     headers: {
@@ -41,7 +40,7 @@ export const BorrowedbookPage = () => {
     }, [authState, checkout]);
 
     async function returnBook(bookId: number) {
-        const url = `${baseUrl}/books/secure/return?bookId=${bookId}`;
+        const url = `${process.env.REACT_APP_API}/books/secure/return?bookId=${bookId}`;
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -57,7 +56,7 @@ export const BorrowedbookPage = () => {
     }
 
     async function renewBook(bookId: number) {
-        const url = `${baseUrl}/books/secure/renew?bookId=${bookId}`;
+        const url = `${process.env.REACT_APP_API}/books/secure/renew?bookId=${bookId}`;
         const requestOptions = {
             method: 'PUT',
             headers: {

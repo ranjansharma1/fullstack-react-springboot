@@ -13,11 +13,10 @@ export const PostQuestion = () => {
     const [displayWarning, setDisplayWarning] = useState(false);
     const [alertMassage, setAlertMassage] = useState("")
 
-    const baseURL: string = "http://localhost:8080/api";
 
     async function submitNewQuestion(event: FormEvent) {
         event.preventDefault();
-        const url: string = `${baseURL}/libraries/secure/user`;
+        const url: string = `${process.env.REACT_APP_API}/libraries/secure/user`;
         if (authState?.isAuthenticated && title !== "" && question !== "") {
             const postRequest: LibraryModel = new LibraryModel(title, question);
             const requestOptions = {
