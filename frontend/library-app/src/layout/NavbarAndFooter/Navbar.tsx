@@ -12,7 +12,7 @@ const Navbar = () => {
 
   const handleLogout = async () => oktaAuth.signOut();
 
-  // console.log(authState);
+  console.log("user Type: "+authState?.accessToken?.claims.userType);
 
   return (
     <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: "#e3f2fd" }}>
@@ -48,7 +48,7 @@ const Navbar = () => {
                 </NavLink>
               </li>
             }
-            {authState?.isAuthenticated &&
+            {(authState?.isAuthenticated && (authState?.accessToken?.claims.userType==="admin"))&&
               <li className="nav-item">
                 <NavLink className="nav-link" to="/admin">
                   Admin
