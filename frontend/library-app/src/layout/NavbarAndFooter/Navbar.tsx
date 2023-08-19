@@ -1,6 +1,4 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
-import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { useOktaAuth } from '@okta/okta-react';
 
 const Navbar = () => {
@@ -44,10 +42,17 @@ const Navbar = () => {
                 </NavLink>
               </li>
             }
-            {(authState?.isAuthenticated && (authState?.accessToken?.claims.userType==="admin"))&&
+            {(authState?.isAuthenticated && (authState?.accessToken?.claims.userType === "admin")) &&
               <li className="nav-item">
                 <NavLink className="nav-link" to="/admin">
                   Admin
+                </NavLink>
+              </li>
+            }
+            {(authState?.isAuthenticated && (authState?.accessToken?.claims.userType !== "admin")) &&
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/services">
+                  Services
                 </NavLink>
               </li>
             }
