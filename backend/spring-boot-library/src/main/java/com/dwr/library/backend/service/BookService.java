@@ -103,7 +103,7 @@ public class BookService {
 		Optional<Book> book = null;
 		int daysleft;
 		for (Checkout checkout : checkedBooks) {
-			daysleft = calculateDaysDifference(checkout.getCheckoutDate(), checkout.getReturnDate());
+			daysleft = calculateDaysDifference(LocalDate.now(), checkout.getReturnDate());
 			book = bookRepository.findById(checkout.getBookId());
 			bookResponses.add(new BorrowedBookResponse(daysleft, book, checkout.getCheckoutDate()));
 		}
@@ -117,13 +117,12 @@ public class BookService {
 	 * can call the method directly using the class name without creating an
 	 * instance of the class.
 	 */
-	public static int calculateDaysDifference(String checkoutDate, String returnDate) {
+	public static int calculateDaysDifference(LocalDate currentDate, String returnDate) {
 		// Parse the date strings into LocalDate objects
-		LocalDate checkoutDateObj = LocalDate.parse(checkoutDate, DateTimeFormatter.ISO_LOCAL_DATE);
 		LocalDate returnDateObj = LocalDate.parse(returnDate, DateTimeFormatter.ISO_LOCAL_DATE);
 
 		// Calculate the difference between checkoutDate and returnDate
-		long daysDifference = ChronoUnit.DAYS.between(checkoutDateObj, returnDateObj);
+		long daysDifference = ChronoUnit.DAYS.between(currentDate, returnDateObj);
 		return Math.toIntExact(daysDifference); // Convert the long value to int
 	}
 
