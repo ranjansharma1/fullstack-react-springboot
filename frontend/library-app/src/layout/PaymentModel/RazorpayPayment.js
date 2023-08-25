@@ -24,7 +24,47 @@ export const RazorpayPayment = () => {
     }
     const responseData = await response.json();
     console.log(responseData);
-    swal("Good job!", `Your order is successfully generated with Order id:  ${responseData.id}`, "success");
+
+    //3. Razorpay integration code with submitting orderID to make payment successfull
+    const options = {
+      key: process.env.RAZORPAY_KEY_ID, // Replace with your Key ID
+      amount: responseData.amount, // Convert amount to currency subunits
+      currency: responseData.currency,
+      name: "Library Management Application",
+      description: "Late Fee",
+      image: require("../../images/dwrlogo.png"),
+      order_id: responseData.id,
+      handler: function (response) {
+        console.log("Payment success: ");
+        console.log(response.razorpay_payment_id);
+        console.log(response.razorpay_order_id);
+        console.log(response.razorpay_signature);
+        swal(
+          "Good job!",
+          `payment successfull with id- ${response.razorpay_payment_id}`,
+          "success"
+        );
+      },
+      prefill: {
+        name: "",
+        email: "developwithranjan@gmail.com",
+        contact: "",
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+    const rzp1 = new window.Razorpay(options);
+    rzp1.on("payment.failed", function (response) {
+      console.log(response);
+      console.log(response.error.code);
+      console.log("Payment Failed");
+      swal("Oops", `Payment failed- ${response.error.description}`, "error");
+    });
+    rzp1.open(); // Open the Razorpay popup
   };
   return (
     <div className="container mt-5 w-50">
