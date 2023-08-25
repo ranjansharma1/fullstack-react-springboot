@@ -3,10 +3,28 @@ import swal from "sweetalert";
 
 export const RazorpayPayment = () => {
   const [amount, setAmount] = useState(25);
-  const openRazorpayPopup = (e) => {
+
+  //1. Created function to get amount from user
+  const openRazorpayPopup = async (e) => {
     e.preventDefault();
-    console.log("payment button clicked: " + amount);
-    swal("Good job!", "You clicked the payment button!", "success");
+
+    //2. Fires order api to get order Id
+    const url = `${process.env.REACT_APP_API}/payment/create-order`;
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount: amount, info: "order_request" }),
+    };
+    const response = await fetch(url, requestOptions);
+    if (!response.ok) {
+      swal("Oops", "Some error occured", "error");
+      throw new Error("Something Went Wrong");
+    }
+    const responseData = await response.json();
+    console.log(responseData);
+    swal("Good job!", `Your order is successfully generated with Order id:  ${responseData.id}`, "success");
   };
   return (
     <div className="container mt-5 w-50">

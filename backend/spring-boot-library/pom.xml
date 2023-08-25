@@ -56,6 +56,13 @@
 			<version>2.1.6</version>
 		</dependency>
 
+		<!-- Rozar pay Integration -->
+		<dependency>
+			<groupId>com.razorpay</groupId>
+			<artifactId>razorpay-java</artifactId>
+			<version>1.4.4</version>
+		</dependency>
+
 		<!-- DEVELOPER TOOLS: Spring Boot DevTools : Provides fast application 
 			restarts, LiveReload, and configurations for enhanced development experience. -->
 		<dependency>
