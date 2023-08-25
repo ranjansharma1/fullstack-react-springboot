@@ -3,7 +3,6 @@ import { Homepage } from "./layout/Hompage/Homepage";
 import Footer from "./layout/NavbarAndFooter/Footer";
 import Navbar from "./layout/NavbarAndFooter/Navbar";
 import { SearchBookPage } from "./layout/SearchBookPage/SearchBookPage";
-import { NoPage } from "./layout/NoPage";
 import { BookCheckoutPage } from "./layout/BookCheckoutPage/BookCheckoutPage";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { oktaConfig } from "./lib/oktaConfig";
@@ -14,6 +13,7 @@ import { ReviewsListPage } from "./layout/BookCheckoutPage/ReviewComponents/Revi
 import { BookSelfPage } from "./layout/BookSelfPage/BookSelfPage";
 import { ServicesPage } from "./layout/ServicesPage/ServicesPage";
 import { AdminMainPage } from "./layout/AdminPage/AdminMainPage";
+import { RazorpayPayment } from "./layout/PaymentModel/RazorpayPayment";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -49,6 +49,9 @@ function App() {
           </Route>
           <Route path='/reviewlist/:bookId'>
             <ReviewsListPage/>
+          </Route>
+          <Route path='/payment'>
+            <RazorpayPayment/>
           </Route>
           <Route path='/login' render={
             () => <LoginWidget config={oktaConfig} /> 

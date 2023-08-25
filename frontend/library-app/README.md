@@ -6,7 +6,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm intall` -- for installing dependency
+### `npm start` -- for starting application
+### `npm run build` -- for development server
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -59,3 +61,13 @@ You will also see any lint errors in the console.
       - The data returned from the API is already in the desired format and directly usable in your application without any additional transformation or manipulation.
       - You don't need to perform any specific operations on each book object before using it.
     Note: In general, if the API response already provides the data in the format required by your application (in this case, the BookModel interface), you can directly use responseJSON._embedded.books and avoid the extra overhead of the loop and manual transformation. However, if there is a need to modify or adapt the data before using it, then you would opt for the first code snippet with the loop and transformation logic.
+
+### Razorpayment Integration
+1. Email: developwithranjan@gmail.com
+2. Dashboard: `https://dashboard.razorpay.com/app/dashboard`
+3. Docs: `https://razorpay.com/docs/payments/server-integration/java/payment-gateway/build-integration/`
+4. Test key and secret: `https://dashboard.razorpay.com/app/website-app-settings/api-keys`
+
+### Sweet Alert Package
+1. sweet Alert Link: `https://sweetalert.js.org/guides/#advanced-examples`
+2. sweet npm library: `https://www.npmjs.com/package/sweetalert`
