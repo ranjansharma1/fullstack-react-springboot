@@ -9,6 +9,6 @@ public class PaymentUserRequest {
     private int amount;
     private String username;
     private String email;
-    private int contact;
+    private String contact;
     private String info;
 }

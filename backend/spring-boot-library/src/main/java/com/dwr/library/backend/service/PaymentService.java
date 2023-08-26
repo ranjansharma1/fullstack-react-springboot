@@ -1,20 +1,30 @@
 package com.dwr.library.backend.service;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.dwr.library.backend.dao.PaymentRepository;
+import com.dwr.library.backend.dao.ReviewRepository;
+import com.dwr.library.backend.entity.Payment;
 import com.dwr.library.backend.requestmodels.PaymentUserRequest;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@Transactional
+@AllArgsConstructor
 public class PaymentService {
 	private static final String KEY_ID = "rzp_test_vcZv5OgSAZ4MBg"; // Your Rozarpay key_id value
 	private static final String KEY_SECRET = "tEYlgvshOT7zp1XaTjyukkLO"; // Your Rozarpay key_secret value
 
+	PaymentRepository paymentRepository;
 
 	public String createOrder(PaymentUserRequest userRequest) throws RazorpayException {
 		
@@ -30,6 +40,17 @@ public class PaymentService {
 		// Create the order using the Razorpay client
 		Order order = razorpay.orders.create(orderRequest);
 		System.out.println(order);
+		
+		//Save Order in database
+		Payment payment=new Payment();
+		payment.setAmount(userRequest.getAmount());
+		payment.setPhoneNumber(userRequest.getContact());
+		payment.setUserEmail(userRequest.getEmail());
+		payment.setUserName(userRequest.getUsername());
+		payment.setOrderId(order.get("id"));
+		payment.setStatus(order.get("status"));
+		payment.setPaymentDate(LocalDate.now());
+		paymentRepository.save(payment);
 
 		// Return the order details as a string
 		return order.toString();
