@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dwr.library.backend.entity.Orders;
+import com.dwr.library.backend.requestmodels.CapturePaymentRequest;
 import com.dwr.library.backend.requestmodels.PaymentUserRequest;
 import com.dwr.library.backend.service.PaymentService;
 import com.razorpay.*;
@@ -41,16 +43,30 @@ public class PaymentController {
 	
 	
 	/**
-	 * POST API: http://localhost:8080/api/payment/create-order { "amount":120 }
+	 * POST API: http://localhost:8080/api/payment/create-order 
+	 * {
+		    "contact": "9478961231",
+		    "email": "test3@email.com",
+		    "username": "ranjan test"
+		}
 	 */
 	@PostMapping("/create-order")
-	public String razorPayment(@RequestBody PaymentUserRequest userRequest) throws RazorpayException {
+	public Orders razorPayment(@RequestBody PaymentUserRequest userRequest) throws RazorpayException {
 		
 		//printing data coming from client
 		System.out.println(userRequest);
 		
 		// Return the order details as a string
 		return paymentService.createOrder(userRequest);
+	}
+	
+	/**
+	 * POST API: http://localhost:8080/api/payment/update-order { "orderId" : "order_MUk7LdE23qtI0E" }
+	 */
+	@PostMapping("/update-order")
+	public Orders updateOrder(@RequestBody CapturePaymentRequest paymentRequest) throws Exception {		
+		
+		return paymentService.updateOrder(paymentRequest);
 	}
 
 }

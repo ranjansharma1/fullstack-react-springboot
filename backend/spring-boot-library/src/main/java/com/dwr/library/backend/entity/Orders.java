@@ -9,9 +9,9 @@ import lombok.Data;
 
 //This Entity will create table in database
 @Entity
-@Table(name = "payment") 
+@Table(name = "Orders") 
 @Data //for creating getter and setter
-public class Payment {
+public class Orders {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // This will auto generate Id
@@ -19,7 +19,7 @@ public class Payment {
 	
 	private String orderId;
 	
-	private String transectionId;	
+	private String transactionId;	
 	
 	private int amount;
 	

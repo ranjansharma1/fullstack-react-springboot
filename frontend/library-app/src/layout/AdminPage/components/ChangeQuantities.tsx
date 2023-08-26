@@ -1,4 +1,3 @@
-import { error } from "console";
 import { useEffect, useState } from "react"
 import BookModel from "../../../models/BookModel";
 import { ChangeQuantitiesItem } from "./ChangeQuantitiesItem";

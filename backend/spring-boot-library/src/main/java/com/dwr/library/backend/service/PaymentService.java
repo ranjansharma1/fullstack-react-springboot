@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dwr.library.backend.dao.PaymentRepository;
 import com.dwr.library.backend.dao.ReviewRepository;
-import com.dwr.library.backend.entity.Payment;
+import com.dwr.library.backend.entity.Orders;
+import com.dwr.library.backend.requestmodels.CapturePaymentRequest;
 import com.dwr.library.backend.requestmodels.PaymentUserRequest;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
@@ -26,8 +27,8 @@ public class PaymentService {
 
 	PaymentRepository paymentRepository;
 
-	public String createOrder(PaymentUserRequest userRequest) throws RazorpayException {
-		
+	public Orders createOrder(PaymentUserRequest userRequest) throws RazorpayException {
+
 		// Create a Razorpay client instance
 		RazorpayClient razorpay = new RazorpayClient(KEY_ID, KEY_SECRET);
 
@@ -40,9 +41,9 @@ public class PaymentService {
 		// Create the order using the Razorpay client
 		Order order = razorpay.orders.create(orderRequest);
 		System.out.println(order);
-		
-		//Save Order in database
-		Payment payment=new Payment();
+
+		// Save Order in database
+		Orders payment = new Orders();
 		payment.setAmount(userRequest.getAmount());
 		payment.setPhoneNumber(userRequest.getContact());
 		payment.setUserEmail(userRequest.getEmail());
@@ -53,6 +54,22 @@ public class PaymentService {
 		paymentRepository.save(payment);
 
 		// Return the order details as a string
-		return order.toString();
+		return payment;
+	}
+
+	public Orders updateOrder(CapturePaymentRequest paymentRequest) throws Exception {
+		Orders order = paymentRepository.findByOrderId(paymentRequest.getOrderId());
+
+		if (order == null)
+			throw new Exception("Something went wrong");
+
+		// updating payment details
+		order.setTransactionId(paymentRequest.getTransactionId());
+		order.setStatus(paymentRequest.getStatus());
+		order.setPaymentDate(LocalDate.now());
+
+		paymentRepository.save(order);
+
+		return order;
 	}
 }

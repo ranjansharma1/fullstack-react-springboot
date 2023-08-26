@@ -51,6 +51,11 @@ export const RazorpayPayment = () => {
         console.log(response.razorpay_payment_id);
         console.log(response.razorpay_order_id);
         console.log(response.razorpay_signature);
+        updateOrder(
+          response.razorpay_payment_id,
+          response.razorpay_order_id,
+          "paid"
+        );
         swal(
           "Good job!",
           `payment successfull with id- ${response.razorpay_payment_id}`,
@@ -78,6 +83,32 @@ export const RazorpayPayment = () => {
     });
     rzp1.open(); // Open the Razorpay popup
   };
+
+  //4.Capture the payment details
+  async function updateOrder(transactionId, orderId, status) {
+    console.log("Captured the payment details");
+    console.log(transactionId, orderId, status);
+    const url = `${process.env.REACT_APP_API}/payment/update-order`;
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        transactionId : transactionId,
+        orderId : orderId,
+        status : status,
+      }),
+    };
+    const response = await fetch(url, requestOptions);
+    if (!response.ok) {
+      swal("Oops", "Some error occured while capturing payment details", "error");
+      throw new Error("Something Went Wrong");
+    }
+    const responseData = await response.json();
+    console.log("saving payment in database")
+    console.log(responseData);
+  }
   return (
     <div className="container mt-5 w-50">
       <h1>Rozarpay payment Integration</h1>
