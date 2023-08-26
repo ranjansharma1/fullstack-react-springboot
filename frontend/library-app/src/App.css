@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+/* Custom CSS */
+.blur-effect {
+  backdrop-filter: blur(10px); /* Adjust the blur intensity as needed */
+  /* border:2px solid red; */
+}
+

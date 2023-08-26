@@ -1,5 +1,6 @@
 import { useState } from "react";
 import swal from "sweetalert";
+import { PaymentRecieptModel } from "./PaymentRecieptModel";
 
 export const RazorpayPayment = () => {
   const [amount, setAmount] = useState(25);
@@ -96,6 +97,7 @@ export const RazorpayPayment = () => {
           </form>
         </div>
       </div>
+      <PaymentRecieptModel/>
     </div>
   );
 };

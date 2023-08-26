@@ -1,5 +1,6 @@
 import React from "react"
 import BorrowedBook from "../../../../models/BorrowedBook"
+import '../../../../App.css'
 
 
 /**How Botstrap Model Works
@@ -40,8 +41,8 @@ export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any
         }, 3000);
     }
     return (
-        <div className="modal" id={`book${props.borrowed.book.id}`} aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
-            <div className="modal-dialog">
+        <div className="modal blur-effect" id={`book${props.borrowed.book.id}`} aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
+            <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title" id="exampleModalLabel">Manage Book</h5>
