@@ -3,12 +3,15 @@ package com.dwr.library.backend.controller;
 import java.util.Map;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dwr.library.backend.requestmodels.PaymentUserRequest;
+import com.dwr.library.backend.service.PaymentService;
 import com.razorpay.*;
 
 /**
@@ -32,34 +35,22 @@ import com.razorpay.*;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
-	private static final String KEY_ID = "rzp_test_vcZv5OgSAZ4MBg"; // Your Rozarpay key_id value
-	private static final String KEY_SECRET = "tEYlgvshOT7zp1XaTjyukkLO"; // Your Rozarpay key_secret value
-
+	
+	@Autowired
+	private PaymentService paymentService;
+	
+	
 	/**
 	 * POST API: http://localhost:8080/api/payment/create-order { "amount":120 }
 	 */
 	@PostMapping("/create-order")
-	public String razorPayment(@RequestBody Map<String, Object> data) throws RazorpayException {
-		//data
-		System.out.println(data);
-		// Extract the amount from the request data
-		int amount = (int) data.get("amount");
-
-		// Create a Razorpay client instance
-		RazorpayClient razorpay = new RazorpayClient(KEY_ID, KEY_SECRET);
-
-		// Prepare the order request parameters
-		JSONObject orderRequest = new JSONObject();
-		orderRequest.put("amount", amount * 100); // amount in the smallest currency unit (Paisa)
-		orderRequest.put("currency", "INR");
-		orderRequest.put("receipt", "order_rcptid_11");
-
-		// Create the order using the Razorpay client
-		Order order = razorpay.orders.create(orderRequest);
-		System.out.println(order);
-
+	public String razorPayment(@RequestBody PaymentUserRequest userRequest) throws RazorpayException {
+		
+		//printing data coming from client
+		System.out.println(userRequest);
+		
 		// Return the order details as a string
-		return order.toString();
+		return paymentService.createOrder(userRequest);
 	}
 
 }
