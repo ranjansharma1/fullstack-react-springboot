@@ -40,6 +40,8 @@ public class PaymentController {
 	 */
 	@PostMapping("/create-order")
 	public String razorPayment(@RequestBody Map<String, Object> data) throws RazorpayException {
+		//data
+		System.out.println(data);
 		// Extract the amount from the request data
 		int amount = (int) data.get("amount");
 

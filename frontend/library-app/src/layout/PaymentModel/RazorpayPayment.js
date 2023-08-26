@@ -1,9 +1,14 @@
 import { useState } from "react";
 import swal from "sweetalert";
-import { PaymentRecieptModel } from "./PaymentRecieptModel";
 
 export const RazorpayPayment = () => {
-  const [amount, setAmount] = useState(25);
+  //Defining amount for late fee
+  const [lateFeeAmount] = useState(50); // Fixed amount that cannot be changed
+
+  //taking details for payment
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState(0);
 
   //1. Created function to get amount from user
   const openRazorpayPopup = async (e) => {
@@ -16,7 +21,13 @@ export const RazorpayPayment = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ amount: amount, info: "order_request" }),
+      body: JSON.stringify({
+        amount: lateFeeAmount,
+        username: username,
+        email: email,
+        contact: contact,
+        info: "order_request",
+      }),
     };
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
@@ -47,9 +58,9 @@ export const RazorpayPayment = () => {
         );
       },
       prefill: {
-        name: "",
-        email: "developwithranjan@gmail.com",
-        contact: "",
+        name: username,
+        email: email,
+        contact: contact,
       },
       notes: {
         address: "Razorpay Corporate Office",
@@ -70,34 +81,102 @@ export const RazorpayPayment = () => {
   return (
     <div className="container mt-5 w-50">
       <h1>Rozarpay payment Integration</h1>
-      <div className="card shadow">
-        <div className="card-body">
-          <form method="POST">
-            <div className="mb-3">
-              <label htmlFor="amount" className="form-label">
-                Amount
-              </label>
-              <input
-                onChange={(e) => setAmount(Number(e.target.value))}
-                type="number"
-                className="form-control"
-                id="amount"
-                value={amount}
-              />
+      <div className="d-flex justify-content-center mt-5">
+        <button
+          type="button"
+          className="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#paymentModal"
+        >
+          Late Fee
+        </button>
+      </div>
+
+      <div
+        className="modal blur-effect"
+        id="paymentModal"
+        tabIndex="-1"
+        aria-labelledby="paymentModalLabel"
+        aria-hidden="true"
+        data-bs-backdrop="static"
+      >
+        <div className="modal-dialog modal-dialog-centered ">
+          <div className="modal-content">
+            <div className="modal-header bg-primary-subtle d-flex justify-content-center">
+              <h1 className="modal-title fs-3" id="paymentModalLabel">
+                Payment Details
+              </h1>
             </div>
-            <div className="mb-3 d-flex justify-content-center ">
+            <div className="modal-body">
+              <form method="POST">
+                <div className="mb-3">
+                  <label
+                    htmlFor="recipient-name"
+                    className="form-label fw-bold"
+                  >
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Your name"
+                    id="recipient-name"
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="exampleInputEmail1"
+                    className="form-label fw-bold"
+                  >
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="Your email address"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="contact" className="form-label fw-bold">
+                    Contact Number
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Your contact number"
+                    id="contact"
+                    onChange={(e) => setContact(Number(e.target.value))}
+                    value={contact !== 0 ? contact : ""}
+                  />
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer bg-primary-subtle d-flex justify-content-between">
               <button
-                onClick={openRazorpayPopup}
-                type="submit"
-                className="btn btn-primary"
+                type="button"
+                className="btn btn-warning "
+                data-bs-dismiss="modal"
               >
-                Proceed to Checkout
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-success "
+                onClick={openRazorpayPopup}
+                data-bs-dismiss="modal"
+              >
+                Pay
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
-      <PaymentRecieptModel/>
     </div>
   );
 };
