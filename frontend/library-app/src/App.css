@@ -43,3 +43,9 @@
   /* border:2px solid red; */
 }
 
+/* Using this for payment reciept */
+@media print {
+  .navbar {
+    display: none;
+  }
+}

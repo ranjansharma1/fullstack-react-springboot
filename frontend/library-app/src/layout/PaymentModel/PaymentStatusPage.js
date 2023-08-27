@@ -3,6 +3,10 @@ import { useLocation } from "react-router-dom";
 export const PaymentStatusPage = () => {
   const location = useLocation();
   const orderData = location.state?.orderData || {};
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div
       className={`bg-success-subtle ${
@@ -69,6 +73,13 @@ export const PaymentStatusPage = () => {
           </p>
           <hr />
         </div>
+      </div>
+
+      {/* Print button */}
+      <div className="text-center my-3">
+        <button className="btn btn-primary" onClick={handlePrint}>
+          Print Receipt
+        </button>
       </div>
     </div>
   );
