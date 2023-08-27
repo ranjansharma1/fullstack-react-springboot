@@ -1,6 +1,6 @@
 import { useOktaAuth } from "@okta/okta-react";
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import swal from "sweetalert";
 
 export const RazorpayPayment = () => {
@@ -43,8 +43,6 @@ export const RazorpayPayment = () => {
         throw new Error("Something Went Wrong");
       }
       const responseData = await response.json();
-      console.log("Order Data: ", responseData);
-      console.log("user email: ", authState.accessToken?.claims.sub);
 
       //3. Razorpay integration code with submitting orderID to make payment successfull
       const options = {
@@ -92,26 +90,30 @@ export const RazorpayPayment = () => {
       };
       const rzp1 = new window.Razorpay(options);
       rzp1.on("payment.failed", function (response) {
-        console.log("Payment Failed");
-        console.log(response);
-        console.log(response.error.description);
-        updateOrder(
-          response.error.metadata.payment_id,
-          response.error.metadata.order_id,
-          "failed",
-          response.error.description
-        );
-        swal("Oops", `Payment failed- ${response.error.description}`, "error");
+        console.log("Payment Failed", response);
+        swal({
+          title: "Oops, Payment Failed",
+          text: `${response.error.description}`,
+          icon: "error",
+        }).then(() => {
+          // Call the updateOrder function here
+          updateOrder(
+            response.error.metadata.payment_id,
+            response.error.metadata.order_id,
+            "failed",
+            response.error.description
+          );
+        });
       });
       rzp1.open(); // Open the Razorpay popup
     } else {
       console.log("User not authenticated, please login first.");
+      alert("Please login first");
     }
   };
 
   //4.Capture the payment details
   async function updateOrder(transactionId, orderId, status, failedDesc) {
-    console.log("Captured the payment details");
     const url = `${process.env.REACT_APP_API}/payment/update-order`;
     const requestOptions = {
       method: "POST",
@@ -135,7 +137,7 @@ export const RazorpayPayment = () => {
       throw new Error("Something Went Wrong");
     }
     const responseData = await response.json();
-    console.log(responseData);
+    console.log("Payment Deatils: ", responseData);
 
     // Redirect to PaymentPage with responseData
     history.push({
@@ -145,7 +147,6 @@ export const RazorpayPayment = () => {
   }
   return (
     <div className="container mt-5 w-50">
-      <Link to="/paymentpage">success page</Link>
       <h1>Rozarpay payment Integration</h1>
       <div className="d-flex justify-content-center mt-5">
         <button

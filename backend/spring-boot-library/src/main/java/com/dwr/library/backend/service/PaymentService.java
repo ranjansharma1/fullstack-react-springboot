@@ -38,7 +38,7 @@ public class PaymentService {
 
 		// Create the order using the Razorpay client
 		Order order = razorpay.orders.create(orderRequest);
-		System.out.println(order);
+//		System.out.println(order);
 
 		// Save Order in database
 		Orders payment = new Orders();

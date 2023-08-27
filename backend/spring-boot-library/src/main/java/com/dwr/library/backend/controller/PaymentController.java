@@ -57,11 +57,11 @@ public class PaymentController {
 	public String razorPayment(@RequestHeader(value = "Authorization") String token, @RequestBody PaymentUserRequest userRequest) throws RazorpayException {
 		
 		//printing data coming from client
-		System.out.println(userRequest);
+//		System.out.println(userRequest);
 		
 		//fetching user email from token
 		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
-		System.out.println(userEmail);
+//		System.out.println(userEmail);
 		
 		// Return the order details as a string
 		return paymentService.createOrder(userRequest, userEmail);
