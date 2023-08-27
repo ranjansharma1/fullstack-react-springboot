@@ -64,19 +64,18 @@ export const RazorpayPayment = () => {
             ", Signature : ",
             response.razorpay_signature
           );
-          updateOrder(
-            response.razorpay_payment_id,
-            response.razorpay_order_id,
-            "paid",
-            ""
-          );
           swal({
             title: "Good job!",
             text: `Payment successful with ID - ${response.razorpay_payment_id}`,
             icon: "success",
           }).then(() => {
-            // Redirect to your callback URL
-            history.push('/paymentpage');
+            // Call the updateOrder function here
+            updateOrder(
+              response.razorpay_payment_id,
+              response.razorpay_order_id,
+              "paid",
+              ""
+            );
           });
         },
         prefill: {
@@ -137,6 +136,12 @@ export const RazorpayPayment = () => {
     }
     const responseData = await response.json();
     console.log(responseData);
+
+    // Redirect to PaymentPage with responseData
+    history.push({
+      pathname: "/paymentpage",
+      state: { orderData: responseData },
+    });
   }
   return (
     <div className="container mt-5 w-50">
