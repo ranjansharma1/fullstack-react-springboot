@@ -107,7 +107,7 @@ export const ManageBookModel: React.FC<{ borrowed: BorrowedBook, returnBook: any
                             >
 
                                 {props.borrowed.daysLeft < 0 ?
-                                    'Late dues cannot be renewed' : 'Renew Book for 7 days'
+                                    'Go back & Pay late fine to renew book' : 'Renew Book for 7 days'
                                 }
                             </button>
                         </div>

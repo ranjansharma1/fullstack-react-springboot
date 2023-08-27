@@ -56,11 +56,6 @@ const Navbar = () => {
                 </NavLink>
               </li>
             }
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/payment">
-                Payment
-              </NavLink>
-            </li>
           </ul>
           <ul className="navbar-nav ms-auto">
             {!authState?.isAuthenticated ?

@@ -3,6 +3,7 @@ import { ManageBookModel } from "./ManageBookModel"
 import BorrowedBook from "../../../../models/BorrowedBook"
 import AlertMassage from "../../../Utils/AlertMassage"
 import { useState } from "react"
+import { RazorpayPayment } from "../../../PaymentModel/RazorpayPayment"
 
 export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[], returnBook: any, renewBook: any }> = (props) => {
     //Display warning massages
@@ -49,11 +50,25 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                                 <hr />
                                 <p className="card-text">Help Other to find their adventure by reviewing your books</p>
                                 <Link to={`/checkout/${borrowed.book.id}`} className="card-link btn btn-primary" type="button">Leave a Review</Link>
+                                {borrowed.daysLeft < 0 ? (
+                                    <div className="mt-3">
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#paymentModal"
+                                        >
+                                            Pay Late fine to Renew book
+                                        </button>
+                                    </div>
+                                ) : null
+                                }
                             </div>
                         </div>
                     </div>
                     <hr />
                     <ManageBookModel borrowed={borrowed} returnBook={props.returnBook} renewBook={props.renewBook} setDisplayWarning={setDisplayWarning} setAlertMassage={setAlertMassage}/>
+                    <RazorpayPayment />
                 </div>
 
             )}

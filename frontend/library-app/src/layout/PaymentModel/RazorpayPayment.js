@@ -147,18 +147,6 @@ export const RazorpayPayment = () => {
   }
   return (
     <div className="container mt-5 w-50">
-      <h1>Rozarpay payment Integration</h1>
-      <div className="d-flex justify-content-center mt-5">
-        <button
-          type="button"
-          className="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#paymentModal"
-        >
-          Late Fee
-        </button>
-      </div>
-
       <div
         className="modal blur-effect"
         id="paymentModal"
