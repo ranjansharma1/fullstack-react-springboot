@@ -25,7 +25,7 @@ public class PaymentService {
 
 	PaymentRepository paymentRepository;
 
-	public Orders createOrder(PaymentUserRequest userRequest) throws RazorpayException {
+	public String createOrder(PaymentUserRequest userRequest) throws RazorpayException {
 
 		// Create a Razorpay client instance
 		RazorpayClient razorpay = new RazorpayClient(KEY_ID, KEY_SECRET);
@@ -52,7 +52,7 @@ public class PaymentService {
 		paymentRepository.save(payment);
 
 		// Return the order details as a string
-		return payment;
+		return order.toString();
 	}
 
 	public Orders updateOrder(CapturePaymentRequest paymentRequest) throws Exception {

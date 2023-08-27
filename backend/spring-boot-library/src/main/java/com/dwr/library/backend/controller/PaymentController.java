@@ -51,7 +51,7 @@ public class PaymentController {
 		}
 	 */
 	@PostMapping("/create-order")
-	public Orders razorPayment(@RequestBody PaymentUserRequest userRequest) throws RazorpayException {
+	public String razorPayment(@RequestBody PaymentUserRequest userRequest) throws RazorpayException {
 		
 		//printing data coming from client
 		System.out.println(userRequest);

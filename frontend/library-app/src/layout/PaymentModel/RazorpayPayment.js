@@ -35,7 +35,7 @@ export const RazorpayPayment = () => {
       throw new Error("Something Went Wrong");
     }
     const responseData = await response.json();
-    console.log(responseData);
+    console.log("Order Data: ", responseData);
 
     //3. Razorpay integration code with submitting orderID to make payment successfull
     const options = {
@@ -47,10 +47,7 @@ export const RazorpayPayment = () => {
       image: require("../../images/dwrlogo.png"),
       order_id: responseData.id,
       handler: function (response) {
-        console.log("Payment success: ");
-        console.log(response.razorpay_payment_id);
-        console.log(response.razorpay_order_id);
-        console.log(response.razorpay_signature);
+        console.log("Transaction Id: ",response.razorpay_payment_id, ", Order Id: ",response.razorpay_order_id,", Signature : ",response.razorpay_signature);
         updateOrder(
           response.razorpay_payment_id,
           response.razorpay_order_id,
@@ -76,9 +73,9 @@ export const RazorpayPayment = () => {
     };
     const rzp1 = new window.Razorpay(options);
     rzp1.on("payment.failed", function (response) {
-      console.log(response);
-      console.log(response.error.code);
       console.log("Payment Failed");
+      console.log(response);
+      console.log(response.error.description);
       swal("Oops", `Payment failed- ${response.error.description}`, "error");
     });
     rzp1.open(); // Open the Razorpay popup
@@ -87,7 +84,6 @@ export const RazorpayPayment = () => {
   //4.Capture the payment details
   async function updateOrder(transactionId, orderId, status) {
     console.log("Captured the payment details");
-    console.log(transactionId, orderId, status);
     const url = `${process.env.REACT_APP_API}/payment/update-order`;
     const requestOptions = {
       method: "POST",
@@ -106,7 +102,6 @@ export const RazorpayPayment = () => {
       throw new Error("Something Went Wrong");
     }
     const responseData = await response.json();
-    console.log("saving payment in database")
     console.log(responseData);
   }
   return (
