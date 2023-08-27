@@ -1,5 +1,6 @@
 import { useOktaAuth } from "@okta/okta-react";
 import { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import swal from "sweetalert";
 
 export const RazorpayPayment = () => {
@@ -12,6 +13,8 @@ export const RazorpayPayment = () => {
   const [username, setUsername] = useState("");
   const [remarks, setRemarks] = useState("");
   const [contact, setContact] = useState(0);
+
+  const history = useHistory();
 
   //1. Created function to get amount from user
   const openRazorpayPopup = async (e) => {
@@ -67,11 +70,14 @@ export const RazorpayPayment = () => {
             "paid",
             ""
           );
-          swal(
-            "Good job!",
-            `payment successfull with id- ${response.razorpay_payment_id}`,
-            "success"
-          );
+          swal({
+            title: "Good job!",
+            text: `Payment successful with ID - ${response.razorpay_payment_id}`,
+            icon: "success",
+          }).then(() => {
+            // Redirect to your callback URL
+            history.push('/paymentpage');
+          });
         },
         prefill: {
           name: username,
@@ -134,6 +140,7 @@ export const RazorpayPayment = () => {
   }
   return (
     <div className="container mt-5 w-50">
+      <Link to="/paymentpage">success page</Link>
       <h1>Rozarpay payment Integration</h1>
       <div className="d-flex justify-content-center mt-5">
         <button

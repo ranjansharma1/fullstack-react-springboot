@@ -14,6 +14,7 @@ import { BookSelfPage } from "./layout/BookSelfPage/BookSelfPage";
 import { ServicesPage } from "./layout/ServicesPage/ServicesPage";
 import { AdminMainPage } from "./layout/AdminPage/AdminMainPage";
 import { RazorpayPayment } from "./layout/PaymentModel/RazorpayPayment";
+import { PaymentStatusPage } from "./layout/PaymentModel/PaymentStatusPage";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -52,6 +53,9 @@ function App() {
           </Route>
           <Route path='/payment'>
             <RazorpayPayment/>
+          </Route>
+          <Route path='/paymentpage'>
+            <PaymentStatusPage/>
           </Route>
           <Route path='/login' render={
             () => <LoginWidget config={oktaConfig} /> 
