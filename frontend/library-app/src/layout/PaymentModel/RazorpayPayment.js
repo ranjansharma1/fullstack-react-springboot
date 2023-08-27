@@ -10,7 +10,7 @@ export const RazorpayPayment = () => {
 
   //taking details for payment
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [remarks, setRemarks] = useState("");
   const [contact, setContact] = useState(0);
 
   //1. Created function to get amount from user
@@ -29,7 +29,7 @@ export const RazorpayPayment = () => {
         body: JSON.stringify({
           amount: lateFeeAmount,
           username: username,
-          email: email,
+          remarks: remarks,
           contact: contact,
           info: "order_request",
         }),
@@ -172,23 +172,6 @@ export const RazorpayPayment = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label
-                    htmlFor="exampleInputEmail1"
-                    className="form-label fw-bold"
-                  >
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Your email address"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                  />
-                </div>
-                <div className="mb-3">
                   <label htmlFor="contact" className="form-label fw-bold">
                     Contact Number
                   </label>
@@ -201,6 +184,25 @@ export const RazorpayPayment = () => {
                     value={contact !== 0 ? contact : ""}
                   />
                 </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="remarkscheck"
+                    className="form-label fw-bold"
+                  >
+                    Remarks
+                  </label>
+                  <textarea
+                    type="email"
+                    className="form-control"
+                    placeholder="Additional Comments..."
+                    id="remarkscheck"
+                    aria-describedby="emailHelp"
+                    rows={3}
+                    onChange={(e) => setRemarks(e.target.value)}
+                    value={remarks}
+                  />
+                </div>
+                
               </form>
             </div>
             <div className="modal-footer bg-primary-subtle d-flex justify-content-between">

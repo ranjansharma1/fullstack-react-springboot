@@ -8,7 +8,7 @@ import lombok.Data;
 public class PaymentUserRequest {
     private int amount;
     private String username;
-    private String email;
+    private String remarks;
     private String contact;
     private String info;
 }

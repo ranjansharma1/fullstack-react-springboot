@@ -35,5 +35,9 @@ public class Orders {
 	
 	@Column(name = "payment_date") // Column for the payment date
 	private LocalDate paymentDate; // Use LocalDate to store only date or LocalDateTime for both date and time
+	
+	private String reciept;
+	
+	private String remarks;
 
 }

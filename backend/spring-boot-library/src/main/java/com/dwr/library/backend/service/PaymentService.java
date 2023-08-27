@@ -48,7 +48,9 @@ public class PaymentService {
 		payment.setUserName(userRequest.getUsername());
 		payment.setOrderId(order.get("id"));
 		payment.setStatus(order.get("status"));
-		payment.setPaymentDate(LocalDate.now());
+		payment.setPaymentDate(LocalDate.now());		
+		payment.setRemarks(userRequest.getRemarks());
+		payment.setReciept(order.get("receipt"));
 		paymentRepository.save(payment);
 
 		// Return the order details as a string
