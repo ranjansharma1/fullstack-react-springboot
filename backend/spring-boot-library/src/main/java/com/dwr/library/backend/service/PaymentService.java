@@ -25,7 +25,7 @@ public class PaymentService {
 
 	PaymentRepository paymentRepository;
 
-	public String createOrder(PaymentUserRequest userRequest) throws RazorpayException {
+	public String createOrder(PaymentUserRequest userRequest, String userEmail) throws RazorpayException {
 
 		// Create a Razorpay client instance
 		RazorpayClient razorpay = new RazorpayClient(KEY_ID, KEY_SECRET);
@@ -44,7 +44,7 @@ public class PaymentService {
 		Orders payment = new Orders();
 		payment.setAmount(userRequest.getAmount());
 		payment.setPhoneNumber(userRequest.getContact());
-		payment.setUserEmail(userRequest.getEmail());
+		payment.setUserEmail(userEmail);
 		payment.setUserName(userRequest.getUsername());
 		payment.setOrderId(order.get("id"));
 		payment.setStatus(order.get("status"));

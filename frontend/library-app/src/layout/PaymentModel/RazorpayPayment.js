@@ -74,7 +74,7 @@ export const RazorpayPayment = () => {
         },
         prefill: {
           name: username,
-          email: email,
+          email: authState.accessToken?.claims.sub,
           contact: contact,
         },
         notes: {

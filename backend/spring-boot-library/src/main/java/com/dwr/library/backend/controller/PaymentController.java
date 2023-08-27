@@ -64,7 +64,7 @@ public class PaymentController {
 		System.out.println(userEmail);
 		
 		// Return the order details as a string
-		return paymentService.createOrder(userRequest);
+		return paymentService.createOrder(userRequest, userEmail);
 	}
 	
 	/**
