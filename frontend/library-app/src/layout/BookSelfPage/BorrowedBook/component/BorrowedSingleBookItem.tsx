@@ -68,7 +68,7 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                     </div>
                     <hr />
                     <ManageBookModel borrowed={borrowed} returnBook={props.returnBook} renewBook={props.renewBook} setDisplayWarning={setDisplayWarning} setAlertMassage={setAlertMassage}/>
-                    <RazorpayPayment />
+                    <RazorpayPayment bookTitle={borrowed.book.title}/>
                 </div>
 
             )}

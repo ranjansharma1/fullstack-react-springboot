@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import swal from "sweetalert";
 
-export const RazorpayPayment = () => {
+export const RazorpayPayment = ({ bookTitle }) => {
   const { authState } = useOktaAuth();
 
   //Defining amount for late fee
@@ -163,6 +163,8 @@ export const RazorpayPayment = () => {
               </h1>
             </div>
             <div className="modal-body">
+              <h6 className="text-danger">Book: {bookTitle}</h6>
+              <hr />
               <form method="POST">
                 <div className="mb-3">
                   <label

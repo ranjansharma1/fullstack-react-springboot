@@ -13,7 +13,6 @@ import { ReviewsListPage } from "./layout/BookCheckoutPage/ReviewComponents/Revi
 import { BookSelfPage } from "./layout/BookSelfPage/BookSelfPage";
 import { ServicesPage } from "./layout/ServicesPage/ServicesPage";
 import { AdminMainPage } from "./layout/AdminPage/AdminMainPage";
-import { RazorpayPayment } from "./layout/PaymentModel/RazorpayPayment";
 import { PaymentStatusPage } from "./layout/PaymentModel/PaymentStatusPage";
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -67,9 +66,6 @@ function App() {
           </SecureRoute>
           <SecureRoute path="/admin">
             <AdminMainPage/>
-          </SecureRoute>
-          <SecureRoute path='/payment'>
-            <RazorpayPayment/>
           </SecureRoute>
           <SecureRoute path='/paymentpage'>
             <PaymentStatusPage/>
