@@ -7,4 +7,5 @@ public class CapturePaymentRequest {
     private String transactionId;
     private String orderId;
     private String status;
+    private String failedDesc;
 }

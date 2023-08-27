@@ -64,7 +64,8 @@ export const RazorpayPayment = () => {
           updateOrder(
             response.razorpay_payment_id,
             response.razorpay_order_id,
-            "paid"
+            "paid",
+            ""
           );
           swal(
             "Good job!",
@@ -89,6 +90,12 @@ export const RazorpayPayment = () => {
         console.log("Payment Failed");
         console.log(response);
         console.log(response.error.description);
+        updateOrder(
+          response.error.metadata.payment_id,
+          response.error.metadata.order_id,
+          "failed",
+          response.error.description
+        );
         swal("Oops", `Payment failed- ${response.error.description}`, "error");
       });
       rzp1.open(); // Open the Razorpay popup
@@ -98,7 +105,7 @@ export const RazorpayPayment = () => {
   };
 
   //4.Capture the payment details
-  async function updateOrder(transactionId, orderId, status) {
+  async function updateOrder(transactionId, orderId, status, failedDesc) {
     console.log("Captured the payment details");
     const url = `${process.env.REACT_APP_API}/payment/update-order`;
     const requestOptions = {
@@ -110,6 +117,7 @@ export const RazorpayPayment = () => {
         transactionId: transactionId,
         orderId: orderId,
         status: status,
+        failedDesc: failedDesc,
       }),
     };
     const response = await fetch(url, requestOptions);
@@ -185,10 +193,7 @@ export const RazorpayPayment = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label
-                    htmlFor="remarkscheck"
-                    className="form-label fw-bold"
-                  >
+                  <label htmlFor="remarkscheck" className="form-label fw-bold">
                     Remarks
                   </label>
                   <textarea
@@ -202,7 +207,6 @@ export const RazorpayPayment = () => {
                     value={remarks}
                   />
                 </div>
-                
               </form>
             </div>
             <div className="modal-footer bg-primary-subtle d-flex justify-content-between">

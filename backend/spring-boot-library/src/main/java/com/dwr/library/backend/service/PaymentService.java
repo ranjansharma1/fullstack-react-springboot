@@ -67,6 +67,7 @@ public class PaymentService {
 		order.setTransactionId(paymentRequest.getTransactionId());
 		order.setStatus(paymentRequest.getStatus());
 		order.setPaymentDate(LocalDate.now());
+		order.setFailedDecription(paymentRequest.getFailedDesc());
 
 		paymentRepository.save(order);
 

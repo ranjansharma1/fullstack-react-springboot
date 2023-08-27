@@ -39,5 +39,7 @@ public class Orders {
 	private String reciept;
 	
 	private String remarks;
+	
+	private String failedDecription;
 
 }
