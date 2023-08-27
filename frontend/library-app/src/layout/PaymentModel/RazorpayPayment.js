@@ -3,7 +3,7 @@ import { useState } from "react";
 import swal from "sweetalert";
 
 export const RazorpayPayment = () => {
-  const {authState}=useOktaAuth();
+  const { authState } = useOktaAuth();
 
   //Defining amount for late fee
   const [lateFeeAmount] = useState(50); // Fixed amount that cannot be changed
@@ -17,77 +17,84 @@ export const RazorpayPayment = () => {
   const openRazorpayPopup = async (e) => {
     e.preventDefault();
 
-    if(authState?.isAuthenticated){
-    //2. Fires order api to get order Id
-    const url = `${process.env.REACT_APP_API}/payment/secure/create-order`;
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        amount: lateFeeAmount,
-        username: username,
-        email: email,
-        contact: contact,
-        info: "order_request",
-      }),
-    };
-    const response = await fetch(url, requestOptions);
-    if (!response.ok) {
-      swal("Oops", "Some error occured", "error");
-      throw new Error("Something Went Wrong");
-    }
-    const responseData = await response.json();
-    console.log("Order Data: ", responseData);
-    console.log("user email: ", authState.accessToken?.claims.sub);    
+    if (authState?.isAuthenticated) {
+      //2. Fires order api to get order Id
+      const url = `${process.env.REACT_APP_API}/payment/secure/create-order`;
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: lateFeeAmount,
+          username: username,
+          email: email,
+          contact: contact,
+          info: "order_request",
+        }),
+      };
+      const response = await fetch(url, requestOptions);
+      if (!response.ok) {
+        swal("Oops", "Some error occured", "error");
+        throw new Error("Something Went Wrong");
+      }
+      const responseData = await response.json();
+      console.log("Order Data: ", responseData);
+      console.log("user email: ", authState.accessToken?.claims.sub);
 
-    //3. Razorpay integration code with submitting orderID to make payment successfull
-    const options = {
-      key: process.env.RAZORPAY_KEY_ID, // Replace with your Key ID
-      amount: responseData.amount, // Convert amount to currency subunits
-      currency: responseData.currency,
-      name: "Library Management Application",
-      description: "Late Fee",
-      image: require("../../images/dwrlogo.png"),
-      order_id: responseData.id,
-      handler: function (response) {
-        console.log("Transaction Id: ",response.razorpay_payment_id, ", Order Id: ",response.razorpay_order_id,", Signature : ",response.razorpay_signature);
-        updateOrder(
-          response.razorpay_payment_id,
-          response.razorpay_order_id,
-          "paid"
-        );
-        swal(
-          "Good job!",
-          `payment successfull with id- ${response.razorpay_payment_id}`,
-          "success"
-        );
-      },
-      prefill: {
-        name: username,
-        email: email,
-        contact: contact,
-      },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-    const rzp1 = new window.Razorpay(options);
-    rzp1.on("payment.failed", function (response) {
-      console.log("Payment Failed");
-      console.log(response);
-      console.log(response.error.description);
-      swal("Oops", `Payment failed- ${response.error.description}`, "error");
-    });
-    rzp1.open(); // Open the Razorpay popup
-  }else{
-    console.log("User not authenticated, please login first.")
-  }
+      //3. Razorpay integration code with submitting orderID to make payment successfull
+      const options = {
+        key: process.env.RAZORPAY_KEY_ID, // Replace with your Key ID
+        amount: responseData.amount, // Convert amount to currency subunits
+        currency: responseData.currency,
+        name: "Library Management Application",
+        description: "Late Fee",
+        image: require("../../images/dwrlogo.png"),
+        order_id: responseData.id,
+        handler: function (response) {
+          console.log(
+            "Transaction Id: ",
+            response.razorpay_payment_id,
+            ", Order Id: ",
+            response.razorpay_order_id,
+            ", Signature : ",
+            response.razorpay_signature
+          );
+          updateOrder(
+            response.razorpay_payment_id,
+            response.razorpay_order_id,
+            "paid"
+          );
+          swal(
+            "Good job!",
+            `payment successfull with id- ${response.razorpay_payment_id}`,
+            "success"
+          );
+        },
+        prefill: {
+          name: username,
+          email: email,
+          contact: contact,
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      const rzp1 = new window.Razorpay(options);
+      rzp1.on("payment.failed", function (response) {
+        console.log("Payment Failed");
+        console.log(response);
+        console.log(response.error.description);
+        swal("Oops", `Payment failed- ${response.error.description}`, "error");
+      });
+      rzp1.open(); // Open the Razorpay popup
+    } else {
+      console.log("User not authenticated, please login first.");
+    }
   };
 
   //4.Capture the payment details
@@ -100,14 +107,18 @@ export const RazorpayPayment = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        transactionId : transactionId,
-        orderId : orderId,
-        status : status,
+        transactionId: transactionId,
+        orderId: orderId,
+        status: status,
       }),
     };
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
-      swal("Oops", "Some error occured while capturing payment details", "error");
+      swal(
+        "Oops",
+        "Some error occured while capturing payment details",
+        "error"
+      );
       throw new Error("Something Went Wrong");
     }
     const responseData = await response.json();
