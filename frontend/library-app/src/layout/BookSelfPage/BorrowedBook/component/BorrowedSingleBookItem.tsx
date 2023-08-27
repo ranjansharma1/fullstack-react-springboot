@@ -56,7 +56,7 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                                             type="button"
                                             className="btn btn-danger"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#paymentModal"
+                                            data-bs-target={`#paymentbook${borrowed.book.id}`}
                                         >
                                             Pay Late fine to Renew book
                                         </button>
@@ -68,7 +68,7 @@ export const BorrowedSingleBookItem: React.FC<{ borrowedBookList: BorrowedBook[]
                     </div>
                     <hr />
                     <ManageBookModel borrowed={borrowed} returnBook={props.returnBook} renewBook={props.renewBook} setDisplayWarning={setDisplayWarning} setAlertMassage={setAlertMassage}/>
-                    <RazorpayPayment bookTitle={borrowed.book.title}/>
+                    <RazorpayPayment bookTitle={borrowed.book.title} bookId={borrowed.book.id}/>
                 </div>
 
             )}

@@ -31,6 +31,8 @@ public class Orders {
 	
 	private String status;
 	
+	private String bookId;
+	
 	private String bookTitle;
 	
 	@Column(name = "payment_date") // Column for the payment date

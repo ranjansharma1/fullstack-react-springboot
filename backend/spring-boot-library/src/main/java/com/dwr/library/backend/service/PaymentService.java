@@ -51,6 +51,10 @@ public class PaymentService {
 		payment.setPaymentDate(LocalDate.now());		
 		payment.setRemarks(userRequest.getRemarks());
 		payment.setReciept(order.get("receipt"));
+		
+		//save book details
+		payment.setBookId(userRequest.getBookId());
+		payment.setBookTitle(userRequest.getBookTitle());
 		paymentRepository.save(payment);
 
 		// Return the order details as a string
