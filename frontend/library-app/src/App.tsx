@@ -51,12 +51,6 @@ function App() {
           <Route path='/reviewlist/:bookId'>
             <ReviewsListPage/>
           </Route>
-          <Route path='/payment'>
-            <RazorpayPayment/>
-          </Route>
-          <Route path='/paymentpage'>
-            <PaymentStatusPage/>
-          </Route>
           <Route path='/login' render={
             () => <LoginWidget config={oktaConfig} /> 
             } 
@@ -73,6 +67,12 @@ function App() {
           </SecureRoute>
           <SecureRoute path="/admin">
             <AdminMainPage/>
+          </SecureRoute>
+          <SecureRoute path='/payment'>
+            <RazorpayPayment/>
+          </SecureRoute>
+          <SecureRoute path='/paymentpage'>
+            <PaymentStatusPage/>
           </SecureRoute>
         </Switch>
         </Security>
