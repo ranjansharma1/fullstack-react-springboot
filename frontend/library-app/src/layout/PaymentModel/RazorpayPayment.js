@@ -1,7 +1,10 @@
+import { useOktaAuth } from "@okta/okta-react";
 import { useState } from "react";
 import swal from "sweetalert";
 
 export const RazorpayPayment = () => {
+  const {authState}=useOktaAuth();
+
   //Defining amount for late fee
   const [lateFeeAmount] = useState(50); // Fixed amount that cannot be changed
 
@@ -14,11 +17,13 @@ export const RazorpayPayment = () => {
   const openRazorpayPopup = async (e) => {
     e.preventDefault();
 
+    if(authState?.isAuthenticated){
     //2. Fires order api to get order Id
-    const url = `${process.env.REACT_APP_API}/payment/create-order`;
+    const url = `${process.env.REACT_APP_API}/payment/secure/create-order`;
     const requestOptions = {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -36,6 +41,7 @@ export const RazorpayPayment = () => {
     }
     const responseData = await response.json();
     console.log("Order Data: ", responseData);
+    console.log("user email: ", authState.accessToken?.claims.sub);    
 
     //3. Razorpay integration code with submitting orderID to make payment successfull
     const options = {
@@ -79,6 +85,9 @@ export const RazorpayPayment = () => {
       swal("Oops", `Payment failed- ${response.error.description}`, "error");
     });
     rzp1.open(); // Open the Razorpay popup
+  }else{
+    console.log("User not authenticated, please login first.")
+  }
   };
 
   //4.Capture the payment details

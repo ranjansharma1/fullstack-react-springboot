@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,7 @@ import com.dwr.library.backend.entity.Orders;
 import com.dwr.library.backend.requestmodels.CapturePaymentRequest;
 import com.dwr.library.backend.requestmodels.PaymentUserRequest;
 import com.dwr.library.backend.service.PaymentService;
+import com.dwr.library.backend.utils.ExtractJWT;
 import com.razorpay.*;
 
 /**
@@ -43,18 +45,23 @@ public class PaymentController {
 	
 	
 	/**
-	 * POST API: http://localhost:8080/api/payment/create-order 
+	 * POST API: http://localhost:8080/api/payment/secure/create-order 
 	 * {
+	 		"amount" :100,
 		    "contact": "9478961231",
 		    "email": "test3@email.com",
 		    "username": "ranjan test"
 		}
 	 */
-	@PostMapping("/create-order")
-	public String razorPayment(@RequestBody PaymentUserRequest userRequest) throws RazorpayException {
+	@PostMapping("/secure/create-order")
+	public String razorPayment(@RequestHeader(value = "Authorization") String token, @RequestBody PaymentUserRequest userRequest) throws RazorpayException {
 		
 		//printing data coming from client
 		System.out.println(userRequest);
+		
+		//fetching user email from token
+		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+		System.out.println(userEmail);
 		
 		// Return the order details as a string
 		return paymentService.createOrder(userRequest);

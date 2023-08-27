@@ -36,7 +36,8 @@ public class SecurityConfig {
 										"/api/books/secure/**", 
 										"/api/reviews/secure/**", 
 										"/api/libraries/secure/**",
-										"/api/admin/secure/**")
+										"/api/admin/secure/**",
+										"/api/payment/secure/**")
 							.authenticated())
 							.oauth2ResourceServer()
 							.jwt();
