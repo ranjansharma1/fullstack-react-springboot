@@ -1,14 +1,17 @@
 package com.dwr.library.backend.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dwr.library.backend.entity.Orders;
@@ -74,6 +77,14 @@ public class PaymentController {
 	public Orders updateOrder(@RequestBody CapturePaymentRequest paymentRequest) throws Exception {		
 		
 		return paymentService.updateOrder(paymentRequest);
+	}
+	
+	
+	@GetMapping()
+	public List<Orders> getOrder(@RequestHeader(value = "Authorization") String token, @RequestParam Long bookId) {
+		String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+
+		return paymentService.findOrder(userEmail, bookId);
 	}
 
 }

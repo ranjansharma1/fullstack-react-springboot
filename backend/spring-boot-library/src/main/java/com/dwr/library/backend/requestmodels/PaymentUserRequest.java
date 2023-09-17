@@ -11,6 +11,6 @@ public class PaymentUserRequest {
     private String remarks;
     private String contact;
     private String info;
-    private String bookId;
+    private Long bookId;
     private String bookTitle;
 }

@@ -1,6 +1,7 @@
 package com.dwr.library.backend.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,14 @@ public class PaymentService {
 
 		paymentRepository.save(order);
 
+		return order;
+	}
+	
+	public List<Orders> findOrder(String userEmail, Long bookId) {
+		List<Orders> order=paymentRepository.findByBookIdAndUserEmail(bookId, userEmail);
+		
+		System.out.println(order);
+		
 		return order;
 	}
 }

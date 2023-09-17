@@ -31,7 +31,7 @@ public class Orders {
 	
 	private String status;
 	
-	private String bookId;
+	private Long bookId;
 	
 	private String bookTitle;
 	
