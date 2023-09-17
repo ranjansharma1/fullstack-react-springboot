@@ -63,6 +63,14 @@
 			<version>1.4.4</version>
 		</dependency>
 
+		<!-- Swagger API Integration -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+
 		<!-- DEVELOPER TOOLS: Spring Boot DevTools : Provides fast application 
 			restarts, LiveReload, and configurations for enhanced development experience. -->
 		<dependency>
