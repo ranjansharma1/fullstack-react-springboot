@@ -1,5 +1,8 @@
 # fullstack-react-springboot
 This is full stack project, which include react as frontend, spring Boot as backend and MySQL as database
+1. frontend: http://localhost:3000/home
+2. backend: http://localhost:8080/api/books
+3. swagger UI: http://localhost:8080/swagger-ui/index.html
 
 ## Getting Started with Library App
 
