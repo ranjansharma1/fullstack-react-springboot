@@ -33,7 +33,7 @@ import com.dwr.library.backend.utils.ExtractJWT;
  * user login as access token
  */
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {

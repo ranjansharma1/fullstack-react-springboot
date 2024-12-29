@@ -23,7 +23,7 @@ import com.dwr.library.backend.utils.ExtractJWT;
  * */
 
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {

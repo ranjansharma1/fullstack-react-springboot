@@ -14,7 +14,7 @@ import com.dwr.library.backend.entity.Review;
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
 
-	private String theAllowedOrigins = "http://localhost:3000";
+	private String theAllowedOrigins = "*"; //old-  http://localhost:3000 Change Req: k8s
 
 	@Override
 	public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {

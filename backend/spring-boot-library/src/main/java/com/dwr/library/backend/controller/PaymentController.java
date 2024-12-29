@@ -38,7 +38,7 @@ import com.razorpay.*;
  * user login as access token
  */
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
